@@ -76,7 +76,7 @@ public class BitboardsInitialisationSection1
 		return new long[][] {
 			generateWhitePawnMovementBitboards(),
 			generateBlackPawnMovementBitboards(),
-			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.ND, 1),
 			generateEmptyBoardBitboards(PieceMovementDirections.BD, 8),
 			generateEmptyBoardBitboards(PieceMovementDirections.RD, 8),
 			generateEmptyBoardBitboards(PieceMovementDirections.QD, 8),
@@ -121,7 +121,7 @@ public class BitboardsInitialisationSection1
 		return new long[][] {
 			generateEmptyBoardBitboards(PieceMovementDirections.WPA, 1),
 			generateEmptyBoardBitboards(PieceMovementDirections.BPA, 1),
-			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.ND, 1),
 			generateEmptyBoardBitboards(PieceMovementDirections.BD, 8),
 			generateEmptyBoardBitboards(PieceMovementDirections.RD, 8),
 			generateEmptyBoardBitboards(PieceMovementDirections.QD, 8),

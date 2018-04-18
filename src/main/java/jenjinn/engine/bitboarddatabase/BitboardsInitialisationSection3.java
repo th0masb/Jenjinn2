@@ -1,71 +1,75 @@
 package jenjinn.engine.bitboarddatabase;
 
+import static jenjinn.engine.misc.BitboardUtils.bitboardsIntersect;
+import static jenjinn.engine.misc.BitboardUtils.bitwiseOr;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.misc.EngineUtils;
+import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
- * @author TB
- * @date 24 Jan 2017
+ * @author ThomasB
+ * @date 18/04/18
  */
 public class BitboardsInitialisationSection3
 {
 	public static long[][] generateRookMagicMoveDatabase()
 	{
-		return generateMagicMoveDatabase(true);
+		return generateMagicMoveDatabase(
+				Bitboards.ROOK_OCCUPANCY_VARIATIONS, 
+				Bitboards.ROOK_MAGIC_NUMBERS, 
+				Bitboards.ROOK_MAGIC_BITSHIFTS, 
+				PieceMovementDirections.ROOK);
 	}
 
 	public static long[][] generateBishopMagicMoveDatabase()
 	{
-		return generateMagicMoveDatabase(false);
+		return generateMagicMoveDatabase(
+				Bitboards.BISHOP_OCCUPANCY_VARIATIONS, 
+				Bitboards.BISHOP_MAGIC_NUMBERS, 
+				Bitboards.BISHOP_MAGIC_BITSHIFTS, 
+				PieceMovementDirections.BISHOP);
 	}
 
-	private static long[][] generateMagicMoveDatabase(final boolean isRook)
+	private static long[][] generateMagicMoveDatabase(final long[][] occupancyVariations, final long[] magicNumbers, final int[] magicBitshifts, final List<Direction> movementDirections)
 	{
 		final long[][] mmDatabase = new long[64][];
-		final long[][] allSquaresOccupancyVariations = isRook ? Bitboards.ROV : Bitboards.BOV;
-
 		for (byte i = 0; i < 64; i++) {
-			final long[] singleSquaresOccupancyVariations = allSquaresOccupancyVariations[i];
-			final long magicNumber = isRook ? Bitboards.RMN[i] : Bitboards.BMN[i];
-			final byte bitShift = isRook ? Bitboards.RMB[i] : Bitboards.BMB[i];
-			final long[] singleSquareMmDatabase = new long[singleSquaresOccupancyVariations.length];
+			final long[] singleSquareOccupancyVariations = occupancyVariations[i];
+			final long magicNumber = magicNumbers[i];
+			final int bitShift = magicBitshifts[i];
+			final long[] singleSquareMmDatabase = new long[singleSquareOccupancyVariations.length];
 
-			for (final long occVar : singleSquaresOccupancyVariations) {
+			for (final long occVar : singleSquareOccupancyVariations) {
 				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
-				singleSquareMmDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, isRook);
+				singleSquareMmDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
 			}
 			mmDatabase[i] = singleSquareMmDatabase;
 		}
-
 		return mmDatabase;
 	}
 
-	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final boolean isRook)
+	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
-		final List<BoardSquare> attackSquares = new ArrayList<>();
-		final Direction[] movementDirections = isRook ? PieceMovementDirections.RD : PieceMovementDirections.BD;
-
-		for (final Direction dir : movementDirections) {
-			BoardSquare nextSq = startSq;
-
-			while (nextSq != null) {
-				nextSq = nextSq.getNextSquareInDirection(dir);
-				final long nextSqAsBB = nextSq == null ? 0L : nextSq.asBitboard();
-				final boolean blocked = (nextSqAsBB & occVar) != 0;
-
-				if (nextSq != null) {
-					attackSquares.add(nextSq);
-				}
-				if (blocked) {
-					break;
-				}
+		return bitwiseOr(movementDirections.stream()
+				.map(startSq::getAllSquaresInDirection)
+				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
+				.flatMap(List::stream));
+	}
+	
+	static <T> List<T> takeUntil(final Predicate<T> stopCondition, final Iterable<T> xs)
+	{
+		final List<T> taken = new ArrayList<>();
+		for (final T x : xs) {
+			taken.add(x);
+			if (stopCondition.test(x)) {
+				break;
 			}
 		}
-		return EngineUtils.bitwiseOr(attackSquares.toArray(new BoardSquare[0]));
+		return taken;
 	}
 }

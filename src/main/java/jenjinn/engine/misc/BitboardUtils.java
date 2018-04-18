@@ -5,8 +5,10 @@ package jenjinn.engine.misc;
 
 import static io.xyz.chains.utilities.MapUtil.longMap;
 import static java.lang.Long.bitCount;
+import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import jenjinn.engine.enums.BoardSquare;
 
@@ -39,6 +41,11 @@ public final class BitboardUtils
 	public static long bitwiseOr(final List<BoardSquare> args)
 	{
 		return bitwiseOr(longMap(BoardSquare::asBitboard, args));
+	}
+	
+	public static long bitwiseOr(final Stream<BoardSquare> args)
+	{
+		return bitwiseOr(args.collect(toList()));
 	}
 
 	public static long bitwiseXor(final long... args)

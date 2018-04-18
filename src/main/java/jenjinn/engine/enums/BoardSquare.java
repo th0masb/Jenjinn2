@@ -8,7 +8,9 @@ package jenjinn.engine.enums;
 
 import static jenjinn.engine.bitboarddatabase.Bitboards.singleOccupancyBitboard;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 
@@ -79,16 +81,6 @@ public enum BoardSquare
 		return getAllSquaresInDirection(direction, 8);
 	}
 
-	public static BoardSquare fromIndex(final int index)
-	{
-		return values()[index];
-	}
-
-	public static BoardSquare fromRankAndFileIndices(final int rankIndex, final int fileIndex)
-	{
-		return values()[fileIndex + 8*rankIndex];
-	}
-
 	public RankFileCoordinate asRankFileCoord()
 	{
 		final int index = ordinal();
@@ -105,5 +97,20 @@ public enum BoardSquare
 		final RankFileCoordinate asPoint = asRankFileCoord();
 		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
 		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
+	}
+	
+	public static BoardSquare fromIndex(final int index)
+	{
+		return values()[index];
+	}
+
+	public static BoardSquare fromRankAndFileIndices(final int rankIndex, final int fileIndex)
+	{
+		return values()[fileIndex + 8*rankIndex];
+	}
+	
+	public static Stream<BoardSquare> stream()
+	{
+		return Arrays.stream(values());
 	}
 }

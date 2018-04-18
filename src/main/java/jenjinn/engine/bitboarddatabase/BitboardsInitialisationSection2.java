@@ -1,12 +1,17 @@
 package jenjinn.engine.bitboarddatabase;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static io.xyz.chains.utilities.CollectionUtil.tail;
+import static io.xyz.chains.utilities.CollectionUtil.take;
+import static io.xyz.chains.utilities.MapUtil.longMap;
+import static io.xyz.chains.utilities.RangeUtil.range;
+import static java.util.stream.Collectors.toList;
 
-import jenjinn.engine.enums.Direction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.LongStream;
+
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.misc.EngineUtils;
+import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
@@ -22,135 +27,74 @@ public class BitboardsInitialisationSection2
 {
 	public static long[][] generateAllBishopOccupancyVariations()
 	{
-		return iterateOverSquaresAndCalculateOccupancyVariations(false);
+		return BoardSquare.stream()
+				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.BISHOP))
+				.collect(toList())
+				.toArray(new long[64][]);
 	}
 
 	public static long[][] generateAllRookOccupancyVariations()
 	{
-		return iterateOverSquaresAndCalculateOccupancyVariations(true);
+		return BoardSquare.stream()
+				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.ROOK))
+				.collect(toList())
+				.toArray(new long[64][]);
 	}
 
-	private static long[][] iterateOverSquaresAndCalculateOccupancyVariations(final boolean isRook)
-	{
-		final long[][] ans = new long[64][];
-		for (BoardSquare sq : BoardSquare.values()) {
-			ans[sq.ordinal()] = calcSingleOccVar(sq, isRook);
-		}
-		return ans;
-	}
-
-	public static long[] calcSingleOccVar(final BoardSquare startSq, final boolean isRook)
+	public static long[] calculateOccupancyVariations(final BoardSquare startSq, final List<Direction> movementDirections)
 	{
 		final List<BoardSquare> relevantSquares = new ArrayList<>();
-		final Direction[] movementDirections = isRook ? PieceMovementDirections.RD : PieceMovementDirections.BD;
-
-		for (Direction dir : movementDirections) {
-			final byte numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
-			relevantSquares.addAll(Arrays.asList(startSq.getAllSquaresInDirection(dir, false, (byte) (numOfSqsLeft - 1))));
+		for (final Direction dir : movementDirections) {
+			final int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
+			relevantSquares.addAll(startSq.getAllSquaresInDirection(dir, numOfSqsLeft - 1));
 		}
-		final long[] relevantSqAsBb = new long[relevantSquares.size()];
-		for (int i = 0; i < relevantSquares.size(); i++) {
-			relevantSqAsBb[i] = relevantSquares.get(i).asBitboard();
-		}
+		return findAllPossibleOrCombos(longMap(BoardSquare::asBitboard, relevantSquares));
+	}
 
-		return EngineUtils.findAllPossibleOrCombos(relevantSqAsBb);
+	/**
+	 * Recursive method to calculate and return all possible bitboards arising from
+	 * performing bitwise | operation on each element of each subset of the powerset
+	 * of the given array. The size of the returned array is 2^(array.length).
+	 */
+	private static long[] findAllPossibleOrCombos(final long[] array)
+	{
+		final int length = array.length;
+		if (length == 1) {
+			return new long[] { 0L, array[0] };
+		}
+		else {
+			final long[] ans = new long[(int) Math.pow(2.0, length)];
+			final long[] recursiveAns = findAllPossibleOrCombos(take(length - 1, array));
+			int ansIndexCounter = 0;
+			int recursiveAnsIndexCounter = 0;
+			for (int j = 0; j < recursiveAns.length; j++) {
+				for (long i = 0; i < 2; i++) {
+					ans[ansIndexCounter] = recursiveAns[recursiveAnsIndexCounter] | (array[length - 1] * i);
+					ansIndexCounter++;
+				}
+				recursiveAnsIndexCounter++;
+			}
+			return ans;
+		}
 	}
 
 	public static long[] generateRookOccupancyMasks()
 	{
-		return generateOccupancyMasks(true);
+		return range(64).stream().mapToLong(i -> tail(Bitboards.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
 	public static long[] generateBishopOccupancyMasks()
 	{
-		return generateOccupancyMasks(false);
+		return range(64).stream().mapToLong(i -> tail(Bitboards.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
-	private static long[] generateOccupancyMasks(final boolean isRook)
+	public static int[] generateRookMagicBitshifts()
 	{
-		final long[] ans = new long[64];
-		final long[][] allOccVars = isRook ? Bitboards.ROV : Bitboards.BOV;
-
-		for (byte i = 0; i < 64; i++) {
-			long[] occVars = allOccVars[i];
-			ans[i] = occVars[occVars.length - 1];
-		}
-
-		return ans;
+		return LongStream.of(Bitboards.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
-	public static byte[] generateRookMagicBitshifts()
+	public static int[] generateBishopMagicBitshifts()
 	{
-		return generateMagicBitshifts(true);
-	}
-
-	public static byte[] generateBishopMagicBitshifts()
-	{
-		return generateMagicBitshifts(false);
-	}
-
-	private static byte[] generateMagicBitshifts(final boolean isRook)
-	{
-		byte[] ans = new byte[64];
-		long[] occMasks = isRook ? Bitboards.ROM : Bitboards.BOM;
-
-		for (int i = 0; i < 64; i++) {
-			ans[i] = (byte) (64 - Long.bitCount(occMasks[i]));
-		}
-
-		return ans;
-	}
-
-	// Now we do pawn first move stuff
-
-	public static long[] generateWhitePawnFirstMoveOccupancyMasks()
-	{
-		return generatePawnFirstMoveOccMasks(true);
-	}
-
-	public static long[] generateBlackPawnFirstMoveOccupancyMasks()
-	{
-		return generatePawnFirstMoveOccMasks(false);
-	}
-
-	private static long[] generatePawnFirstMoveOccMasks(final boolean isWhite)
-	{
-		final long[] ans = new long[8];
-		final long[] moves = isWhite ? Bitboards.EBM[0] : Bitboards.EBM[1];
-
-		final byte shiftFactor = (byte) (isWhite ? 8 : 48);
-
-		for (byte i = 0; i < 8; i++) {
-			ans[i] = moves[shiftFactor + i];
-		}
-
-		return ans;
-	}
-
-	public static long[][] generateWhitePawnFirstMoveOccupancyVariations()
-	{
-		return generatePawnFirstMoveOccVars(true);
-	}
-
-	public static long[][] generateBlackPawnFirstMoveOccupancyVariations()
-	{
-		return generatePawnFirstMoveOccVars(false);
-	}
-
-	private static long[][] generatePawnFirstMoveOccVars(final boolean isWhite)
-	{
-		final long[][] ans = new long[8][];
-		final Direction movementDirection = isWhite ? Direction.N : Direction.S;
-
-		final byte shiftFactor = (byte) (isWhite ? 8 : 48);
-
-		for (byte i = 0; i < 8; i++) {
-			final BoardSquare[] relevantSquares = BoardSquare.values()[shiftFactor + i].getAllSquaresInDirection(movementDirection, false,
-					(byte) 2);
-			final long[] relevantSquaresAsBB = { relevantSquares[0].asBitboard(), relevantSquares[1].asBitboard() };
-			ans[i] = EngineUtils.findAllPossibleOrCombos(relevantSquaresAsBB);
-		}
-
-		return ans;
+		return LongStream.of(Bitboards.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 }

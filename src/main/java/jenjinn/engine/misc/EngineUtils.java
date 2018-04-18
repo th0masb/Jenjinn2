@@ -1,7 +1,5 @@
 package jenjinn.engine.misc;
 
-import static io.xyz.chains.utilities.CollectionUtil.take;
-
 import jenjinn.engine.enums.BoardSquare;
 
 /**
@@ -48,33 +46,6 @@ public class EngineUtils
 	}
 	
 	
-	/**
-	 * Recursive method to calculate and return all possible bitboards arising from
-	 * performing bitwise | operation on each element of each subset of the powerset
-	 * of the given array. The size of the returned array is 2^(array.length).
-	 */
-	public static long[] findAllPossibleOrCombos(final long[] array)
-	{
-		final int length = array.length;
-		if (length == 1) {
-			return new long[] { 0L, array[0] };
-		}
-		else {
-			final long[] ans = new long[(int) Math.pow(2.0, length)];
-			final long[] recursiveAns = findAllPossibleOrCombos(take(length - 1, array));
-			int ansIndexCounter = 0;
-			int recursiveAnsIndexCounter = 0;
-			for (int j = 0; j < recursiveAns.length; j++) {
-				for (long i = 0; i < 2; i++) {
-					ans[ansIndexCounter] = recursiveAns[recursiveAnsIndexCounter] | (array[length - 1] * i);
-					ansIndexCounter++;
-				}
-				recursiveAnsIndexCounter++;
-			}
-			return ans;
-		}
-	}
-
 //	public static StandardMove[] bitboardToMoves(final byte loc, final long bitboard)
 //	{
 //		final int bitboardCard = Long.bitCount(bitboard);

@@ -13,7 +13,7 @@ import jenjinn.engine.enums.Direction;
  * @author TB
  * @date 22 Jan 2017
  */
-public class PieceMovementDirectionArrays
+public class PieceMovementDirections
 {
 	/** White pawn movement directions */
 	public static final List<Direction> WPM = asList( Direction.N );

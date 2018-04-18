@@ -60,14 +60,11 @@ public enum BoardSquare
 		}
 	}
 
-	public List<BoardSquare> getAllSquaresInDirection(final Direction direction, final boolean includeStart, final int maxSquares)
+	public List<BoardSquare> getAllSquaresInDirection(final Direction direction, final int maxSquares)
 	{
 		final ImmutableList.Builder<BoardSquare> builder = ImmutableList.builder();
-		if (includeStart) {
-			builder.add(this);
-		}
 		BoardSquare nextSq = getNextSquareInDirection(direction);
-		int lengthCounter = includeStart ? 1 : 0;
+		int lengthCounter = 0;
 		while (nextSq != null && lengthCounter < maxSquares)
 		{
 			builder.add(nextSq);
@@ -77,9 +74,9 @@ public enum BoardSquare
 		return builder.build();
 	}
 
-	public List<BoardSquare> getAllSquaresInDirection(final Direction direction, final boolean includeStart)
+	public List<BoardSquare> getAllSquaresInDirection(final Direction direction)
 	{
-		return getAllSquaresInDirection(direction, includeStart, 10);
+		return getAllSquaresInDirection(direction, 8);
 	}
 
 	public static BoardSquare fromIndex(final int index)

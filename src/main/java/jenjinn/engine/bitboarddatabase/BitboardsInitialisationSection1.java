@@ -1,15 +1,17 @@
 package jenjinn.engine.bitboarddatabase;
 
-import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.misc.BitboardUtils.bitwiseOr;
+import static io.xyz.chains.utilities.CollectionUtil.insert;
+import static io.xyz.chains.utilities.RangeUtil.range;
+import static java.util.stream.Collectors.toCollection;
+import static jenjinn.engine.bitboarddatabase.Bitboards.singleOccupancyBitboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
-import jenjinn.engine.misc.PieceMovementDirectionArrays;
+import jenjinn.engine.misc.BitboardUtils;
+import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
  * First of three utility classes containing only static methods to initialise
@@ -21,186 +23,109 @@ import jenjinn.engine.misc.PieceMovementDirectionArrays;
  */
 public class BitboardsInitialisationSection1
 {
-
 	public static long[] generateSingleOccupancyBitboards()
 	{
-		final long[] ans = new long[64];
-		for (int i = 0; i < 64; i++) {
-			ans[i] = (1L << i);
-		}
-		return ans;
+		return range(64)
+				.stream()
+				.mapToLong(i -> 1L << i)
+				.toArray();
 	}
 
 	public static long[] generateRankBitboards()
 	{
-		final long[] ans = new long[8];
-		for (byte i = 0; i < 8; i++) {
-			final BoardSquare start = BoardSquare.fromIndex(8 * i);
-			final List<BoardSquare> allConstituents = start.getAllSquaresInDirection(Direction.W, true);
-			ans[i] = bitwiseOr(allConstituents);
-		}
-		return ans;
+		return range(0, 64, 8)
+				.stream()
+				.mapToObj(BoardSquare::fromIndex)
+				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.W)))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
 	}
 
 	public static long[] generateFileBitboards()
 	{
-		final long[] ans = new long[8];
-		for (byte i = 0; i < 8; i++) {
-			final BoardSquare start = BoardSquare.fromIndex(i);
-			final List<BoardSquare> allConstituents = start.getAllSquaresInDirection(Direction.N, true);
-			ans[i] = bitwiseOr(allConstituents);
-		}
-		return ans;
+		return range(8)
+				.stream()
+				.mapToObj(BoardSquare::fromIndex)
+				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.N)))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
 	}
 
 	public static long[] generateDiagonalBitboards()
 	{
-		final long[] ans = new long[15];
-		for (byte i = 0; i < 15; i++) {
-			final BoardSquare start = i < 8 ? BoardSquare.fromIndex(i) : BoardSquare.fromRankAndFileIndices(i - 7,  7);
-			final List<BoardSquare> allConstituents = start.getAllSquaresInDirection(Direction.NE, true);
-			ans[i] = bitwiseOr(allConstituents);
-		}
-		return ans;
+		return range(15).stream()
+				.map(i -> i < 8 ? i : 8*(i - 7) + 7)
+				.mapToObj(BoardSquare::fromIndex)
+				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.NE)))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
 	}
 
 	public static long[] generateAntidiagonalBitboards()
 	{
-		final long[] ans = new long[15];
-		for (byte i = 0; i < 15; i++) {
-			final BoardSquare start = (i < 8) ? BoardSquare.fromIndex(7 - i) : BoardSquare.fromRankAndFileIndices(i - 7, 0);
-			final List<BoardSquare> allConstituents = start.getAllSquaresInDirection(Direction.NW, true);
-			ans[i] = bitwiseOr(allConstituents);
-		}
-		return ans;
+		return range(15).stream()
+				.map(i -> i < 8 ? 7 - i : 8*(i - 7))
+				.mapToObj(BoardSquare::fromIndex)
+				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.NW)))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
 	}
 
 	public static long[][] generateAllEmptyBoardPieceMovementBitboards()
 	{
-		final long[][] ans = new long[7][];
-		for (int i = 0; i < 7; i++) {
-			ans[i] = generateMoves(i, false);
-		}
-		return ans;
+		return new long[][] {
+			generateWhitePawnMovementBitboards(),
+			generateBlackPawnMovementBitboards(),
+			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.BD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.RD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.QD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1)
+		};
+	}
+	
+	private static long[] generateWhitePawnMovementBitboards()
+	{
+		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.WPM, 1);
+		range(8, 16).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i + 8));
+		return moves;
+	}
+
+	private static long[] generateBlackPawnMovementBitboards()
+	{
+		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.BPM, 1);
+		range(48, 56).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i - 8));
+		return moves;
+	}
+	
+	private static long[] generateEmptyBoardBitboards(final List<Direction> moveDirections, final int lengthCap)
+	{
+		return range(64).stream()
+				.mapToObj(BoardSquare::fromIndex)
+				.map(square -> getSquaresFromSourceSquare(square, moveDirections, lengthCap))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
+	}
+
+	private static List<BoardSquare> getSquaresFromSourceSquare(final BoardSquare src, final List<Direction> directions, final int lengthCap)
+	{
+		return directions
+				.stream()
+				.map(dir -> src.getAllSquaresInDirection(dir, lengthCap))
+				.flatMap(List::stream)
+				.collect(toCollection(ArrayList::new));
 	}
 
 	public static long[][] generateAllEmptyBoardPieceAttackBitboards()
 	{
-		final long[][] ans = new long[7][];
-		for (int i = 0; i < 7; i++) {
-			ans[i] = generateMoves(i, true);
-		}
-		return ans;
-	}
-
-	private static long[] generateMoves(final int i, final boolean isAttackset)
-	{
-		long[] ans = new long[64];
-
-		if (i == 0) {
-			ans = generateEmptyBoardPawnBitboards(true, isAttackset);
-		}
-		if (i == 1) {
-			ans = generateEmptyBoardPawnBitboards(false, isAttackset);
-		}
-		if (i == 2) {
-			ans = generateEmptyBoardMinorPieceBitboards(true);
-		}
-		if (i == 3) {
-			ans = generateEmptyBoardMinorPieceBitboards(false);
-		}
-		if (i == 4) {
-			ans = generateEmptyBoardMajorPieceBitboards(true);
-		}
-		if (i == 5) {
-			ans = generateEmptyBoardMajorPieceBitboards(false);
-		}
-		if (i == 6) {
-			ans = generateEmptyBoardKingBitboards();
-		}
-		return ans;
-	}
-
-	private static long[] generateEmptyBoardKingBitboards()
-	{
-		final long[] ans = new long[64];
-		final List<Direction> movementDirections = PieceMovementDirectionArrays.KD;
-		for (final BoardSquare startSq : BoardSquare.values()) 
-		{
-			final List<BoardSquare> possMoveSqs = movementDirections
-			.stream()
-			.map(dir -> startSq.getAllSquaresInDirection(dir, false, 1))
-			.flatMap(List::stream)
-			.collect(toList());
-			ans[startSq.ordinal()] = bitwiseOr(possMoveSqs);
-		}
-		return ans;
-	}
-
-	private static long[] generateEmptyBoardMajorPieceBitboards(final boolean isRook)
-	{
-		final long[] ans = new long[64];
-		final List<Direction> movementDirections = isRook ? PieceMovementDirectionArrays.RD : PieceMovementDirectionArrays.QD;
-		for (final BoardSquare startSq : BoardSquare.values()) {
-			final List<BoardSquare> possMoveSqs = new ArrayList<>();
-			for (final Direction dir : movementDirections) {
-				final BoardSquare[] nextSqs = startSq.getAllSquaresInDirection(dir, false);
-				possMoveSqs.addAll(Arrays.asList(nextSqs));
-			}
-			ans[startSq.ordinal()] = bitwiseOr(possMoveSqs.toArray(new BoardSquare[0]));
-		}
-		return ans;
-	}
-
-	private static long[] generateEmptyBoardMinorPieceBitboards(final boolean isBishop)
-	{
-		final long[] ans = new long[64];
-		final List<Direction> movementDirections = isBishop ? PieceMovementDirectionArrays.BD : PieceMovementDirectionArrays.ND;
-		for (final BoardSquare startSq : BoardSquare.values()) {
-			final List<BoardSquare> possMoveSqs = new ArrayList<>();
-			for (final Direction dir : movementDirections) {
-				if (isBishop) {
-					final BoardSquare[] nextSqs = startSq.getAllSquaresInDirection(dir, false);
-					possMoveSqs.addAll(Arrays.asList(nextSqs));
-				}
-				else {
-					final BoardSquare[] nextSqs = startSq.getAllSquaresInDirection(dir, false,  1);
-					possMoveSqs.addAll(Arrays.asList(nextSqs));
-				}
-			}
-			ans[startSq.ordinal()] = bitwiseOr(possMoveSqs.toArray(new BoardSquare[0]));
-		}
-		return ans;
-	}
-
-	private static long[] generateEmptyBoardPawnBitboards(final boolean isWhite, final boolean isAttackset)
-	{
-		final long[] ans = new long[64];
-		final long startRank = isWhite ? Bitboards.RANK[1] : Bitboards.RANK[6];
-
-		List<Direction> movementDirections = null;
-		if (isWhite) {
-			movementDirections = isAttackset ? PieceMovementDirectionArrays.WPA : PieceMovementDirectionArrays.WPM;
-		}
-		else {
-			movementDirections = isAttackset ? PieceMovementDirectionArrays.BPA : PieceMovementDirectionArrays.BPM;
-		}
-
-		for (final BoardSquare startSq : BoardSquare.values()) {
-			final List<BoardSquare> possMoveSqs = new ArrayList<>();
-			for (final Direction dir : movementDirections) {
-				// This is the case of the pawns first move
-				if (!isAttackset && (startSq.asBitboard() & startRank) != 0) {
-					final BoardSquare[] nextSqs = startSq.getAllSquaresInDirection(dir, false,  2);
-					possMoveSqs.addAll(Arrays.asList(nextSqs));
-				}
-				else {
-					final BoardSquare[] nextSqs = startSq.getAllSquaresInDirection(dir, false,  1);
-					possMoveSqs.addAll(Arrays.asList(nextSqs));
-				}
-			}
-			ans[startSq.ordinal()] = bitwiseOr(possMoveSqs.toArray(new BoardSquare[0]));
-		}
-		return ans;
+		return new long[][] {
+			generateEmptyBoardBitboards(PieceMovementDirections.WPA, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.BPA, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1),
+			generateEmptyBoardBitboards(PieceMovementDirections.BD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.RD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.QD, 8),
+			generateEmptyBoardBitboards(PieceMovementDirections.KD, 1)
+		};
 	}
 }

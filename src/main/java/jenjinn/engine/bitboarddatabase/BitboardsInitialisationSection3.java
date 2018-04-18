@@ -6,7 +6,7 @@ import java.util.List;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.misc.EngineUtils;
-import jenjinn.engine.misc.PieceMovementDirectionArrays;
+import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
  * @author TB
@@ -48,7 +48,7 @@ public class BitboardsInitialisationSection3
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final boolean isRook)
 	{
 		final List<BoardSquare> attackSquares = new ArrayList<>();
-		final Direction[] movementDirections = isRook ? PieceMovementDirectionArrays.RD : PieceMovementDirectionArrays.BD;
+		final Direction[] movementDirections = isRook ? PieceMovementDirections.RD : PieceMovementDirections.BD;
 
 		for (final Direction dir : movementDirections) {
 			BoardSquare nextSq = startSq;

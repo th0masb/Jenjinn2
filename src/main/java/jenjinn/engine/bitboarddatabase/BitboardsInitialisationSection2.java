@@ -7,7 +7,7 @@ import java.util.List;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.misc.EngineUtils;
-import jenjinn.engine.misc.PieceMovementDirectionArrays;
+import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
  * Second of three utility classes containing only static methods to initialise
@@ -42,7 +42,7 @@ public class BitboardsInitialisationSection2
 	public static long[] calcSingleOccVar(final BoardSquare startSq, final boolean isRook)
 	{
 		final List<BoardSquare> relevantSquares = new ArrayList<>();
-		final Direction[] movementDirections = isRook ? PieceMovementDirectionArrays.RD : PieceMovementDirectionArrays.BD;
+		final Direction[] movementDirections = isRook ? PieceMovementDirections.RD : PieceMovementDirections.BD;
 
 		for (Direction dir : movementDirections) {
 			final byte numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);

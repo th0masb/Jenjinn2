@@ -1,21 +1,21 @@
-package jenjinn.engine.bitboarddatabase;
+package jenjinn.engine.bitboards;
 
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateAllEmptyBoardPieceAttackBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateAllEmptyBoardPieceMovementBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateAntidiagonalBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateDiagonalBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateFileBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateRankBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection1.generateSingleOccupancyBitboards;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateAllBishopOccupancyVariations;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateAllRookOccupancyVariations;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateBishopMagicBitshifts;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateBishopOccupancyMasks;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateRookMagicBitshifts;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection2.generateRookOccupancyMasks;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection3.generateBishopMagicMoveDatabase;
-import static jenjinn.engine.bitboarddatabase.BitboardsInitialisationSection3.generateRookMagicMoveDatabase;
-import static jenjinn.engine.misc.BitboardUtils.bitwiseOr;
+import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateAllEmptyBoardPieceAttackBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateAllEmptyBoardPieceMovementBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateAntidiagonalBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateDiagonalBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateFileBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateRankBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection1.generateSingleOccupancyBitboards;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateAllBishopOccupancyVariations;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateAllRookOccupancyVariations;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateBishopMagicBitshifts;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateBishopOccupancyMasks;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateRookMagicBitshifts;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection2.generateRookOccupancyMasks;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection3.generateBishopMagicMoveDatabase;
+import static jenjinn.engine.bitboards.BitboardsInitialisationSection3.generateRookMagicMoveDatabase;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
@@ -38,7 +38,7 @@ public final class Bitboards
 	public static final long BORDER_BITBOARD;
 
 
-	private static final long[] SOB;
+	private static final long[] SINGLE_OCCUPANCY_BITBOARDS;
 	/**
 	 * Access array of 64 bitboards representing single squares on a chessboard. They are
 	 * ordered from h1 to a8, the reason for this seemingly strange ordering is due
@@ -48,51 +48,51 @@ public final class Bitboards
 	 */
 	public static long singleOccupancyBitboard(final int squareIndex)
 	{
-		return SOB[squareIndex];
+		return SINGLE_OCCUPANCY_BITBOARDS[squareIndex];
 	}
 
 
-	private static final long[] RANK;
+	private static final long[] RANK_BITBOARDS;
 	/**
 	 * Access array of 8 bitboards representing the ranks on a chessboard. Ordered rank 1
 	 * up to rank 8.
 	 */
 	public static long rankBitboard(final int rankIndex)
 	{
-		return RANK[rankIndex];
+		return RANK_BITBOARDS[rankIndex];
 	}
 
 
-	private static final long[] FILE;
+	private static final long[] FILE_BITBOARDS;
 	/**
 	 * Access array of 8 bitboards representing the files on a chessboard. Ordered from h
 	 * to a.
 	 */
 	public static long fileBitboard(final int fileIndex)
 	{
-		return FILE[fileIndex];
+		return FILE_BITBOARDS[fileIndex];
 	}
 
 
-	public static final long[] DIAGONAL;
+	private static final long[] DIAGONAL_BITBOARDS;
 	/**
 	 * Array of 15 bitboards representing the diagonals of gradient 1 on a
 	 * chessboard. Ordered from right to left.
 	 */
 	public static long diagonalBitboard(final int diagonalIndex)
 	{
-		return DIAGONAL[diagonalIndex];
+		return DIAGONAL_BITBOARDS[diagonalIndex];
 	}
 
 
-	private static final long[] ANTI_DIAGONAL;
+	private static final long[] ANTI_DIAGONAL_BITBOARDS;
 	/**
 	 * Array of 15 bitboards representing the diagonals of gradient -1 on a
 	 * chessboard. Ordered from left to right.
 	 */
 	public static long antiDiagonalBitboard(final int antiDiagonalIndex)
 	{
-		return ANTI_DIAGONAL[antiDiagonalIndex];
+		return ANTI_DIAGONAL_BITBOARDS[antiDiagonalIndex];
 	}
 
 
@@ -137,13 +137,13 @@ public final class Bitboards
 	 * Section one initialiser
 	 */
 	static {
-		SOB = generateSingleOccupancyBitboards();
-		RANK = generateRankBitboards();
-		FILE = generateFileBitboards();
-		DIAGONAL = generateDiagonalBitboards();
-		ANTI_DIAGONAL = generateAntidiagonalBitboards();
-		UNIVERSAL_BITBOARD = bitwiseOr(RANK);
-		BORDER_BITBOARD = bitwiseOr(new long[] { RANK[0], FILE[0], RANK[7], FILE[7] });
+		SINGLE_OCCUPANCY_BITBOARDS = generateSingleOccupancyBitboards();
+		RANK_BITBOARDS = generateRankBitboards();
+		FILE_BITBOARDS = generateFileBitboards();
+		DIAGONAL_BITBOARDS = generateDiagonalBitboards();
+		ANTI_DIAGONAL_BITBOARDS = generateAntidiagonalBitboards();
+		UNIVERSAL_BITBOARD = bitwiseOr(RANK_BITBOARDS);
+		BORDER_BITBOARD = bitwiseOr(new long[] { RANK_BITBOARDS[0], FILE_BITBOARDS[0], RANK_BITBOARDS[7], FILE_BITBOARDS[7] });
 		EMPTY_BOARD_MOVESETS = generateAllEmptyBoardPieceMovementBitboards();
 		EMPTY_BOARD_ATTACKSETS = generateAllEmptyBoardPieceAttackBitboards();
 	}
@@ -199,7 +199,8 @@ public final class Bitboards
 	 * Bishop magic number values for each square. Used for defining the surjective
 	 * map definition used in magic bitboards.
 	 */
-	public static final long[] BISHOP_MAGIC_NUMBERS = { 
+	public static final long[] BISHOP_MAGIC_NUMBERS = 
+		{ 
 			0x8480100440302L, 0x200200a1010000L, 0x4010040441508100L, 0x491040080030021L,
 			0x21104080208000L, 0x1032011000000L, 0x41c0128080000L, 0x2002020201040200L,
 			0x120430040040L, 0x201040812084209L, 0x4220801002204L, 0x8044502000000L,
@@ -222,7 +223,8 @@ public final class Bitboards
 	 * Rook magic number values for each square. Used for defining the surjective
 	 * map definition used in magic bitboards.
 	 */
-	public static final long[] ROOK_MAGIC_NUMBERS = { 
+	public static final long[] ROOK_MAGIC_NUMBERS = 
+		{ 
 			0x10800480a0104000L, 0x40002000403000L, 0x80281000200080L, 0x800c0800500280L,
 			0x8200200410081200L, 0x4a00080200040510L, 0x2180408002000100L, 0x180004100002080L,
 			0x4000800080204000L, 0x802010814000L, 0x444801000822001L, 0x801000680080L,

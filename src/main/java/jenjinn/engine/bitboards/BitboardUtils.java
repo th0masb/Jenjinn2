@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.engine.misc;
+package jenjinn.engine.bitboards;
 
 import static io.xyz.chains.utilities.MapUtil.longMap;
 import static java.lang.Long.bitCount;
@@ -10,6 +10,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import io.xyz.chains.rangedfunction.RangedLongFunction;
 import jenjinn.engine.enums.BoardSquare;
 
 /**
@@ -29,6 +30,15 @@ public final class BitboardUtils
 		long ans = 0L;
 		for (final long arg : args) {
 			ans |= arg;
+		}
+		return ans;
+	}
+	
+	public static long bitwiseOr(final RangedLongFunction args)
+	{
+		long ans = 0L;
+		for (int i = 0; i < args.linkCount(); i++) {
+			ans |= args.elementAt(i);
 		}
 		return ans;
 	}

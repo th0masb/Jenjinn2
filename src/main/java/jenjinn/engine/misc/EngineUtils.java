@@ -140,7 +140,7 @@ public class EngineUtils
 
 		final short[] testP = new short[64];
 		testP[0] = 1;
-		testP[BoardSquare.c4.ordinal()] = -3;
+		testP[BoardSquare.C4.ordinal()] = -3;
 		System.out.println(formatPieceTable(testP));
 	}
 }

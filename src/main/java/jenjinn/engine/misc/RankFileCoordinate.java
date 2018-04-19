@@ -1,7 +1,7 @@
 package jenjinn.engine.misc;
 
-import static jenjinn.engine.bitboarddatabase.Bitboards.fileBitboard;
-import static jenjinn.engine.bitboarddatabase.Bitboards.rankBitboard;
+import static jenjinn.engine.bitboards.Bitboards.fileBitboard;
+import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 
 import jenjinn.engine.enums.BoardSquare;
 

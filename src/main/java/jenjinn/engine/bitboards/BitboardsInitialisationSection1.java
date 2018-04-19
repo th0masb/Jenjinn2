@@ -1,16 +1,15 @@
-package jenjinn.engine.bitboarddatabase;
+package jenjinn.engine.bitboards;
 
 import static io.xyz.chains.utilities.CollectionUtil.insert;
+import static io.xyz.chains.utilities.MapUtil.longMap;
 import static io.xyz.chains.utilities.RangeUtil.range;
-import static java.util.stream.Collectors.toCollection;
-import static jenjinn.engine.bitboarddatabase.Bitboards.singleOccupancyBitboard;
+import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
-import jenjinn.engine.misc.BitboardUtils;
 import jenjinn.engine.misc.PieceMovementDirections;
 
 /**
@@ -28,19 +27,15 @@ public class BitboardsInitialisationSection1
 
 	public static long[] generateRankBitboards()
 	{
-		return range(0, 64, 8).stream()
-				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.W)))
-				.mapToLong(BitboardUtils::bitwiseOr)
+		return range(8).stream()
+				.mapToLong(i -> 0b11111111L << (8*i))
 				.toArray();
 	}
 
 	public static long[] generateFileBitboards()
 	{
 		return range(8).stream()
-				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.N)))
-				.mapToLong(BitboardUtils::bitwiseOr)
+				.mapToLong(i -> bitwiseOr(longMap(j -> (1L << i) << (8*j), range(8))))
 				.toArray();
 	}
 
@@ -49,7 +44,7 @@ public class BitboardsInitialisationSection1
 		return range(15).stream()
 				.map(i -> i < 8 ? i : 8*(i - 7) + 7)
 				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.NE)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}
@@ -59,7 +54,7 @@ public class BitboardsInitialisationSection1
 		return range(15).stream()
 				.map(i -> i < 8 ? 7 - i : 8*(i - 7))
 				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirection(Direction.NW)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}
@@ -93,14 +88,14 @@ public class BitboardsInitialisationSection1
 	private static long[] generateWhitePawnMovementBitboards()
 	{
 		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.WHITE_PAWN_MOVE, 1);
-		range(8, 16).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i + 8));
+		range(8, 16).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i + 16));
 		return moves;
 	}
 
 	private static long[] generateBlackPawnMovementBitboards()
 	{
 		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.BLACK_PAWN_MOVE, 1);
-		range(48, 56).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i - 8));
+		range(48, 56).stream().forEach(i -> moves[i] |= singleOccupancyBitboard(i - 16));
 		return moves;
 	}
 	
@@ -108,16 +103,9 @@ public class BitboardsInitialisationSection1
 	{
 		return range(64).stream()
 				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> getSquaresFromSourceSquare(square, moveDirections, lengthCap))
+				.map(square -> square.getAllSquaresInDirections(moveDirections, lengthCap))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}
 
-	private static List<BoardSquare> getSquaresFromSourceSquare(final BoardSquare src, final List<Direction> directions, final int lengthCap)
-	{
-		return directions.stream()
-				.map(dir -> src.getAllSquaresInDirection(dir, lengthCap))
-				.flatMap(List::stream)
-				.collect(toCollection(ArrayList::new));
-	}
 }

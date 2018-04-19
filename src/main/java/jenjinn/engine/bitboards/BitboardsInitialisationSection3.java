@@ -1,7 +1,7 @@
-package jenjinn.engine.bitboarddatabase;
+package jenjinn.engine.bitboards;
 
-import static jenjinn.engine.misc.BitboardUtils.bitboardsIntersect;
-import static jenjinn.engine.misc.BitboardUtils.bitwiseOr;
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class BitboardsInitialisationSection3
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
 		return bitwiseOr(movementDirections.stream()
-				.map(startSq::getAllSquaresInDirection)
+				.map(startSq::getAllSquaresInDirections)
 				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
 				.flatMap(List::stream));
 	}

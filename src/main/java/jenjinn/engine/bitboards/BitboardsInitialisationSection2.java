@@ -1,5 +1,6 @@
-package jenjinn.engine.bitboarddatabase;
+package jenjinn.engine.bitboards;
 
+import static io.xyz.chains.utilities.CollectionUtil.asList;
 import static io.xyz.chains.utilities.CollectionUtil.tail;
 import static io.xyz.chains.utilities.CollectionUtil.take;
 import static io.xyz.chains.utilities.MapUtil.longMap;
@@ -46,7 +47,7 @@ public class BitboardsInitialisationSection2
 		final List<BoardSquare> relevantSquares = new ArrayList<>();
 		for (final Direction dir : movementDirections) {
 			final int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
-			relevantSquares.addAll(startSq.getAllSquaresInDirection(dir, numOfSqsLeft - 1));
+			relevantSquares.addAll(startSq.getAllSquaresInDirections(asList(dir), numOfSqsLeft - 1));
 		}
 		return findAllPossibleOrCombos(longMap(BoardSquare::asBitboard, relevantSquares));
 	}

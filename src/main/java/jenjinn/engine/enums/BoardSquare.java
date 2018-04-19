@@ -92,12 +92,12 @@ public enum BoardSquare
 		return singleOccupancyBitboard(ordinal());
 	}
 	
-	public boolean isLightSquare()
-	{
-		final RankFileCoordinate asPoint = asRankFileCoord();
-		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
-		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
-	}
+//	public boolean isLightSquare()
+//	{
+//		final RankFileCoordinate asPoint = asRankFileCoord();
+//		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
+//		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
+//	}
 	
 	public static BoardSquare fromIndex(final int index)
 	{

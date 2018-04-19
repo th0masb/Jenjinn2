@@ -12,7 +12,7 @@ import jenjinn.engine.enums.BoardSquare;
  * @author TB
  * @date 22 Jan 2017
  */
-public class RankFileCoordinate
+public final class RankFileCoordinate
 {
 	public final int rankIndex;
 	public final int fileIndex;
@@ -31,5 +31,30 @@ public class RankFileCoordinate
 	public long toBitboard()
 	{
 		return fileBitboard(rankIndex) & rankBitboard(fileIndex);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + fileIndex;
+		result = prime * result + rankIndex;
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final RankFileCoordinate other = (RankFileCoordinate) obj;
+		if (fileIndex != other.fileIndex)
+			return false;
+		if (rankIndex != other.rankIndex)
+			return false;
+		return true;
 	}
 }

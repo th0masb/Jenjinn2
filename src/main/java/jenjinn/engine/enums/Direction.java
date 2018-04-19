@@ -1,5 +1,8 @@
 package jenjinn.engine.enums;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
  * Enum representing all the different directions
  * the various chesspieces can move on the board.
@@ -8,22 +11,10 @@ package jenjinn.engine.enums;
  */
 public enum Direction
 {
-	N(0, 1), 
-	E(-1, 0), 
-	S(0, -1), 
-	W(1, 0),
-	NE(-1, 1), 
-	SE(-1, -1), 
-	SW(1, -1), 
-	NW(1, 1),
-	NNE(-1, 2),
-	NEE(-2, 1), 
-	SEE(-2, -1), 
-	SSE(-1, -2),
-	SSW(1, -2),
-	SWW(2, -1), 
-	NWW(2, 1), 
-	NNW(1, 2);
+	N(1, 0), E(0, -1), S(-1, 0), W(0, 1),
+	NE(1, -1), SE(-1, -1), SW(-1, 1), NW(1, 1),
+	NNE(2, -1), NEE(1, -2), SEE(-1, -2), SSE(-2, -1),
+	SSW(-2, 1), SWW(-1, 2), NWW(1, 2), NNW(2, 1);
 
 	public int rankIndexChange;
 	public int fileIndexChange;
@@ -32,5 +23,10 @@ public enum Direction
 	{
 		this.rankIndexChange = rankIndexChange;
 		this.fileIndexChange = fileIndexChange;
+	}
+	
+	public static Stream<Direction> stream()
+	{
+		return Arrays.stream(values());
 	}
 }

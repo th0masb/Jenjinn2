@@ -3,18 +3,51 @@
  */
 package jenjinn.engine.enums;
 
+import static io.xyz.chains.utilities.CollectionUtil.asList;
 import static io.xyz.chains.utilities.RangeUtil.range;
 import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.toList;
+import static jenjinn.engine.enums.BoardSquare.A1;
+import static jenjinn.engine.enums.BoardSquare.A2;
+import static jenjinn.engine.enums.BoardSquare.A3;
+import static jenjinn.engine.enums.BoardSquare.A4;
+import static jenjinn.engine.enums.BoardSquare.A5;
+import static jenjinn.engine.enums.BoardSquare.A6;
+import static jenjinn.engine.enums.BoardSquare.A7;
+import static jenjinn.engine.enums.BoardSquare.A8;
+import static jenjinn.engine.enums.BoardSquare.B1;
+import static jenjinn.engine.enums.BoardSquare.B2;
+import static jenjinn.engine.enums.BoardSquare.B3;
+import static jenjinn.engine.enums.BoardSquare.C1;
+import static jenjinn.engine.enums.BoardSquare.C2;
+import static jenjinn.engine.enums.BoardSquare.C3;
+import static jenjinn.engine.enums.BoardSquare.C5;
+import static jenjinn.engine.enums.BoardSquare.D1;
+import static jenjinn.engine.enums.BoardSquare.D4;
+import static jenjinn.engine.enums.BoardSquare.D7;
+import static jenjinn.engine.enums.BoardSquare.E1;
+import static jenjinn.engine.enums.BoardSquare.E3;
+import static jenjinn.engine.enums.BoardSquare.E5;
+import static jenjinn.engine.enums.BoardSquare.F1;
+import static jenjinn.engine.enums.BoardSquare.F6;
+import static jenjinn.engine.enums.BoardSquare.G1;
+import static jenjinn.engine.enums.BoardSquare.G4;
+import static jenjinn.engine.enums.BoardSquare.G7;
+import static jenjinn.engine.enums.BoardSquare.H1;
+import static jenjinn.engine.enums.BoardSquare.H8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 import jenjinn.engine.misc.RankFileCoordinate;
 
@@ -84,6 +117,68 @@ class BoardSquareTest
 		final BoardSquare f6 = BoardSquare.F6;
 		assertEquals(EnumSet.of(BoardSquare.F7, BoardSquare.F8), EnumSet.copyOf(f6.getAllSquaresInDirections(Direction.N)));
 		assertEquals(EnumSet.of(BoardSquare.G6, BoardSquare.H6), EnumSet.copyOf(f6.getAllSquaresInDirections(Direction.E)));
+	}
+	
+	@Test
+	void testGetAllSquaresInDirection()
+	{
+		final BoardSquare edgeSquare = A1;
+		
+		L
+		
+		for (final int i = 0; i < 8; i++) {
+			final int j = i;
+			expectedResult.entrySet()
+			.stream()
+			.forEach(pair -> 
+			assertEquals(take(j, pair.getValue()), edgeSquare.getAllSquaresInDirections(pair.getKey(), j), pair.getKey().name())
+			);
+		}
+		
+		expectedResult.entrySet()
+		.stream()
+		.forEach(pair -> 
+		assertEquals(pair.getValue(), edgeSquare.getAllSquaresInDirections(pair.getKey()), pair.getKey().name())
+		);
+		
+		final EnumSet<BoardSquare> expectedCombinedSet = combine(expectedResult.get(Direction.N), expectedResult.get(Direction.E));
+		assertEquals(expectedCombinedSet, EnumSet.copyOf(edgeSquare.getAllSquaresInDirections(Direction.N, Direction.E)));
+		assertEquals(expectedCombinedSet, EnumSet.copyOf(edgeSquare.getAllSquaresInDirections(asList(Direction.N, Direction.E))));
+	}
+	
+	@SafeVarargs
+	private final EnumSet<BoardSquare> combine(final List<BoardSquare>... squares)
+	{
+		return EnumSet.copyOf(Arrays.stream(squares).flatMap(List::stream).collect(toList()));
+	}
+	
+	private List<BoardSquare> take(final int n, final List<BoardSquare> src)
+	{
+		return src.subList(0, Math.min(n, src.size()));
+	}
+	
+	private Map<Direction, List<BoardSquare>> getExpectedValuesForSquareA1()
+	{
+		final ImmutableMap.Builder<Direction, List<BoardSquare>> expectedResultsBuilder = ImmutableMap.builder();
+		
+		return expectedResultsBuilder
+		.put(Direction.N, asList(A2, A3, A4, A5, A6, A7, A8))
+		.put(Direction.E, asList(B1, C1, D1, E1, F1, G1, H1))
+		.put(Direction.S, asList())
+		.put(Direction.W, asList())
+		.put(Direction.NE, asList(B2, C3, D4, E5, F6, G7, H8))
+		.put(Direction.SE, asList())
+		.put(Direction.SW, asList())
+		.put(Direction.NW, asList())
+		.put(Direction.NNE, asList(B3, C5, D7))
+		.put(Direction.NEE, asList(C2, E3, G4))
+		.put(Direction.SEE, asList())
+		.put(Direction.SSE, asList())
+		.put(Direction.SSW, asList())
+		.put(Direction.SWW, asList())
+		.put(Direction.NWW, asList())
+		.put(Direction.NNW, asList())
+		.build();
 	}
 
 	@Test

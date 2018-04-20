@@ -44,7 +44,7 @@ public class BitboardsInitialisationSection1
 		return range(15).stream()
 				.map(i -> i < 8 ? i : 8*(i - 7) + 7)
 				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}
@@ -54,7 +54,7 @@ public class BitboardsInitialisationSection1
 		return range(15).stream()
 				.map(i -> i < 8 ? 7 - i : 8*(i - 7))
 				.mapToObj(BoardSquare::fromIndex)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}

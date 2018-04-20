@@ -83,7 +83,7 @@ class BasicBitboardsTest
 	void testRankBitboard() 
 	{
 		final long[] expectedRanks = Stream.of(A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.E)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.E, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 		
@@ -94,7 +94,7 @@ class BasicBitboardsTest
 	void testFileBitboard() 
 	{
 		final long[] expectedFiles = Stream.of(H1, G1, F1, E1, D1, C1, B1, A1)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.N)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.N, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 		
@@ -105,7 +105,7 @@ class BasicBitboardsTest
 	void testDiagonalBitboard() 
 	{
 		final long[] expectedDiagonals = Stream.of(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 		
@@ -116,7 +116,7 @@ class BasicBitboardsTest
 	void testAntiDiagonalBitboard() 
 	{
 		final long[] expectedAntiDiagonals = Stream.of(A1, B1, C1, D1, E1, F1, G1, H1, H2, H3, H4, H5, H6, H7, H8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW)))
+				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 		
@@ -130,17 +130,17 @@ class BasicBitboardsTest
 				new EmptyBoardMovementTestData(WHITE_PAWN, A2, asList(A3, A4)),
 				new EmptyBoardMovementTestData(WHITE_PAWN, B3, asList(B4)),
 				new EmptyBoardMovementTestData(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardMovementTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP)),
-				new EmptyBoardMovementTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK)),
-				new EmptyBoardMovementTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN)),
+				new EmptyBoardMovementTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				new EmptyBoardMovementTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				new EmptyBoardMovementTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardMovementTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
 				
 				new EmptyBoardMovementTestData(BLACK_PAWN, A2, asList(A1)),
 				new EmptyBoardMovementTestData(BLACK_PAWN, B7, asList(B6, B5)),
 				new EmptyBoardMovementTestData(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardMovementTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP)),
-				new EmptyBoardMovementTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK)),
-				new EmptyBoardMovementTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN)),
+				new EmptyBoardMovementTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				new EmptyBoardMovementTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				new EmptyBoardMovementTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardMovementTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
 				);
 		
@@ -157,18 +157,18 @@ class BasicBitboardsTest
 				new EmptyBoardAttackTestData(WHITE_PAWN, B3, asList(C4, A4)),
 				new EmptyBoardAttackTestData(WHITE_PAWN, H5, asList(G6)),
 				new EmptyBoardAttackTestData(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardAttackTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP)),
-				new EmptyBoardAttackTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK)),
-				new EmptyBoardAttackTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN)),
+				new EmptyBoardAttackTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				new EmptyBoardAttackTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				new EmptyBoardAttackTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardAttackTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
 				
 				new EmptyBoardAttackTestData(BLACK_PAWN, A2, asList(B1)),
 				new EmptyBoardAttackTestData(BLACK_PAWN, B7, asList(C6, A6)),
 				new EmptyBoardAttackTestData(BLACK_PAWN, H4, asList(G3)),
 				new EmptyBoardAttackTestData(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardAttackTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP)),
-				new EmptyBoardAttackTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK)),
-				new EmptyBoardAttackTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN)),
+				new EmptyBoardAttackTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				new EmptyBoardAttackTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				new EmptyBoardAttackTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardAttackTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
 				);
 		

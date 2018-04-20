@@ -56,7 +56,7 @@ public class BitboardsInitialisationSection3
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
 		return bitwiseOr(movementDirections.stream()
-				.map(startSq::getAllSquaresInDirections)
+				.map(direction -> startSq.getAllSquaresInDirections(movementDirections, 8))
 				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
 				.flatMap(List::stream));
 	}

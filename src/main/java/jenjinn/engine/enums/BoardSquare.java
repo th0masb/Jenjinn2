@@ -85,16 +85,6 @@ public enum BoardSquare
 		return getAllSquaresInDirections(asList(direction), maxSquares);
 	}
 	
-	public List<BoardSquare> getAllSquaresInDirections(final Iterable<Direction> directions)
-	{
-		return getAllSquaresInDirections(asList(directions), 8);
-	}
-	
-	public List<BoardSquare> getAllSquaresInDirections(final Direction... directions)
-	{
-		return getAllSquaresInDirections(asList(directions), 8);
-	}
-
 	public RankFileCoordinate asRankFileCoord()
 	{
 		final int index = ordinal();

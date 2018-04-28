@@ -20,6 +20,8 @@ repositories {
 }
 
 dependencies {
+	compile project(':JFlow')
+
     compile group: 'com.google.guava', name: 'guava', version: '23.0'
     compile name: 'JChain-0.1'
     

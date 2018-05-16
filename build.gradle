@@ -23,24 +23,12 @@ dependencies {
 	compile project(':JFlow')
 
     compile group: 'com.google.guava', name: 'guava', version: '23.0'
-    compile name: 'JChain-0.1'
+    //compile name: 'JChain-0.1'
     
      testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "5.1.0"
      testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: "1.1.0"
 }
 
-//test {
-    // Enable JUnit 5 (Gradle 4.6+).
-//    useJUnitPlatform()
-
-    // Always run tests, even when nothing changed.
-//    dependsOn 'cleanTest'
-
-    // Show test results.
-//    testLogging {
-//        events "passed", "skipped", "failed"
-//    }
-//}
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '4.6'

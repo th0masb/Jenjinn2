@@ -1,21 +1,15 @@
-/**
- * Written by Tom Ball 2017.
- *
- * This code is unlicensed but please don't plagiarize.
- */
-
 package jenjinn.engine.enums;
 
-import static io.xyz.chains.utilities.CollectionUtil.asList;
+import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
-
-import com.google.common.collect.ImmutableList;
 
 import jenjinn.engine.misc.RankFileCoordinate;
+import xawd.jflow.Flow;
+import xawd.jflow.construction.Iter;
 
 /**
  * Enumeration of the 64 chess squares on a chess board.
@@ -37,7 +31,7 @@ public enum BoardSquare
 	H7, G7, F7, E7, D7, C7, B7, A7,
 	H8, G8, F8, E8, D8, C8, B8, A8;
 
-	
+
 	public int getNumberOfSquaresLeftInDirection(final Direction direction)
 	{
 		int ans = 0;
@@ -54,7 +48,7 @@ public enum BoardSquare
 		final RankFileCoordinate startSq = this.asRankFileCoord();
 		final int newRank = startSq.rankIndex + direction.rankIndexChange;
 		final int newFile = startSq.fileIndex + direction.fileIndexChange;
-		
+
 		if (0 <= newRank && newRank < 8 && 0 <= newFile && newFile < 8) {
 			return fromRankAndFileIndices(newRank, newFile);
 		}
@@ -65,26 +59,26 @@ public enum BoardSquare
 
 	public List<BoardSquare> getAllSquaresInDirections(final Iterable<Direction> directions, final int maxSquares)
 	{
-		final ImmutableList.Builder<BoardSquare> builder = ImmutableList.builder();
+		final List<BoardSquare> allSquares = new ArrayList<>();
 		for (final Direction direction : directions)
 		{
 			BoardSquare nextSq = getNextSquareInDirection(direction);
 			int lengthCounter = 0;
 			while (nextSq != null && lengthCounter < maxSquares)
 			{
-				builder.add(nextSq);
+				allSquares.add(nextSq);
 				nextSq = nextSq.getNextSquareInDirection(direction);
 				lengthCounter++;
 			}
 		}
-		return builder.build();
+		return allSquares;
 	}
-	
+
 	public List<BoardSquare> getAllSquaresInDirections(final Direction direction, final int maxSquares)
 	{
 		return getAllSquaresInDirections(asList(direction), maxSquares);
 	}
-	
+
 	public RankFileCoordinate asRankFileCoord()
 	{
 		final int index = ordinal();
@@ -95,14 +89,14 @@ public enum BoardSquare
 	{
 		return singleOccupancyBitboard(ordinal());
 	}
-	
-//	public boolean isLightSquare()
-//	{
-//		final RankFileCoordinate asPoint = asRankFileCoord();
-//		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
-//		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
-//	}
-	
+
+	//	public boolean isLightSquare()
+	//	{
+	//		final RankFileCoordinate asPoint = asRankFileCoord();
+	//		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
+	//		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
+	//	}
+
 	public static BoardSquare fromIndex(final int index)
 	{
 		return values()[index];
@@ -112,9 +106,9 @@ public enum BoardSquare
 	{
 		return values()[fileIndex + 8*rankIndex];
 	}
-	
-	public static Stream<BoardSquare> stream()
+
+	public static Flow<BoardSquare> iterate()
 	{
-		return Arrays.stream(values());
+		return Iter.of(Arrays.asList(values()));
 	}
 }

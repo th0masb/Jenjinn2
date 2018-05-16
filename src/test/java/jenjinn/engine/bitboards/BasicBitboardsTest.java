@@ -1,13 +1,9 @@
 /**
- * 
+ *
  */
 package jenjinn.engine.bitboards;
 
-import static io.xyz.chains.utilities.CollectionUtil.asList;
-import static io.xyz.chains.utilities.CollectionUtil.insert;
-import static io.xyz.chains.utilities.RangeUtil.range;
-import static jenjinn.engine.bitboards.Bitboards.antiDiagonalBitboard;
-import static jenjinn.engine.bitboards.Bitboards.diagonalBitboard;
+import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.Bitboards.fileBitboard;
 import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
@@ -59,6 +55,7 @@ import static jenjinn.engine.enums.ChessPiece.WHITE_QUEEN;
 import static jenjinn.engine.enums.ChessPiece.WHITE_ROOK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -66,6 +63,8 @@ import org.junit.jupiter.api.Test;
 
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
+import xawd.jflow.construction.Iter;
+import xawd.jflow.construction.IterRange;
 
 /**
  * @author ThomasB
@@ -74,57 +73,57 @@ import jenjinn.engine.misc.PieceMovementDirections;
 class BasicBitboardsTest
 {
 	@Test
-	void testSingleOccupancyBitboard() 
+	void testSingleOccupancyBitboard()
 	{
-		range(64).stream().forEach(i -> assertEquals(1L << i, singleOccupancyBitboard(i)));
+		IterRange.to(64).forEach(i -> assertEquals(1L << i, singleOccupancyBitboard(i)));
 	}
 
 	@Test
-	void testRankBitboard() 
+	void testRankBitboard()
 	{
-		final long[] expectedRanks = Stream.of(A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.E, 8)))
+		final long[] expectedRanks = Iter.of(A1, A2, A3, A4, A5, A6, A7, A8)
+				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.E, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
-		
-		range(8).stream().forEach(i -> assertEquals(expectedRanks[i], rankBitboard(i)));
+
+		IterRange.to(8).forEach(i -> assertEquals(expectedRanks[i], rankBitboard(i)));
 	}
 
 	@Test
-	void testFileBitboard() 
+	void testFileBitboard()
 	{
-		final long[] expectedFiles = Stream.of(H1, G1, F1, E1, D1, C1, B1, A1)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.N, 8)))
+		final long[] expectedFiles = Iter.of(H1, G1, F1, E1, D1, C1, B1, A1)
+				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.N, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
-		
-		range(8).stream().forEach(i -> assertEquals(expectedFiles[i], fileBitboard(i)));
+
+		IterRange.to(8).forEach(i -> assertEquals(expectedFiles[i], fileBitboard(i)));
 	}
 
 	@Test
-	void testDiagonalBitboard() 
+	void testDiagonalBitboard()
 	{
-		final long[] expectedDiagonals = Stream.of(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NE, 8)))
-				.mapToLong(BitboardUtils::bitwiseOr)
-				.toArray();
-		
-		range(15).stream().forEach(i -> assertEquals(expectedDiagonals[i], diagonalBitboard(i)));
+		final long[] expectedDiagonals = Iter.of(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8)
+				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.NE, 8).insert(square))
+						.mapToLong(BitboardUtils::bitwiseOr)
+						.toArray();
+
+				range(15).stream().forEach(i -> assertEquals(expectedDiagonals[i], diagonalBitboard(i)));
 	}
 
 	@Test
-	void testAntiDiagonalBitboard() 
+	void testAntiDiagonalBitboard()
 	{
 		final long[] expectedAntiDiagonals = Stream.of(A1, B1, C1, D1, E1, F1, G1, H1, H2, H3, H4, H5, H6, H7, H8)
 				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW, 8)))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
-		
+
 		range(15).stream().forEach(i -> assertEquals(expectedAntiDiagonals[i], antiDiagonalBitboard(i)));
 	}
 
 	@Test
-	void testEmptyBoardMovesetBitboard() 
+	void testEmptyBoardMovesetBitboard()
 	{
 		final List<EmptyBoardMovementTestData> testCases = asList(
 				new EmptyBoardMovementTestData(WHITE_PAWN, A2, asList(A3, A4)),
@@ -134,7 +133,7 @@ class BasicBitboardsTest
 				new EmptyBoardMovementTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
 				new EmptyBoardMovementTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardMovementTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
-				
+
 				new EmptyBoardMovementTestData(BLACK_PAWN, A2, asList(A1)),
 				new EmptyBoardMovementTestData(BLACK_PAWN, B7, asList(B6, B5)),
 				new EmptyBoardMovementTestData(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
@@ -143,14 +142,14 @@ class BasicBitboardsTest
 				new EmptyBoardMovementTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardMovementTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
 				);
-		
+
 		testCases
 		.stream()
 		.forEach(testCase -> assertEquals(testCase.getExpectedMoveBitboard(), testCase.getActualMoveBitboard(), testCase.toString()));
 	}
 
 	@Test
-	void testEmptyBoardAttacksetBitboard() 
+	void testEmptyBoardAttacksetBitboard()
 	{
 		final List<EmptyBoardAttackTestData> testCases = asList(
 				new EmptyBoardAttackTestData(WHITE_PAWN, A2, asList(B3)),
@@ -161,7 +160,7 @@ class BasicBitboardsTest
 				new EmptyBoardAttackTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
 				new EmptyBoardAttackTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardAttackTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
-				
+
 				new EmptyBoardAttackTestData(BLACK_PAWN, A2, asList(B1)),
 				new EmptyBoardAttackTestData(BLACK_PAWN, B7, asList(C6, A6)),
 				new EmptyBoardAttackTestData(BLACK_PAWN, H4, asList(G3)),
@@ -171,7 +170,7 @@ class BasicBitboardsTest
 				new EmptyBoardAttackTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
 				new EmptyBoardAttackTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
 				);
-		
+
 		testCases
 		.stream()
 		.forEach(testCase -> assertEquals(testCase.getExpectedMoveBitboard(), testCase.getActualMoveBitboard(), testCase.toString()));

@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
+import xawd.jflow.construction.Iter;
 
 /**
  * @author ThomasB
@@ -20,18 +21,18 @@ public class BitboardsInitialisationSection3
 	public static long[][] generateRookMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
-				Bitboards.ROOK_OCCUPANCY_VARIATIONS, 
-				Bitboards.ROOK_MAGIC_NUMBERS, 
-				Bitboards.ROOK_MAGIC_BITSHIFTS, 
+				Bitboards.ROOK_OCCUPANCY_VARIATIONS,
+				Bitboards.ROOK_MAGIC_NUMBERS,
+				Bitboards.ROOK_MAGIC_BITSHIFTS,
 				PieceMovementDirections.ROOK);
 	}
 
 	public static long[][] generateBishopMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
-				Bitboards.BISHOP_OCCUPANCY_VARIATIONS, 
-				Bitboards.BISHOP_MAGIC_NUMBERS, 
-				Bitboards.BISHOP_MAGIC_BITSHIFTS, 
+				Bitboards.BISHOP_OCCUPANCY_VARIATIONS,
+				Bitboards.BISHOP_MAGIC_NUMBERS,
+				Bitboards.BISHOP_MAGIC_BITSHIFTS,
 				PieceMovementDirections.BISHOP);
 	}
 
@@ -55,12 +56,12 @@ public class BitboardsInitialisationSection3
 
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
-		return bitwiseOr(movementDirections.stream()
+		return bitwiseOr(Iter.of(movementDirections)
 				.map(direction -> startSq.getAllSquaresInDirections(movementDirections, 8))
 				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
-				.flatMap(List::stream));
+				.flatten(Iter::of));
 	}
-	
+
 	static <T> List<T> takeUntil(final Predicate<T> stopCondition, final Iterable<T> xs)
 	{
 		final List<T> taken = new ArrayList<>();

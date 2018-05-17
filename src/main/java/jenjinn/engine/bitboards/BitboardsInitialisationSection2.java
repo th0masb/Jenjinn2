@@ -1,6 +1,7 @@
 package jenjinn.engine.bitboards;
 
 import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.take;
 import static xawd.jflow.utilities.MapUtil.longMap;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.List;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.construction.Iter;
-import xawd.jflow.construction.IterRange;
+import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * Second of three utility classes containing only static methods to initialise
@@ -63,7 +64,7 @@ public class BitboardsInitialisationSection2
 		}
 		else {
 			final long[] ans = new long[(int) Math.pow(2.0, length)];
-			final long[] recursiveAns = findAllPossibleOrCombos(Iter.of(array).take(length - 1).toArray());
+			final long[] recursiveAns = findAllPossibleOrCombos(take(length - 1, array));
 			int ansIndexCounter = 0;
 			int recursiveAnsIndexCounter = 0;
 			for (int j = 0; j < recursiveAns.length; j++) {
@@ -89,11 +90,11 @@ public class BitboardsInitialisationSection2
 
 	public static int[] generateRookMagicBitshifts()
 	{
-		return Iter.of(Bitboards.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.over(Bitboards.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	public static int[] generateBishopMagicBitshifts()
 	{
-		return Iter.of(Bitboards.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.over(Bitboards.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 }

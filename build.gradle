@@ -22,9 +22,8 @@ repositories {
 dependencies {
 	compile project(':JFlow')
 
-    
-     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "5.1.0"
-     testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: "1.1.0"
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "5.1.0"
+    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: "1.1.0"
 }
 
 

@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import jenjinn.engine.misc.RankFileCoordinate;
-import xawd.jflow.Flow;
-import xawd.jflow.construction.Iter;
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * Enumeration of the 64 chess squares on a chess board.
@@ -109,6 +109,6 @@ public enum BoardSquare
 
 	public static Flow<BoardSquare> iterate()
 	{
-		return Iter.of(Arrays.asList(values()));
+		return Iterate.over(Arrays.asList(values()));
 	}
 }

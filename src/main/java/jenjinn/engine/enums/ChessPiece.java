@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import xawd.jflow.construction.Iter;
+import xawd.jflow.iterators.construction.Iterate;
 
 
 /**
@@ -42,8 +42,8 @@ public enum ChessPiece
 	}
 
 	private static final List<ChessPiece> ALL_PIECES = Collections.unmodifiableList(Arrays.asList(values()));
-	private static final List<ChessPiece> WHITE_PIECES = Iter.of(ALL_PIECES).take(6).toImmutableList();
-	private static final List<ChessPiece> BLACK_PIECES = Iter.of(ALL_PIECES).skip(6).toImmutableList();
+	private static final List<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toImmutableList();
+	private static final List<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).skip(6).toImmutableList();
 
 	public static List<ChessPiece> allPieces()
 	{

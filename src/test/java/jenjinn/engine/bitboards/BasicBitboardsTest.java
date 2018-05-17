@@ -4,6 +4,8 @@
 package jenjinn.engine.bitboards;
 
 import static java.util.Arrays.asList;
+import static jenjinn.engine.bitboards.Bitboards.antiDiagonalBitboard;
+import static jenjinn.engine.bitboards.Bitboards.diagonalBitboard;
 import static jenjinn.engine.bitboards.Bitboards.fileBitboard;
 import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
@@ -55,16 +57,14 @@ import static jenjinn.engine.enums.ChessPiece.WHITE_QUEEN;
 import static jenjinn.engine.enums.ChessPiece.WHITE_ROOK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.construction.Iter;
-import xawd.jflow.construction.IterRange;
+import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -81,8 +81,8 @@ class BasicBitboardsTest
 	@Test
 	void testRankBitboard()
 	{
-		final long[] expectedRanks = Iter.of(A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.E, 8)).insert(square))
+		final long[] expectedRanks = Iterate.over(A1, A2, A3, A4, A5, A6, A7, A8)
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.E, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 
@@ -92,8 +92,8 @@ class BasicBitboardsTest
 	@Test
 	void testFileBitboard()
 	{
-		final long[] expectedFiles = Iter.of(H1, G1, F1, E1, D1, C1, B1, A1)
-				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.N, 8)).insert(square))
+		final long[] expectedFiles = Iterate.over(H1, G1, F1, E1, D1, C1, B1, A1)
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.N, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 
@@ -103,23 +103,23 @@ class BasicBitboardsTest
 	@Test
 	void testDiagonalBitboard()
 	{
-		final long[] expectedDiagonals = Iter.of(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8)
-				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.NE, 8).insert(square))
-						.mapToLong(BitboardUtils::bitwiseOr)
-						.toArray();
+		final long[] expectedDiagonals = Iterate.over(asList(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8))
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.NE, 8)).insert(square))
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.toArray();
 
-				range(15).stream().forEach(i -> assertEquals(expectedDiagonals[i], diagonalBitboard(i)));
+		IterRange.to(15).forEach(i -> assertEquals(expectedDiagonals[i], diagonalBitboard(i)));
 	}
 
 	@Test
 	void testAntiDiagonalBitboard()
 	{
-		final long[] expectedAntiDiagonals = Stream.of(A1, B1, C1, D1, E1, F1, G1, H1, H2, H3, H4, H5, H6, H7, H8)
-				.map(square -> insert(square, square.getAllSquaresInDirections(Direction.NW, 8)))
+		final long[] expectedDiagonals = Iterate.over(asList(A1, B1, C1, D1, E1, F1, G1, H1, H2, H3, H4, H5, H6, H7, H8))
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.NW, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 
-		range(15).stream().forEach(i -> assertEquals(expectedAntiDiagonals[i], antiDiagonalBitboard(i)));
+		IterRange.to(15).forEach(i -> assertEquals(expectedDiagonals[i], antiDiagonalBitboard(i)));
 	}
 
 	@Test

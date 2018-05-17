@@ -8,8 +8,8 @@ import java.util.List;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.construction.Iter;
-import xawd.jflow.construction.IterRange;
+import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author Tom
@@ -43,7 +43,7 @@ public class BitboardsInitialisationSection1
 		return IterRange.to(15)
 				.map(i -> i < 8 ? i : 8*(i - 7) + 7)
 				.mapToObject(BoardSquare::fromIndex)
-				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.NE, 8)).insert(square))
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.NE, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}
@@ -53,7 +53,7 @@ public class BitboardsInitialisationSection1
 		return IterRange.to(15)
 				.map(i -> i < 8 ? 7 - i : 8*(i - 7))
 				.mapToObject(BoardSquare::fromIndex)
-				.map(square -> Iter.of(square.getAllSquaresInDirections(Direction.NW, 8)).insert(square))
+				.map(square -> Iterate.over(square.getAllSquaresInDirections(Direction.NW, 8)).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();
 	}

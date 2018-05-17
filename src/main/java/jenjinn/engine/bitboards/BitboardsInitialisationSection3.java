@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.construction.Iter;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -43,23 +43,23 @@ public class BitboardsInitialisationSection3
 			final long[] singleSquareOccupancyVariations = occupancyVariations[i];
 			final long magicNumber = magicNumbers[i];
 			final int bitShift = magicBitshifts[i];
-			final long[] singleSquareMmDatabase = new long[singleSquareOccupancyVariations.length];
+			final long[] singleSquareMagicMoveDatabase = new long[singleSquareOccupancyVariations.length];
 
 			for (final long occVar : singleSquareOccupancyVariations) {
 				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
-				singleSquareMmDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
+				singleSquareMagicMoveDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
 			}
-			mmDatabase[i] = singleSquareMmDatabase;
+			mmDatabase[i] = singleSquareMagicMoveDatabase;
 		}
 		return mmDatabase;
 	}
 
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
-		return bitwiseOr(Iter.of(movementDirections)
+		return bitwiseOr(Iterate.over(movementDirections)
 				.map(direction -> startSq.getAllSquaresInDirections(movementDirections, 8))
 				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
-				.flatten(Iter::of));
+				.flatten(Iterate::over));
 	}
 
 	static <T> List<T> takeUntil(final Predicate<T> stopCondition, final Iterable<T> xs)

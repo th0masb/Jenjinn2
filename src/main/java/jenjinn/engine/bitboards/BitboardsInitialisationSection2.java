@@ -1,11 +1,11 @@
 package jenjinn.engine.bitboards;
 
+import static java.util.Arrays.asList;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
 import static xawd.jflow.utilities.MapUtil.longMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -46,7 +46,7 @@ public class BitboardsInitialisationSection2
 		final List<BoardSquare> relevantSquares = new ArrayList<>();
 		for (final Direction dir : movementDirections) {
 			final int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
-			relevantSquares.addAll(startSq.getAllSquaresInDirections(Arrays.asList(dir), numOfSqsLeft - 1));
+			relevantSquares.addAll(startSq.getAllSquaresInDirections(asList(dir), numOfSqsLeft - 1));
 		}
 		return findAllPossibleOrCombos(longMap(BoardSquare::asBitboard, relevantSquares));
 	}

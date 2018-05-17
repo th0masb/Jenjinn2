@@ -38,7 +38,7 @@ public class BitboardsInitialisationSection3
 
 	private static long[][] generateMagicMoveDatabase(final long[][] occupancyVariations, final long[] magicNumbers, final int[] magicBitshifts, final List<Direction> movementDirections)
 	{
-		final long[][] mmDatabase = new long[64][];
+		final long[][] magicMoveDatabase = new long[64][];
 		for (byte i = 0; i < 64; i++) {
 			final long[] singleSquareOccupancyVariations = occupancyVariations[i];
 			final long magicNumber = magicNumbers[i];
@@ -49,9 +49,9 @@ public class BitboardsInitialisationSection3
 				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
 				singleSquareMagicMoveDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
 			}
-			mmDatabase[i] = singleSquareMagicMoveDatabase;
+			magicMoveDatabase[i] = singleSquareMagicMoveDatabase;
 		}
-		return mmDatabase;
+		return magicMoveDatabase;
 	}
 
 	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)

@@ -3,7 +3,8 @@
  */
 package jenjinn.engine;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public final class ChessPieces
 {
 	private ChessPieces() {}
 
-	private static final List<ChessPiece> ALL_PIECES = Collections.unmodifiableList(Arrays.asList(ChessPiece.values()));
+	private static final List<ChessPiece> ALL_PIECES = Collections.unmodifiableList(asList(ChessPiece.values()));
 	private static final List<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toImmutableList();
 	private static final List<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).skip(6).toImmutableList();
 

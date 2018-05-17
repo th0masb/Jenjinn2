@@ -31,7 +31,6 @@ public enum BoardSquare
 	H7, G7, F7, E7, D7, C7, B7, A7,
 	H8, G8, F8, E8, D8, C8, B8, A8;
 
-
 	public int getNumberOfSquaresLeftInDirection(final Direction direction)
 	{
 		int ans = 0;

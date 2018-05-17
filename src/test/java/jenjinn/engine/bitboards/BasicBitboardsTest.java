@@ -58,9 +58,15 @@ import static jenjinn.engine.enums.ChessPiece.WHITE_ROOK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
 import xawd.jflow.iterators.construction.IterRange;
@@ -122,57 +128,61 @@ class BasicBitboardsTest
 		IterRange.to(15).forEach(i -> assertEquals(expectedDiagonals[i], antiDiagonalBitboard(i)));
 	}
 
-	@Test
-	void testEmptyBoardMovesetBitboard()
+	@ParameterizedTest
+	@MethodSource
+	void testEmptyBoardMovesetBitboard(final ChessPiece piece, final BoardSquare location, final List<BoardSquare> expectedMoveLocations)
 	{
-		final List<EmptyBoardMovementTestData> testCases = asList(
-				new EmptyBoardMovementTestData(WHITE_PAWN, A2, asList(A3, A4)),
-				new EmptyBoardMovementTestData(WHITE_PAWN, B3, asList(B4)),
-				new EmptyBoardMovementTestData(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardMovementTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
-				new EmptyBoardMovementTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
-				new EmptyBoardMovementTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
-				new EmptyBoardMovementTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
-
-				new EmptyBoardMovementTestData(BLACK_PAWN, A2, asList(A1)),
-				new EmptyBoardMovementTestData(BLACK_PAWN, B7, asList(B6, B5)),
-				new EmptyBoardMovementTestData(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardMovementTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
-				new EmptyBoardMovementTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
-				new EmptyBoardMovementTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
-				new EmptyBoardMovementTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
-				);
-
-		testCases
-		.stream()
-		.forEach(testCase -> assertEquals(testCase.getExpectedMoveBitboard(), testCase.getActualMoveBitboard(), testCase.toString()));
+		assertEquals(BitboardUtils.bitwiseOr(expectedMoveLocations), Bitboards.emptyBoardMoveset(piece, location));
 	}
 
-	@Test
-	void testEmptyBoardAttacksetBitboard()
+	static Stream<Arguments> testEmptyBoardMovesetBitboard()
 	{
-		final List<EmptyBoardAttackTestData> testCases = asList(
-				new EmptyBoardAttackTestData(WHITE_PAWN, A2, asList(B3)),
-				new EmptyBoardAttackTestData(WHITE_PAWN, B3, asList(C4, A4)),
-				new EmptyBoardAttackTestData(WHITE_PAWN, H5, asList(G6)),
-				new EmptyBoardAttackTestData(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardAttackTestData(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
-				new EmptyBoardAttackTestData(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
-				new EmptyBoardAttackTestData(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
-				new EmptyBoardAttackTestData(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
+		return Stream.of(
+				Arguments.of(WHITE_PAWN, A2, asList(A3, A4)),
+				Arguments.of(WHITE_PAWN, B3, asList(B4)),
+				Arguments.of(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
+				Arguments.of(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				Arguments.of(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				Arguments.of(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
+				Arguments.of(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
 
-				new EmptyBoardAttackTestData(BLACK_PAWN, A2, asList(B1)),
-				new EmptyBoardAttackTestData(BLACK_PAWN, B7, asList(C6, A6)),
-				new EmptyBoardAttackTestData(BLACK_PAWN, H4, asList(G3)),
-				new EmptyBoardAttackTestData(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
-				new EmptyBoardAttackTestData(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
-				new EmptyBoardAttackTestData(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
-				new EmptyBoardAttackTestData(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
-				new EmptyBoardAttackTestData(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
+				Arguments.of(BLACK_PAWN, A2, asList(A1)),
+				Arguments.of(BLACK_PAWN, B7, asList(B6, B5)),
+				Arguments.of(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
+				Arguments.of(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				Arguments.of(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				Arguments.of(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
+				Arguments.of(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
 				);
+	}
 
-		testCases
-		.stream()
-		.forEach(testCase -> assertEquals(testCase.getExpectedMoveBitboard(), testCase.getActualMoveBitboard(), testCase.toString()));
+	@ParameterizedTest
+	@MethodSource
+	void testEmptyBoardAttacksetBitboard(final ChessPiece piece, final BoardSquare location, final List<BoardSquare> expectedMoveLocations)
+	{
+		assertEquals(BitboardUtils.bitwiseOr(expectedMoveLocations), Bitboards.emptyBoardAttackset(piece, location));
+	}
+
+	static Stream<Arguments> testEmptyBoardAttacksetBitboard()
+	{
+		return Stream.of(
+				Arguments.of(WHITE_PAWN, A2, asList(B3)),
+				Arguments.of(WHITE_PAWN, B3, asList(C4, A4)),
+				Arguments.of(WHITE_PAWN, H5, asList(G6)),
+				Arguments.of(WHITE_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
+				Arguments.of(WHITE_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				Arguments.of(WHITE_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				Arguments.of(WHITE_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
+				Arguments.of(WHITE_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1)),
+
+				Arguments.of(BLACK_PAWN, A2, asList(B1)),
+				Arguments.of(BLACK_PAWN, B7, asList(C6, A6)),
+				Arguments.of(BLACK_PAWN, H4, asList(G3)),
+				Arguments.of(BLACK_KNIGHT, C5, C5.getAllSquaresInDirections(PieceMovementDirections.KNIGHT, 1)),
+				Arguments.of(BLACK_BISHOP, F3, F3.getAllSquaresInDirections(PieceMovementDirections.BISHOP, 8)),
+				Arguments.of(BLACK_ROOK, B3, B3.getAllSquaresInDirections(PieceMovementDirections.ROOK, 8)),
+				Arguments.of(BLACK_QUEEN, H2, H2.getAllSquaresInDirections(PieceMovementDirections.QUEEN, 8)),
+				Arguments.of(BLACK_KING, E2, E2.getAllSquaresInDirections(PieceMovementDirections.KING, 1))
+				);
 	}
 }

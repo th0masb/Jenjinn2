@@ -1,6 +1,6 @@
 package jenjinn.engine.bitboards;
 
-import static jenjinn.engine.bitboards.Bitboards.emptyBoardMovesetBitboard;
+import static jenjinn.engine.bitboards.Bitboards.emptyBoardMoveset;
 
 import java.util.List;
 
@@ -21,6 +21,6 @@ public class EmptyBoardMovementTestData extends AbstractPieceMovementTestData
 	@Override
 	public long getActualMoveBitboard() 
 	{
-		return emptyBoardMovesetBitboard(getPiece(), getLocation());
+		return emptyBoardMoveset(getPiece(), getLocation());
 	}
 }

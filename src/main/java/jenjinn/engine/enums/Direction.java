@@ -1,12 +1,14 @@
 package jenjinn.engine.enums;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
+
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * Enum representing all the different directions
  * the various chesspieces can move on the board.
- * 
+ *
  * @author t
  */
 public enum Direction
@@ -24,9 +26,9 @@ public enum Direction
 		this.rankIndexChange = rankIndexChange;
 		this.fileIndexChange = fileIndexChange;
 	}
-	
-	public static Stream<Direction> stream()
+
+	public static Flow<Direction> iterateAll()
 	{
-		return Arrays.stream(values());
+		return Iterate.over(Arrays.asList(values()));
 	}
 }

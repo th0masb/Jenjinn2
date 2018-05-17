@@ -27,7 +27,7 @@ public class BitboardsInitialisationSection2
 {
 	public static long[][] generateAllBishopOccupancyVariations()
 	{
-		return BoardSquare.iterate()
+		return BoardSquare.iterateAll()
 				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.BISHOP))
 				.toList()
 				.toArray(new long[64][]);
@@ -35,7 +35,7 @@ public class BitboardsInitialisationSection2
 
 	public static long[][] generateAllRookOccupancyVariations()
 	{
-		return BoardSquare.iterate()
+		return BoardSquare.iterateAll()
 				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.ROOK))
 				.toList()
 				.toArray(new long[64][]);
@@ -80,21 +80,21 @@ public class BitboardsInitialisationSection2
 
 	public static long[] generateRookOccupancyMasks()
 	{
-		return IterRange.to(64).mapToLong(i -> tail(Bitboards.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
+		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
 	public static long[] generateBishopOccupancyMasks()
 	{
-		return IterRange.to(64).mapToLong(i -> tail(Bitboards.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
+		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
 	public static int[] generateRookMagicBitshifts()
 	{
-		return Iterate.over(Bitboards.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.over(BitboardsImpl.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	public static int[] generateBishopMagicBitshifts()
 	{
-		return Iterate.over(Bitboards.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.over(BitboardsImpl.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 }

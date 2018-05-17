@@ -107,7 +107,7 @@ public enum BoardSquare
 		return values()[fileIndex + 8*rankIndex];
 	}
 
-	public static Flow<BoardSquare> iterate()
+	public static Flow<BoardSquare> iterateAll()
 	{
 		return Iterate.over(Arrays.asList(values()));
 	}

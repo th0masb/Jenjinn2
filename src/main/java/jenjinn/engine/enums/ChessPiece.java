@@ -4,32 +4,319 @@
 package jenjinn.engine.enums;
 
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import xawd.jflow.iterators.construction.Iterate;
+import jenjinn.engine.Moveable;
+import jenjinn.engine.bitboards.Bitboards;
 
 
 /**
  * @author ThomasB
  */
-public enum ChessPiece
+public enum ChessPiece implements Moveable
 {
 	// DON'T CHANGE ORDER
-	WHITE_PAWN,
-	WHITE_KNIGHT,
-	WHITE_BISHOP,
-	WHITE_ROOK,
-	WHITE_QUEEN,
-	WHITE_KING,
+	WHITE_PAWN
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int locationIndex = currentLocation.ordinal();
+			assert 7 < locationIndex && locationIndex < 56;
 
-	BLACK_PAWN,
-	BLACK_KNIGHT,
-	BLACK_BISHOP,
-	BLACK_ROOK,
-	BLACK_QUEEN,
-	BLACK_KING;
+			final long emptySquares = ~(whitePieces | blackPieces);
+			long push = (1L << (locationIndex + 8)) & emptySquares;
+
+			if (locationIndex < 16 && push != 0) {
+				push |= (1L << (locationIndex + 16)) & emptySquares;
+			}
+
+			return push | getAttacks(currentLocation, whitePieces, blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardAttackset(WHITE_PAWN, currentLocation);
+		}
+	},
+
+	WHITE_KNIGHT
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardMoveset(WHITE_KNIGHT, currentLocation);
+		}
+	},
+
+	WHITE_BISHOP
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int magicIndex = getMagicMoveIndex(
+					whitePieces | blackPieces,
+					Bitboards.bishopOccupancyMaskAt(currentLocation),
+					Bitboards.bishopMagicNumberAt(currentLocation),
+					Bitboards.bishopMagicBitshiftAt(currentLocation)
+					);
+
+			return Bitboards.bishopMagicMove(currentLocation, magicIndex);
+		}
+	},
+
+	WHITE_ROOK
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int magicIndex = getMagicMoveIndex(
+					whitePieces | blackPieces,
+					Bitboards.rookOccupancyMaskAt(currentLocation),
+					Bitboards.rookMagicNumberAt(currentLocation),
+					Bitboards.rookMagicBitshiftAt(currentLocation)
+					);
+
+			return Bitboards.rookMagicMove(currentLocation, magicIndex) & (~whitePieces);
+		}
+	},
+
+	WHITE_QUEEN
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return WHITE_BISHOP.getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					| WHITE_ROOK.getSquaresOfControl(currentLocation, whitePieces, blackPieces);
+		}
+	},
+
+	WHITE_KING
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardMoveset(WHITE_KING, currentLocation);
+		}
+	},
+
+
+
+	BLACK_PAWN
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int locationIndex = currentLocation.ordinal();
+			assert 7 < locationIndex && locationIndex < 56;
+
+			final long emptySquares = ~(whitePieces | blackPieces);
+			long push = (1L << (locationIndex - 8)) & emptySquares;
+
+			if (locationIndex > 55 && push != 0) {
+				push |= (1L << (locationIndex - 16)) & emptySquares;
+			}
+
+			return push | getAttacks(currentLocation, whitePieces, blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardAttackset(BLACK_PAWN, currentLocation);
+		}
+	},
+
+	BLACK_KNIGHT
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardMoveset(BLACK_KNIGHT, currentLocation);
+		}
+	},
+
+	BLACK_BISHOP
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int magicIndex = getMagicMoveIndex(
+					whitePieces | blackPieces,
+					Bitboards.bishopOccupancyMaskAt(currentLocation),
+					Bitboards.bishopMagicNumberAt(currentLocation),
+					Bitboards.bishopMagicBitshiftAt(currentLocation)
+					);
+
+			return Bitboards.bishopMagicMove(currentLocation, magicIndex);
+		}
+	},
+
+	BLACK_ROOK
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			final int magicIndex = getMagicMoveIndex(
+					whitePieces | blackPieces,
+					Bitboards.rookOccupancyMaskAt(currentLocation),
+					Bitboards.rookMagicNumberAt(currentLocation),
+					Bitboards.rookMagicBitshiftAt(currentLocation)
+					);
+
+			return Bitboards.rookMagicMove(currentLocation, magicIndex);
+		}
+	},
+
+	BLACK_QUEEN
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return BLACK_BISHOP.getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					| BLACK_ROOK.getSquaresOfControl(currentLocation, whitePieces, blackPieces);
+		}
+	},
+
+	BLACK_KING
+	{
+		@Override
+		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+		}
+
+		@Override
+		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+		}
+
+		@Override
+		public long getSquaresOfControl(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
+		{
+			return Bitboards.emptyBoardMoveset(BLACK_KING, currentLocation);
+		}
+	};
 
 	public boolean isPawn()
 	{
@@ -41,27 +328,8 @@ public enum ChessPiece
 		return ordinal() < 6;
 	}
 
-	private static final List<ChessPiece> ALL_PIECES = Collections.unmodifiableList(Arrays.asList(values()));
-	private static final List<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toImmutableList();
-	private static final List<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).skip(6).toImmutableList();
-
-	public static List<ChessPiece> allPieces()
+	private static int getMagicMoveIndex(final long allPieces, final long occupancyMask, final long magicNumber, final int magicBitshift)
 	{
-		return ALL_PIECES;
-	}
-
-	public static List<ChessPiece> whitePieces()
-	{
-		return WHITE_PIECES;
-	}
-
-	public static List<ChessPiece> blackPieces()
-	{
-		return BLACK_PIECES;
-	}
-
-	public static ChessPiece fromIndex(final int index)
-	{
-		return values()[index];
+		return (int) (((occupancyMask & allPieces) * magicNumber) >>> magicBitshift);
 	}
 }

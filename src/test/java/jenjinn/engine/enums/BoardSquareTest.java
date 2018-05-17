@@ -4,7 +4,6 @@
 package jenjinn.engine.enums;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.partitioningBy;
 import static jenjinn.engine.enums.BoardSquare.A1;
 import static jenjinn.engine.enums.BoardSquare.A2;
 import static jenjinn.engine.enums.BoardSquare.A3;
@@ -68,20 +67,20 @@ import org.junit.jupiter.api.Test;
 
 import jenjinn.engine.misc.RankFileCoordinate;
 import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.misc.PredicatePartition;
 
 /**
  * @author t
  */
-public class BoardSquareTest
+class BoardSquareTest
 {
 	@Test
 	void testGetNumberOfSquaresLeftInDirection()
 	{
 		final BoardSquare a1 = BoardSquare.A1;
-		final Map<Boolean, List<Direction>> collect = Direction.stream()
-				.collect(partitioningBy(dir -> dir.name().matches(".*[SsWw].*")));
-		collect.get(true).stream().forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
-		collect.get(false).stream().forEach(dir -> assertTrue(a1.getNumberOfSquaresLeftInDirection(dir) > 0));
+		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
+		partitioned.iterateAccepted().forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
+		partitioned.iterateRejected().forEach(dir -> assertTrue(a1.getNumberOfSquaresLeftInDirection(dir) > 0));
 
 		final BoardSquare d4 = BoardSquare.D4;
 		assertEquals(4, d4.getNumberOfSquaresLeftInDirection(Direction.N));
@@ -96,10 +95,9 @@ public class BoardSquareTest
 	void testGetNextSquareInDirection()
 	{
 		final BoardSquare a1 = BoardSquare.A1;
-		final Map<Boolean, List<Direction>> collect = Direction.stream()
-				.collect(partitioningBy(dir -> dir.name().matches(".*[SsWw].*")));
-		collect.get(true).stream().forEach(dir -> assertNull(a1.getNextSquareInDirection(dir)));
-		collect.get(false).stream().forEach(dir -> assertNotNull(a1.getNextSquareInDirection(dir)));
+		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
+		partitioned.iterateAccepted().forEach(dir -> assertNull(a1.getNextSquareInDirection(dir)));
+		partitioned.iterateRejected().forEach(dir -> assertNotNull(a1.getNextSquareInDirection(dir)));
 
 		final BoardSquare d4 = BoardSquare.D4;
 		assertEquals(BoardSquare.D5, d4.getNextSquareInDirection(Direction.N));
@@ -122,7 +120,7 @@ public class BoardSquareTest
 			for (int i = 0; i < 9; i++) {
 				// Test that we get every direction individually correct
 				final int j = i;
-				Direction.stream()
+				Direction.iterateAll()
 				.forEach(dir ->
 				assertEquals(testCase.getActualSquaresUniDirection(dir, j), testCase.getExpectedSquaresUniDirection(dir, j)));
 
@@ -186,6 +184,7 @@ public class BoardSquareTest
 		assertEquals(new RankFileCoordinate(7, 2), BoardSquare.F8.asRankFileCoord());
 		assertEquals(new RankFileCoordinate(1, 4), BoardSquare.D2.asRankFileCoord());
 		assertEquals(new RankFileCoordinate(6, 6), BoardSquare.B7.asRankFileCoord());
+		assertEquals(new RankFileCoordinate(7, 7), BoardSquare.A8.asRankFileCoord());
 	}
 
 	@Test

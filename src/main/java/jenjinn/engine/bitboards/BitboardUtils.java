@@ -5,7 +5,6 @@ package jenjinn.engine.bitboards;
 
 import static java.lang.Long.bitCount;
 
-import java.util.Arrays;
 import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -27,12 +26,20 @@ public final class BitboardUtils
 
 	public static long bitwiseOr(final long... args)
 	{
-		return bitwiseOr(Iterate.over(args));
+		long result = 0L;
+		for (final long arg : args) {
+			result |= arg;
+		}
+		return result;
 	}
 
 	public static long bitwiseOr(final BoardSquare... args)
 	{
-		return bitwiseOr(Arrays.asList(args));
+		long result = 0L;
+		for (final BoardSquare arg : args) {
+			result |= arg.asBitboard();
+		}
+		return result;
 	}
 
 	public static long bitwiseOr(final List<BoardSquare> args)
@@ -60,19 +67,18 @@ public final class BitboardUtils
 		return args.reduce(0L, (a, b) -> a ^ b);
 	}
 
-	public static int[] getSetBitIndices(long bitboard)
+	public static int[] getSetBitIndices(final long bitboard)
 	{
 		final int cardinality = bitCount(bitboard);
 		final int[] setBits = new int[cardinality];
-		int arrCounter = 0, loopCounter = 0;
 
-		while (bitboard != 0) {
-			if ((1 & bitboard) != 0) {
-				setBits[arrCounter++] = loopCounter;
+		byte arrCount = 0;
+		for (byte i = 0; i < 64 && arrCount < cardinality; i++) {
+			if (bitboardsIntersect(1L << i, bitboard)) {
+				setBits[arrCount++] = i;
 			}
-			loopCounter++;
-			bitboard >>>= 1;
 		}
+
 		return setBits;
 	}
 }

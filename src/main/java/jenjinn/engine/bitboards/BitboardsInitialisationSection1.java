@@ -100,7 +100,7 @@ public class BitboardsInitialisationSection1
 
 	private static long[] generateEmptyBoardBitboards(final List<Direction> moveDirections, final int lengthCap)
 	{
-		return BoardSquare.iterate()
+		return BoardSquare.iterateAll()
 				.map(square -> square.getAllSquaresInDirections(moveDirections, lengthCap))
 				.mapToLong(BitboardUtils::bitwiseOr)
 				.toArray();

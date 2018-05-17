@@ -21,18 +21,18 @@ public class BitboardsInitialisationSection3
 	public static long[][] generateRookMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
-				Bitboards.ROOK_OCCUPANCY_VARIATIONS,
-				Bitboards.ROOK_MAGIC_NUMBERS,
-				Bitboards.ROOK_MAGIC_BITSHIFTS,
+				BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS,
+				BitboardsImpl.ROOK_MAGIC_NUMBERS,
+				BitboardsImpl.ROOK_MAGIC_BITSHIFTS,
 				PieceMovementDirections.ROOK);
 	}
 
 	public static long[][] generateBishopMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
-				Bitboards.BISHOP_OCCUPANCY_VARIATIONS,
-				Bitboards.BISHOP_MAGIC_NUMBERS,
-				Bitboards.BISHOP_MAGIC_BITSHIFTS,
+				BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS,
+				BitboardsImpl.BISHOP_MAGIC_NUMBERS,
+				BitboardsImpl.BISHOP_MAGIC_BITSHIFTS,
 				PieceMovementDirections.BISHOP);
 	}
 

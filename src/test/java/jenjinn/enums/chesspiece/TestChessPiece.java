@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.enums.chesspiece;
 
 import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jenjinn.engine.Moveable;
+import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.Direction;
 import xawd.jflow.iterators.construction.Iterate;
 
 /**

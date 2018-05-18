@@ -76,7 +76,7 @@ import xawd.jflow.iterators.construction.Iterate;
  * @author ThomasB
  *
  */
-class BasicBitboardsTest
+class BitboardsInitialisationSection1Test
 {
 	@Test
 	void testSingleOccupancyBitboard()

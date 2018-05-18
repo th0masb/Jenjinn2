@@ -1,7 +1,6 @@
 package jenjinn.engine.enums;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +85,7 @@ public enum BoardSquare
 
 	public long asBitboard()
 	{
-		return singleOccupancyBitboard(ordinal());
+		return 1L << ordinal();
 	}
 
 	//	public boolean isLightSquare()

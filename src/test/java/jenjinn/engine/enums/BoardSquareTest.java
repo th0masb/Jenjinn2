@@ -58,15 +58,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static xawd.jflow.utilities.CollectionUtil.head;
+import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.take;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.misc.RankFileCoordinate;
 import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 import xawd.jflow.iterators.misc.PredicatePartition;
 
 /**
@@ -108,30 +118,33 @@ class BoardSquareTest
 		assertEquals(BoardSquare.C2, d4.getNextSquareInDirection(Direction.SSW));
 	}
 
-	@Test
-	void testGetAllSquaresInDirection()
+	@ParameterizedTest
+	@MethodSource
+	void testGetAllSquaresInDirection(final BoardSquare startSquare, final Map<Direction, List<BoardSquare>> expectedSquaresInEachDirection)
 	{
-		final List<BoardSquareDirectionTestData> testCases = asList(
-				getTestCaseForEdgeSquare(),
-				getTestCaseForCentreSquare());
+		for (int i = 0; i < 9; i++) {
+			// Test that we get every direction individually correct
+			final int j = i;
+			Direction.iterateAll().forEach(dir ->
+			assertEquals(take(j, expectedSquaresInEachDirection.get(dir)), startSquare.getAllSquaresInDirections(dir, j)));
 
-		for (final BoardSquareDirectionTestData testCase : testCases)
-		{
-			for (int i = 0; i < 9; i++) {
-				// Test that we get every direction individually correct
-				final int j = i;
-				Direction.iterateAll()
-				.forEach(dir ->
-				assertEquals(testCase.getActualSquaresUniDirection(dir, j), testCase.getExpectedSquaresUniDirection(dir, j)));
+			// Test that combining two directions works
+			for (final List<Direction> pair : asList(asList(Direction.N, Direction.E), asList(Direction.S, Direction.SE)))
+			{
+				final Set<BoardSquare> expected = Iterate.over(expectedSquaresInEachDirection.get(head(pair))).take(j).toCollection(HashSet::new);
+				expected.addAll(take(j, expectedSquaresInEachDirection.get(tail(pair))));
 
-				// Test that combining two directions works
-				final Direction dir1 = Direction.N, dir2 = Direction.E;
-				assertEquals(testCase.getActualSquaresBiDirection(dir1, dir2, j), testCase.getExpectedSquaresBiDirection(dir1, dir2, j));
+				assertEquals(expected, new HashSet<>(startSquare.getAllSquaresInDirections(pair, j)));
 			}
 		}
 	}
 
-	private BoardSquareDirectionTestData getTestCaseForEdgeSquare()
+	static Stream<Arguments> testGetAllSquaresInDirection()
+	{
+		return Stream.of(getTestCaseForEdgeSquare(), getTestCaseForCentreSquare());
+	}
+
+	private static Arguments getTestCaseForEdgeSquare()
 	{
 		final Map<Direction, List<BoardSquare>> expectedResults = new HashMap<>();
 		expectedResults.put(Direction.N, asList(A2, A3, A4, A5, A6, A7, A8));
@@ -151,10 +164,10 @@ class BoardSquareTest
 		expectedResults.put(Direction.NWW, asList());
 		expectedResults.put(Direction.NNW, asList());
 
-		return new BoardSquareDirectionTestData(A1, expectedResults);
+		return Arguments.of(A1, expectedResults);
 	}
 
-	private BoardSquareDirectionTestData getTestCaseForCentreSquare()
+	private static Arguments getTestCaseForCentreSquare()
 	{
 		final Map<Direction, List<BoardSquare>> expectedResults = new HashMap<>();
 		expectedResults.put(Direction.N, asList(E6, E7, E8));
@@ -174,7 +187,7 @@ class BoardSquareTest
 		expectedResults.put(Direction.NWW, asList(C6, A7));
 		expectedResults.put(Direction.NNW, asList(D7));
 
-		return new BoardSquareDirectionTestData(E5, expectedResults);
+		return Arguments.of(E5, expectedResults);
 	}
 
 	@Test

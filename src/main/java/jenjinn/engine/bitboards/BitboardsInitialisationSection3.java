@@ -16,9 +16,9 @@ import xawd.jflow.iterators.construction.Iterate;
  * @author ThomasB
  * @date 18/04/18
  */
-public class BitboardsInitialisationSection3
+final class BitboardsInitialisationSection3
 {
-	public static long[][] generateRookMagicMoveDatabase()
+	static long[][] generateRookMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
 				BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS,
@@ -27,7 +27,7 @@ public class BitboardsInitialisationSection3
 				PieceMovementDirections.ROOK);
 	}
 
-	public static long[][] generateBishopMagicMoveDatabase()
+	static long[][] generateBishopMagicMoveDatabase()
 	{
 		return generateMagicMoveDatabase(
 				BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS,
@@ -36,7 +36,7 @@ public class BitboardsInitialisationSection3
 				PieceMovementDirections.BISHOP);
 	}
 
-	private static long[][] generateMagicMoveDatabase(final long[][] occupancyVariations, final long[] magicNumbers, final int[] magicBitshifts, final List<Direction> movementDirections)
+	static long[][] generateMagicMoveDatabase(final long[][] occupancyVariations, final long[] magicNumbers, final int[] magicBitshifts, final List<Direction> movementDirections)
 	{
 		final long[][] magicMoveDatabase = new long[64][];
 		for (byte i = 0; i < 64; i++) {
@@ -47,25 +47,29 @@ public class BitboardsInitialisationSection3
 
 			for (final long occVar : singleSquareOccupancyVariations) {
 				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
-				singleSquareMagicMoveDatabase[magicIndex] = findAttackSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
+				singleSquareMagicMoveDatabase[magicIndex] = findControlSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
 			}
 			magicMoveDatabase[i] = singleSquareMagicMoveDatabase;
 		}
 		return magicMoveDatabase;
 	}
 
-	private static long findAttackSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
+	static long findControlSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
 	{
 		return bitwiseOr(Iterate.over(movementDirections)
-				.map(direction -> startSq.getAllSquaresInDirections(movementDirections, 8))
-				.map(squares -> takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
+				.map(direction -> startSq.getAllSquaresInDirections(direction, 8))
+				.map(squares -> BitboardsInitialisationSection3.takeUntil(square -> bitboardsIntersect(occVar, square.asBitboard()), squares))
 				.flatten(Iterate::over));
 	}
 
-	static <T> List<T> takeUntil(final Predicate<T> stopCondition, final Iterable<T> xs)
+	/**
+	 * Copies all elements of the input List in order up to and including the first element for which
+	 * the predicate fails to be true (or the whole list if the predicate is true for all elements).
+	 */
+	static <E> List<E> takeUntil(final Predicate<? super E> stopCondition, final List<? extends E> xs)
 	{
-		final List<T> taken = new ArrayList<>();
-		for (final T x : xs) {
+		final List<E> taken = new ArrayList<>();
+		for (final E x : xs) {
 			taken.add(x);
 			if (stopCondition.test(x)) {
 				break;

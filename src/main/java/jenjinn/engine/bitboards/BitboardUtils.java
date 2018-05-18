@@ -9,8 +9,6 @@ import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.LongFlow;
-import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author t
@@ -33,7 +31,7 @@ public final class BitboardUtils
 		return result;
 	}
 
-	public static long bitwiseOr(final BoardSquare... args)
+	public static long bitwiseOr(final List<BoardSquare> args)
 	{
 		long result = 0L;
 		for (final BoardSquare arg : args) {
@@ -42,29 +40,9 @@ public final class BitboardUtils
 		return result;
 	}
 
-	public static long bitwiseOr(final List<BoardSquare> args)
-	{
-		return bitwiseOr(Iterate.over(args));
-	}
-
 	public static long bitwiseOr(final Flow<BoardSquare> args)
 	{
-		return bitwiseOr(args.mapToLong(BoardSquare::asBitboard));
-	}
-
-	public static long bitwiseOr(final LongFlow args)
-	{
-		return args.reduce(0L, (a, b) -> a | b);
-	}
-
-	public static long bitwiseXor(final long... args)
-	{
-		return bitwiseXor(Iterate.over(args));
-	}
-
-	public static long bitwiseXor(final LongFlow args)
-	{
-		return args.reduce(0L, (a, b) -> a ^ b);
+		return args.mapToLong(BoardSquare::asBitboard).reduce(0L, (a, b) -> a | b);
 	}
 
 	public static int[] getSetBitIndices(final long bitboard)

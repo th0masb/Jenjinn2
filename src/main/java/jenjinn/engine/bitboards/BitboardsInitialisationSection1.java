@@ -1,6 +1,5 @@
 package jenjinn.engine.bitboards;
 
-import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 import static jenjinn.engine.bitboards.Bitboards.singleOccupancyBitboard;
 
 import java.util.List;
@@ -15,30 +14,30 @@ import xawd.jflow.iterators.construction.Iterate;
  * @author Tom
  * @date 18 April 2018
  */
-public class BitboardsInitialisationSection1
+final class BitboardsInitialisationSection1
 {
-	public static long[] generateSingleOccupancyBitboards()
+	static long[] generateSingleOccupancyBitboards()
 	{
 		return IterRange.to(64)
 				.mapToLong(i -> 1L << i)
 				.toArray();
 	}
 
-	public static long[] generateRankBitboards()
+	static long[] generateRankBitboards()
 	{
 		return IterRange.to(8)
 				.mapToLong(i -> 0b11111111L << (8*i))
 				.toArray();
 	}
 
-	public static long[] generateFileBitboards()
+	static long[] generateFileBitboards()
 	{
 		return IterRange.to(8)
-				.mapToLong(i -> bitwiseOr(IterRange.to(8).mapToLong(j -> (1L << i) << (8*j))))
+				.mapToLong(i -> IterRange.to(8).mapToLong(j -> (1L << i) << (8*j)).reduce(0L, (a, b) -> a | b))
 				.toArray();
 	}
 
-	public static long[] generateDiagonalBitboards()
+	static long[] generateDiagonalBitboards()
 	{
 		return IterRange.to(15)
 				.map(i -> i < 8 ? i : 8*(i - 7) + 7)
@@ -48,7 +47,7 @@ public class BitboardsInitialisationSection1
 				.toArray();
 	}
 
-	public static long[] generateAntidiagonalBitboards()
+	static long[] generateAntidiagonalBitboards()
 	{
 		return IterRange.to(15)
 				.map(i -> i < 8 ? 7 - i : 8*(i - 7))
@@ -58,7 +57,7 @@ public class BitboardsInitialisationSection1
 				.toArray();
 	}
 
-	public static long[][] generateAllEmptyBoardPieceMovementBitboards()
+	static long[][] generateAllEmptyBoardPieceMovementBitboards()
 	{
 		return new long[][] {
 			generateWhitePawnMovementBitboards(),
@@ -71,7 +70,7 @@ public class BitboardsInitialisationSection1
 		};
 	}
 
-	public static long[][] generateAllEmptyBoardPieceAttackBitboards()
+	static long[][] generateAllEmptyBoardPieceAttackBitboards()
 	{
 		return new long[][] {
 			generateEmptyBoardBitboards(PieceMovementDirections.WHITE_PAWN_ATTACK, 1),

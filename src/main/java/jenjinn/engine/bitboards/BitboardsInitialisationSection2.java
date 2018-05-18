@@ -23,9 +23,9 @@ import xawd.jflow.iterators.construction.Iterate;
  * @author TB
  * @date 23 Jan 2017
  */
-public class BitboardsInitialisationSection2
+final class BitboardsInitialisationSection2
 {
-	public static long[][] generateAllBishopOccupancyVariations()
+	static long[][] generateAllBishopOccupancyVariations()
 	{
 		return BoardSquare.iterateAll()
 				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.BISHOP))
@@ -33,7 +33,7 @@ public class BitboardsInitialisationSection2
 				.toArray(new long[64][]);
 	}
 
-	public static long[][] generateAllRookOccupancyVariations()
+	static long[][] generateAllRookOccupancyVariations()
 	{
 		return BoardSquare.iterateAll()
 				.map(square -> calculateOccupancyVariations(square, PieceMovementDirections.ROOK))
@@ -41,14 +41,35 @@ public class BitboardsInitialisationSection2
 				.toArray(new long[64][]);
 	}
 
-	public static long[] calculateOccupancyVariations(final BoardSquare startSq, final List<Direction> movementDirections)
+	static long[] calculateOccupancyVariations(final BoardSquare startSq, final List<Direction> movementDirections)
 	{
 		final List<BoardSquare> relevantSquares = new ArrayList<>();
-		for (final Direction dir : movementDirections) {
+		for (final Direction dir : movementDirections)
+		{
 			final int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
 			relevantSquares.addAll(startSq.getAllSquaresInDirections(asList(dir), numOfSqsLeft - 1));
 		}
-		return findAllPossibleOrCombos(longMap(BoardSquare::asBitboard, relevantSquares));
+		return BitboardsInitialisationSection2.bitwiseOrAllSetsInPowerset(longMap(BoardSquare::asBitboard, relevantSquares));
+	}
+
+	static long[] generateRookOccupancyMasks()
+	{
+		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
+	}
+
+	static long[] generateBishopOccupancyMasks()
+	{
+		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
+	}
+
+	static int[] generateRookMagicBitshifts()
+	{
+		return Iterate.over(BitboardsImpl.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+	}
+
+	static int[] generateBishopMagicBitshifts()
+	{
+		return Iterate.over(BitboardsImpl.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	/**
@@ -56,15 +77,18 @@ public class BitboardsInitialisationSection2
 	 * performing bitwise | operation on each element of each subset of the powerset
 	 * of the given array. The size of the returned array is 2^(array.length).
 	 */
-	private static long[] findAllPossibleOrCombos(final long[] array)
+	static long[] bitwiseOrAllSetsInPowerset(final long[] array)
 	{
 		final int length = array.length;
-		if (length == 1) {
+		if (length == 0) {
+			return new long[0];
+		}
+		else if (length == 1) {
 			return new long[] { 0L, array[0] };
 		}
 		else {
 			final long[] ans = new long[(int) Math.pow(2.0, length)];
-			final long[] recursiveAns = findAllPossibleOrCombos(take(length - 1, array));
+			final long[] recursiveAns = bitwiseOrAllSetsInPowerset(take(length - 1, array));
 			int ansIndexCounter = 0;
 			int recursiveAnsIndexCounter = 0;
 			for (int j = 0; j < recursiveAns.length; j++) {
@@ -76,25 +100,5 @@ public class BitboardsInitialisationSection2
 			}
 			return ans;
 		}
-	}
-
-	public static long[] generateRookOccupancyMasks()
-	{
-		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
-	}
-
-	public static long[] generateBishopOccupancyMasks()
-	{
-		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
-	}
-
-	public static int[] generateRookMagicBitshifts()
-	{
-		return Iterate.over(BitboardsImpl.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
-	}
-
-	public static int[] generateBishopMagicBitshifts()
-	{
-		return Iterate.over(BitboardsImpl.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 }

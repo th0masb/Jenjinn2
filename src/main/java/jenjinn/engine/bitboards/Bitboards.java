@@ -4,8 +4,7 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 
 /**
- * A class initialising all the variables we need to implement board
- * representation via the well known magic bitboard approach.
+ * Exposes API methods for accessing cached bitboards.
  *
  * @author TB
  * @date 21 Jan 2017
@@ -67,7 +66,9 @@ public final class Bitboards
 	 */
 	public static long emptyBoardMoveset(final ChessPiece piece, final BoardSquare square)
 	{
-		if (piece.isPawn()) {
+		final int pieceOrdinalModSix = piece.ordinal() % 6;
+
+		if (pieceOrdinalModSix == 0) {
 			return BitboardsImpl.EMPTY_BOARD_MOVESETS[piece.isWhite()? 0 : 1][square.ordinal()];
 		}
 		else {
@@ -81,11 +82,13 @@ public final class Bitboards
 	 */
 	public static long emptyBoardAttackset(final ChessPiece piece, final BoardSquare square)
 	{
-		if (piece.isPawn()) {
+		final int pieceOrdinalModSix = piece.ordinal() % 6;
+
+		if (pieceOrdinalModSix == 0) {
 			return BitboardsImpl.EMPTY_BOARD_ATTACKSETS[piece.isWhite()? 0 : 1][square.ordinal()];
 		}
 		else {
-			return BitboardsImpl.EMPTY_BOARD_ATTACKSETS[(piece.ordinal() % 6) + 1][square.ordinal()];
+			return BitboardsImpl.EMPTY_BOARD_ATTACKSETS[pieceOrdinalModSix + 1][square.ordinal()];
 		}
 	}
 
@@ -118,7 +121,7 @@ public final class Bitboards
 	 * square. A bov for square i is BOM[i] & (location of all pieces on the board).
 	 * There are 2^(Cardinality(BOM[i])) variations.
 	 */
-	public static long[] bishopOccupancyVariations(final BoardSquare square)
+	public static long[] bishopOccupancyVariationAt(final BoardSquare square)
 	{
 		return BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[square.ordinal()];
 	}
@@ -128,7 +131,7 @@ public final class Bitboards
 	 * square. A rov for square i is ROM[i] & (location of all pieces on the board).
 	 * There are 2^(Cardinality(ROM[i])) variations.
 	 */
-	public static long[] rookOccupancyVariations(final BoardSquare square)
+	public static long[] rookOccupancyVariationAt(final BoardSquare square)
 	{
 		return BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[square.ordinal()];
 	}

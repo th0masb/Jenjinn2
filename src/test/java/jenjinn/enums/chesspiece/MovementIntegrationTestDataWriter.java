@@ -3,20 +3,19 @@
  */
 package jenjinn.enums.chesspiece;
 
+import static java.util.stream.Collectors.toList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.misc.PieceLocations;
@@ -40,7 +39,7 @@ public final class MovementIntegrationTestDataWriter
 					StandardOpenOption.CREATE_NEW);
 
 		} catch (final IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -65,7 +64,7 @@ public final class MovementIntegrationTestDataWriter
 				.stream()
 				.map(PieceLocations::toString)
 				.sorted()
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	static PieceLocations generateRandomBoard(Random numberGenerator, int sidePieceCount)
@@ -82,11 +81,11 @@ public final class MovementIntegrationTestDataWriter
 		return new PieceLocations(bitwiseOr(whiteLocs), bitwiseOr(blackLocs));
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(final String[] args)
-	{
-		writeTestData(Paths.get("/home/t/git/Jenjinn2/src/test/resources/movementIntegrationTestData"), 500);
-	}
+	//	/**
+	//	 * @param args
+	//	 */
+	//	public static void main(final String[] args)
+	//	{
+	//		writeTestData(Paths.get("/home/t/git/Jenjinn2/src/test/resources/movementIntegrationTestData"), 500);
+	//	}
 }

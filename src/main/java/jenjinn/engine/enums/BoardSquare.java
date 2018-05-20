@@ -109,4 +109,9 @@ public enum BoardSquare
 	{
 		return Iterate.over(Arrays.asList(values()));
 	}
+
+	public static List<BoardSquare> valuesAsList()
+	{
+		return Arrays.asList(values());
+	}
 }

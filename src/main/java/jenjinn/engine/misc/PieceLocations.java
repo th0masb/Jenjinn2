@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.enums.chesspiece;
+package jenjinn.engine.misc;
 
 import static java.lang.Long.toHexString;
 
@@ -34,31 +34,6 @@ public final class PieceLocations
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (blackLocations ^ (blackLocations >>> 32));
-		result = prime * result + (int) (whiteLocations ^ (whiteLocations >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final PieceLocations other = (PieceLocations) obj;
-		if (blackLocations != other.blackLocations)
-			return false;
-		if (whiteLocations != other.whiteLocations)
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString()
 	{
 		return new StringBuilder("PieceLocations[white:")
@@ -83,5 +58,30 @@ public final class PieceLocations
 			System.err.println("error parsing: " + stringRepresentation);
 			throw new AssertionError(ex);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (blackLocations ^ (blackLocations >>> 32));
+		result = prime * result + (int) (whiteLocations ^ (whiteLocations >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final PieceLocations other = (PieceLocations) obj;
+		if (blackLocations != other.blackLocations)
+			return false;
+		if (whiteLocations != other.whiteLocations)
+			return false;
+		return true;
 	}
 }

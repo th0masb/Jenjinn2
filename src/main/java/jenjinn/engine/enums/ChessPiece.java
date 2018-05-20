@@ -4,8 +4,13 @@
 package jenjinn.engine.enums;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import jenjinn.engine.Moveable;
 import jenjinn.engine.bitboards.Bitboards;
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.Iterate;
 
 
 /**
@@ -331,5 +336,15 @@ public enum ChessPiece implements Moveable
 	private static int getMagicMoveIndex(final long allPieces, final long occupancyMask, final long magicNumber, final int magicBitshift)
 	{
 		return (int) (((occupancyMask & allPieces) * magicNumber) >>> magicBitshift);
+	}
+
+	public static List<ChessPiece> valuesAsList()
+	{
+		return Arrays.asList(values());
+	}
+
+	public static Flow<ChessPiece> iterateAll()
+	{
+		return Iterate.over(valuesAsList());
 	}
 }

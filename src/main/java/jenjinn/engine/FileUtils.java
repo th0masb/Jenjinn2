@@ -31,7 +31,7 @@ public final class FileUtils
 	 * @param relativeResourceName - The name of the resource file to load.
 	 * @return - A {@link Stream} of the lines contained in the file.
 	 */
-	public static Stream<String> loadResourceFromSamePackage(final Class<?> cls, final String relativeResourceName)
+	public static Stream<String> loadResourceFromPackageOf(final Class<?> cls, final String relativeResourceName)
 	{
 		final InputStream is = cls.getResourceAsStream(absoluteName(cls, relativeResourceName));
 		return new BufferedReader(new InputStreamReader(is)).lines();

@@ -8,11 +8,13 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jenjinn.engine.Moveable;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
+import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.construction.Iterate;
 
 /**
@@ -25,7 +27,23 @@ public enum TestChessPiece implements Moveable
 		@Override
 		public long getMoves(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
 		{
-			throw new RuntimeException();
+			final long allPieces = whitePieces | blackPieces;
+			final List<BoardSquare> pushSquares = new ArrayList<>();
+			final BoardSquare firstPush = currentLocation.getNextSquareInDirection(Direction.N);
+			if (firstPush != null && !bitboardsIntersect(firstPush.asBitboard(), allPieces))
+			{
+				pushSquares.add(firstPush);
+				final int locIndex = currentLocation.ordinal();
+				if (7 < locIndex && locIndex < 16)
+				{
+					final BoardSquare secondPush = firstPush.getNextSquareInDirection(Direction.N);
+					if (!bitboardsIntersect(secondPush.asBitboard(), allPieces))
+					{
+						pushSquares.add(secondPush);
+					}
+				}
+			}
+			return bitwiseOr(pushSquares) | getAttacks(currentLocation, whitePieces, blackPieces);
 		}
 
 		@Override
@@ -166,8 +184,23 @@ public enum TestChessPiece implements Moveable
 		@Override
 		public long getMoves(BoardSquare currentLocation, long whitePieces, long blackPieces)
 		{
-			// TODO Auto-generated method stub
-			return 0;
+			final long allPieces = whitePieces | blackPieces;
+			final List<BoardSquare> pushSquares = new ArrayList<>();
+			final BoardSquare firstPush = currentLocation.getNextSquareInDirection(Direction.S);
+			if (firstPush != null && !bitboardsIntersect(firstPush.asBitboard(), allPieces))
+			{
+				pushSquares.add(firstPush);
+				final int locIndex = currentLocation.ordinal();
+				if (48 < locIndex && locIndex < 58)
+				{
+					final BoardSquare secondPush = firstPush.getNextSquareInDirection(Direction.S);
+					if (!bitboardsIntersect(secondPush.asBitboard(), allPieces))
+					{
+						pushSquares.add(secondPush);
+					}
+				}
+			}
+			return bitwiseOr(pushSquares) | getAttacks(currentLocation, whitePieces, blackPieces);
 		}
 
 		@Override
@@ -319,5 +352,15 @@ public enum TestChessPiece implements Moveable
 			}
 		});
 		return bitwiseOr(controlSquares);
+	}
+
+	public static List<TestChessPiece> valuesAsList()
+	{
+		return Arrays.asList(values());
+	}
+
+	public static Flow<TestChessPiece> iterateAll()
+	{
+		return Iterate.over(valuesAsList());
 	}
 }

@@ -4,7 +4,6 @@
 package jenjinn.engine.stringutils;
 
 import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
-import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 
 import java.util.List;
 import java.util.Map;
@@ -23,14 +22,6 @@ import xawd.jflow.iterators.construction.ReverseIterate;
 public final class StringifyBoard {
 
 	private static final String BOARD_INDENTER = ">>    ";
-
-	private StringifyBoard() {
-		//		+--+
-		//	    |BN|
-		//	    +--+
-		//	    |WQ|
-		//		+--+
-	}
 
 	public static String fromBitboard(final long bitboard)
 	{
@@ -92,7 +83,15 @@ public final class StringifyBoard {
 		return sb.toString();
 	}
 
-	public static void main(final String[] args) {
-		System.out.println(fromBitboard(rankBitboard(0) | rankBitboard(5)));
+	private StringifyBoard() {
+		//		+--+
+		//	    |BN|
+		//	    +--+
+		//	    |WQ|
+		//		+--+
 	}
+
+//	public static void main(final String[] args) {
+//		System.out.println(fromBitboard(rankBitboard(0) | rankBitboard(5)));
+//	}
 }

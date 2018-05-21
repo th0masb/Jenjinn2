@@ -4,6 +4,7 @@
 package jenjinn.engine.misc;
 
 import static java.lang.Long.toHexString;
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,16 +20,19 @@ public final class PieceLocations
 
 	public PieceLocations(final long whiteLocations, final long blackLocations)
 	{
+		if (bitboardsIntersect(whiteLocations, blackLocations)) {
+			throw new IllegalArgumentException();
+		}
 		this.whiteLocations = whiteLocations;
 		this.blackLocations = blackLocations;
 	}
 
-	public long getWhiteLocations()
+	public long getWhite()
 	{
 		return whiteLocations;
 	}
 
-	public long getBlackLocations()
+	public long getBlack()
 	{
 		return blackLocations;
 	}

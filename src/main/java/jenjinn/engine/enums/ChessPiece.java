@@ -4,13 +4,8 @@
 package jenjinn.engine.enums;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import jenjinn.engine.Moveable;
 import jenjinn.engine.bitboards.Bitboards;
-import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
 
 
 /**
@@ -123,7 +118,7 @@ public enum ChessPiece implements Moveable
 					Bitboards.rookMagicBitshiftAt(currentLocation)
 					);
 
-			return Bitboards.rookMagicMove(currentLocation, magicIndex) & (~whitePieces);
+			return Bitboards.rookMagicMove(currentLocation, magicIndex);
 		}
 	},
 
@@ -183,7 +178,7 @@ public enum ChessPiece implements Moveable
 			final long emptySquares = ~(whitePieces | blackPieces);
 			long push = (1L << (locationIndex - 8)) & emptySquares;
 
-			if (locationIndex > 55 && push != 0) {
+			if (locationIndex > 47 && push != 0) {
 				push |= (1L << (locationIndex - 16)) & emptySquares;
 			}
 
@@ -193,7 +188,7 @@ public enum ChessPiece implements Moveable
 		@Override
 		public long getAttacks(final BoardSquare currentLocation, final long whitePieces, final long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
 		}
 
 		@Override
@@ -336,15 +331,5 @@ public enum ChessPiece implements Moveable
 	private static int getMagicMoveIndex(final long allPieces, final long occupancyMask, final long magicNumber, final int magicBitshift)
 	{
 		return (int) (((occupancyMask & allPieces) * magicNumber) >>> magicBitshift);
-	}
-
-	public static List<ChessPiece> valuesAsList()
-	{
-		return Arrays.asList(values());
-	}
-
-	public static Flow<ChessPiece> iterateAll()
-	{
-		return Iterate.over(valuesAsList());
 	}
 }

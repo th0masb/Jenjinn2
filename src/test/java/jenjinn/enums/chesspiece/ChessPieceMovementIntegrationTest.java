@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import jenjinn.engine.ChessPieces;
 import jenjinn.engine.FileUtils;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
@@ -27,7 +28,7 @@ class ChessPieceMovementIntegrationTest
 	@Test
 	void testNonPawnMoves()
 	{
-		final List<ChessPiece> nonPawns = ChessPiece.iterateAll().filter(p -> !p.isPawn()).toList();
+		final List<ChessPiece> nonPawns = ChessPieces.iterate().filter(p -> !p.isPawn()).toList();
 		BoardSquare.iterateAll().forEach(square -> testMovesAgreeAtSquare(square, nonPawns));
 	}
 
@@ -38,10 +39,9 @@ class ChessPieceMovementIntegrationTest
 		BoardSquare.iterateAll().skip(8).take(48).forEach(square -> testMovesAgreeAtSquare(square, pawns));
 	}
 
-	void testMovesAgreeAtSquare(BoardSquare square, List<ChessPiece> piecesToTest)
+	void testMovesAgreeAtSquare(final BoardSquare square, final List<ChessPiece> piecesToTest)
 	{
-		piecesToTest.stream()
-		.forEach(piece ->
+		piecesToTest.stream().forEach(piece ->
 		{
 			FileUtils.loadResourceFromPackageOf(getClass(), INPUT_FILE_NAME)
 			.map(PieceLocations::reconstructFrom)
@@ -49,10 +49,10 @@ class ChessPieceMovementIntegrationTest
 		});
 	}
 
-	void testMovesAreCorrect(ChessPiece piece, BoardSquare square, PieceLocations pieceLocations)
+	void testMovesAreCorrect(final ChessPiece piece, final BoardSquare square, final PieceLocations pieceLocations)
 	{
 		final TestChessPiece constraintPiece = TestChessPiece.values()[piece.ordinal()];
-		final long white = pieceLocations.getWhiteLocations(), black = pieceLocations.getBlackLocations();
+		final long white = pieceLocations.getWhite(), black = pieceLocations.getBlack();
 
 		assertEquals(
 				constraintPiece.getSquaresOfControl(square, white, black),
@@ -73,11 +73,16 @@ class ChessPieceMovementIntegrationTest
 				);
 	}
 
-	@SuppressWarnings("unused")
-	public static void main(String[] args)
-	{
-		final String failString = "Attacks:Piece=BLACK_PAWN, Square=H2, PieceLocations[white:10008102d084002|black:208204810002540]";
-		final PieceLocations locs = PieceLocations.reconstructFrom("PieceLocations[white:10008102d084002|black:208204810002540]");
-		//		BoardSquare
-	}
+	// Debugging the test
+//	@SuppressWarnings("unused")
+//	public static void main(final String[] args)
+//	{
+//		final String failString = "SOC:Piece=WHITE_KING, Square=H1, PieceLocations[white:100003001c09101|black:6000a18054000008]";
+//		final PieceLocations locs = PieceLocations.reconstructFrom("PieceLocations[white:100003001c09101|black:6000a18054000008]");
+//		//		BoardSquare
+//		System.out.println(FormatBoard.fromPieceLocations(locs));
+//
+//		System.out.println(FormatBoard.fromBitboard(ChessPiece.WHITE_KING.getSquaresOfControl(BoardSquare.H1, locs)));
+//		System.out.println(FormatBoard.fromBitboard(TestChessPiece.WHITE_KING.getSquaresOfControl(BoardSquare.H1, locs)));
+//	}
 }

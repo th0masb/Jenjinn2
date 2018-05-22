@@ -11,29 +11,22 @@ import jenjinn.engine.enums.BoardSquare;
  */
 public abstract class AbstractChessMove implements ChessMove
 {
-	protected final BoardSquare start, target;
+	private final BoardSquare source, target;
 
 	public AbstractChessMove(final BoardSquare start, final BoardSquare target) {
-		this.start = start;
+		this.source = start;
 		this.target = target;
 	}
 
-//	/* (non-Javadoc)
-//	 * @see jenjinn.engine.moves.ChessMove#makeMove(jenjinn.engine.boardstate.BoardStateImpl, jenjinn.engine.boardstate.ReverseMoveData)
-//	 */
-//	@Override
-//	public void makeMove(final BoardStateImpl state, final ReverseMoveData unmakeDataStore) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see jenjinn.engine.moves.ChessMove#reverseMove(jenjinn.engine.boardstate.BoardStateImpl, jenjinn.engine.boardstate.ReverseMoveData)
-//	 */
-//	@Override
-//	public void reverseMove(final BoardStateImpl state, final ReverseMoveData unmakeDataStore) {
-//		// TODO Auto-generated method stub
-//
-//	}
+	@Override
+	public BoardSquare getSource()
+	{
+		return source;
+	}
 
+	@Override
+	public BoardSquare getTarget()
+	{
+		return target;
+	}
 }

@@ -27,6 +27,13 @@ public final class CastleRightsRemoval
 
 	private static final Map<BoardSquare, EnumSet<CastleZone>> RIGHTS_REMOVAL_MAP = initRemovalMap();
 
+	public static EnumSet<CastleZone> getRightsRemovedBy(StandardMove move)
+	{
+		final EnumSet<CastleZone> rightsRemoved = getRightsRemovedByMovesInvolving(move.getSource());
+		rightsRemoved.addAll(getRightsRemovedByMovesInvolving(move.getTarget()));
+		return rightsRemoved;
+	}
+
 	public static EnumSet<CastleZone> getRightsRemovedByMovesInvolving(final BoardSquare square)
 	{
 		return RIGHTS_REMOVAL_MAP.containsKey(square)? RIGHTS_REMOVAL_MAP.get(square) : EnumSet.noneOf(CastleZone.class);

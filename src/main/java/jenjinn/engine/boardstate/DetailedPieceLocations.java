@@ -36,24 +36,44 @@ public final class DetailedPieceLocations
 		return whiteLocations;
 	}
 
-	public void setWhiteLocations(final long whiteLocations)
-	{
-		this.whiteLocations = whiteLocations;
-	}
-
 	public long getBlackLocations()
 	{
 		return blackLocations;
 	}
 
-	public void setBlackLocations(final long blackLocations)
+	public long getPieceLocations(ChessPiece piece)
 	{
-		this.blackLocations = blackLocations;
+		return pieceLocations[piece.ordinal()];
 	}
 
-	public long[] getPieceLocations()
+	public void addPieceAt(BoardSquare location, ChessPiece pieceToAdd)
 	{
-		return pieceLocations;
+		final long newLocation = location.asBitboard();
+		assert !bitboardsIntersect(pieceLocations[pieceToAdd.ordinal()], newLocation);
+		pieceLocations[pieceToAdd.ordinal()] |= newLocation;
+		if (pieceToAdd.isWhite()) {
+			assert bitboardsIntersect(whiteLocations, newLocation);
+			whiteLocations |= newLocation;
+		}
+		else {
+			assert bitboardsIntersect(blackLocations, newLocation);
+			blackLocations |= newLocation;
+		}
+	}
+
+	public void removePieceAt(BoardSquare location, ChessPiece pieceToAdd)
+	{
+		final long newLocation = location.asBitboard();
+		assert bitboardsIntersect(pieceLocations[pieceToAdd.ordinal()], newLocation);
+		pieceLocations[pieceToAdd.ordinal()] ^= newLocation;
+		if (pieceToAdd.isWhite()) {
+			assert bitboardsIntersect(whiteLocations, newLocation);
+			whiteLocations ^= newLocation;
+		}
+		else {
+			assert bitboardsIntersect(blackLocations, newLocation);
+			blackLocations |= location.asBitboard();
+		}
 	}
 
 	public ChessPiece getPieceAt(final BoardSquare square)

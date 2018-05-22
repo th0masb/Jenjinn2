@@ -18,7 +18,7 @@ import jenjinn.engine.utils.ZobristHasher;
 public final class BoardState
 {
 	private final ZobristHasher stateHasher = BoardStateHasher.getDefault();
-	private final PieceSquareTables pieceSquareTables = null;
+	private final PieceSquareTables midgameTables = null, endGameTables = null;
 	private final GameClock gameClock = new GameClock();
 	private final StateHashCache hashCache = StateHashCache.getGameStartCache();
 	private final DetailedPieceLocations pieceLocations;
@@ -108,9 +108,14 @@ public final class BoardState
 		return stateHasher;
 	}
 
-	public PieceSquareTables getPieceSquareTables()
+	public PieceSquareTables getMidgameTables()
 	{
-		return pieceSquareTables;
+		return midgameTables;
+	}
+
+	public PieceSquareTables getEndGameTables()
+	{
+		return endGameTables;
 	}
 
 	public GameClock getGameClock()

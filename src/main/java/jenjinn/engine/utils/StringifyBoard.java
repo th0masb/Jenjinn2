@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.stringutils;
+package jenjinn.engine.utils;
 
 import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 

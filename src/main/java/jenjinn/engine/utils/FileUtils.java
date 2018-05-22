@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine;
+package jenjinn.engine.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

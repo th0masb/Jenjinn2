@@ -3,13 +3,17 @@
  */
 package jenjinn.engine.boardstate;
 
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
+import jenjinn.engine.ChessPieces;
+import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.ChessPiece;
+
 /**
  * @author ThomasB
- *
  */
 public final class DetailedPieceLocations
 {
@@ -49,6 +53,17 @@ public final class DetailedPieceLocations
 	public long[] getPieceLocations()
 	{
 		return pieceLocations;
+	}
+
+	public ChessPiece getPieceAt(final BoardSquare square)
+	{
+		final long squareAsBitboard = square.asBitboard();
+		for (int i = 0; i < 12; i++) {
+			if (bitboardsIntersect(pieceLocations[i], squareAsBitboard)) {
+				return ChessPieces.fromIndex(i);
+			}
+		}
+		return null;
 	}
 
 	public static DetailedPieceLocations getStartLocations()

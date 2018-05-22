@@ -3,8 +3,8 @@
  */
 package jenjinn.engine.moves;
 
-import jenjinn.engine.boardstate.BoardStateImpl;
-import jenjinn.engine.boardstate.ReverseMoveData;
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.DataForReversingMove;
 
 /**
  * @author ThomasB
@@ -12,21 +12,21 @@ import jenjinn.engine.boardstate.ReverseMoveData;
 public interface ChessMove
 {
 	/**
-	 * Mutate the state of the parameter {@linkplain BoardStateImpl} according
+	 * Mutate the state of the parameter {@linkplain BoardState} according
 	 * to this move. Store required data for reversing this move in the parameter
-	 * {@linkplain ReverseMoveData} instance.
+	 * {@linkplain DataForReversingMove} instance.
 	 *
 	 * @param state
 	 * @param unmakeDataStore
 	 */
-	void makeMove(BoardStateImpl state, ReverseMoveData unmakeDataStore);
+	void makeMove(BoardState state, DataForReversingMove unmakeDataStore);
 
 	/**
-	 * Using the supplied {@linkplain ReverseMoveData} to mutate the state of the
-	 * parameter {@linkplain BoardStateImpl} instance to reverse this move.
+	 * Using the supplied {@linkplain DataForReversingMove} to mutate the state of the
+	 * parameter {@linkplain BoardState} instance to reverse this move.
 	 *
 	 * @param state
 	 * @param unmakeDataStore
 	 */
-	void reverseMove(BoardStateImpl state, ReverseMoveData unmakeDataStore);
+	void reverseMove(BoardState state, DataForReversingMove unmakeDataStore);
 }

@@ -7,11 +7,12 @@ import static java.util.stream.Collectors.toList;
 import static xawd.jflow.utilities.MapUtil.intMap;
 import static xawd.jflow.utilities.StringUtils.getAllMatches;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.utils.FileUtils;
+import xawd.jflow.iterators.construction.IterRange;
 import xawd.jflow.iterators.construction.ReverseIterate;
 
 /**
@@ -22,9 +23,14 @@ public final class TableParser
 {
 	private TableParser() {}
 
-	public static int[] parseFile(final String filename)
+	public static PieceSquareTable parseFile(final ChessPiece piece, final String filename)
 	{
-		final List<String> lines = FileUtils.loadResourceFromPackageOf(TableParser.class, filename).collect(toList());
+		return parseFile(piece, TableParser.class, filename);
+	}
+
+	public static PieceSquareTable parseFile(final ChessPiece piece, final Class<?> packageProvider, final String filename)
+	{
+		final List<String> lines = FileUtils.loadResourceFromPackageOf(packageProvider, filename).collect(toList());
 		final Pattern numberPattern = Pattern.compile("-*[0-9]+");
 
 		final int[] parseResult = ReverseIterate.over(lines)
@@ -33,15 +39,15 @@ public final class TableParser
 				.flattenToInts(ReverseIterate::over)
 				.toArray();
 
-		if (parseResult.length == 64) {
-			return parseResult;
-		}
-		else {
-			throw new AssertionError("Error parsing table file: " + filename + ". Only recovered " + parseResult.length + " values.");
-		}
+		return new PieceSquareTable(piece, piece.isWhite()? parseResult : invertValues(parseResult));
 	}
 
-	public static void main(final String[] args) {
-		System.out.println(Arrays.toString(parseFile("knight-midgame")));
+	/**
+	 * The corresponding piece square table for black pieces is horizontally symmetric to the one for
+	 * white pieces.
+	 */
+	static int[] invertValues(final int[] whiteValues)
+	{
+		return IterRange.to(64).map(i -> -whiteValues[63 - 1 - 8*(i/8) - (7 - (i % 8))]).toArray();
 	}
 }

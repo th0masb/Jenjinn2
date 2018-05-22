@@ -11,6 +11,7 @@ import static xawd.jflow.utilities.CollectionUtil.take;
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.Side;
 
 /**
  * @author ThomasB
@@ -59,6 +60,18 @@ public final class DetailedPieceLocations
 	{
 		final long squareAsBitboard = square.asBitboard();
 		for (int i = 0; i < 12; i++) {
+			if (bitboardsIntersect(pieceLocations[i], squareAsBitboard)) {
+				return ChessPieces.fromIndex(i);
+			}
+		}
+		return null;
+	}
+
+	public ChessPiece getPieceAt(final BoardSquare square, final Side side)
+	{
+		final long squareAsBitboard = square.asBitboard();
+		final int lowerBound = side.isWhite() ? 0 : 6, upperBound = lowerBound + 6;
+		for (int i = lowerBound; i < upperBound; i++) {
 			if (bitboardsIntersect(pieceLocations[i], squareAsBitboard)) {
 				return ChessPieces.fromIndex(i);
 			}

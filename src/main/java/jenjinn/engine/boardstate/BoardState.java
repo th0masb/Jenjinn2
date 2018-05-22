@@ -8,42 +8,28 @@ import java.util.EnumSet;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.utils.BoardStateHasher;
 import jenjinn.engine.utils.ZobristHasher;
 
 /**
  * @author ThomasB
- *
  */
 public final class BoardState
 {
 	private final ZobristHasher stateHasher = BoardStateHasher.getDefault();
-
-	private int halfMoveClock = 0;
-
-	// Side to move
-	private Side activeSide;
-
-	// Piece locations
+	private final PieceSquareTables pieceSquareTables = null;
+	private final GameClock gameClock = new GameClock();
+	private final StateHashCache hashCache = StateHashCache.getGameStartCache();
 	private final DetailedPieceLocations pieceLocations;
-
-	// Enpassant
-	private BoardSquare enPassantSquare;
-
-	// Castling
 	private final CastlingStatus castlingStatus;
-
-	// Developmental Status
 	private final EnumSet<DevelopmentPiece> developedPieces;
 
-	// Board identity hashing
-	private final long[] recentHashes;
-
-	// Evaluation status
+	private Side activeSide;
+	private BoardSquare enPassantSquare;
 	private int midgamePieceLocationEvaluation, endgamePieceLocationEvaluation;
 
 	public BoardState(
-			final int halfMoveClock,
 			final Side activeSide,
 			final DetailedPieceLocations pieceLocations,
 			final BoardSquare enPassantSquare,
@@ -53,13 +39,11 @@ public final class BoardState
 			final int midgamePieceLocationEvaluation,
 			final int endgamePieceLocationEvaluation)
 	{
-		this.halfMoveClock = halfMoveClock;
 		this.activeSide = activeSide;
 		this.pieceLocations = pieceLocations;
 		this.enPassantSquare = enPassantSquare;
 		this.castlingStatus = castlingStatus;
 		this.developedPieces = developedPieces;
-		this.recentHashes = recentHashes;
 		this.midgamePieceLocationEvaluation = midgamePieceLocationEvaluation;
 		this.endgamePieceLocationEvaluation = endgamePieceLocationEvaluation;
 	}
@@ -89,11 +73,6 @@ public final class BoardState
 		return developedPieces;
 	}
 
-	public long[] getRecentHashes()
-	{
-		return recentHashes;
-	}
-
 	public int getMidgamePieceLocationEvaluation()
 	{
 		return midgamePieceLocationEvaluation;
@@ -114,16 +93,6 @@ public final class BoardState
 		this.endgamePieceLocationEvaluation = endgamePieceLocationEvaluation;
 	}
 
-	public int getHalfMoveClock()
-	{
-		return halfMoveClock;
-	}
-
-	public void setHalfMoveClock(final int halfMoveClock)
-	{
-		this.halfMoveClock = halfMoveClock;
-	}
-
 	public DetailedPieceLocations getPieceLocations()
 	{
 		return pieceLocations;
@@ -139,11 +108,25 @@ public final class BoardState
 		return stateHasher;
 	}
 
+	public PieceSquareTables getPieceSquareTables()
+	{
+		return pieceSquareTables;
+	}
+
+	public GameClock getGameClock()
+	{
+		return gameClock;
+	}
+
+	public StateHashCache getHashCache()
+	{
+		return hashCache;
+	}
+
 	// Move to own file?
 	public static BoardState getStartBoard()
 	{
 		return new BoardState(
-				0,
 				Side.W,
 				DetailedPieceLocations.getStartLocations(),
 				null,

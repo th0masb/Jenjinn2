@@ -23,7 +23,18 @@ public final class FileUtils
 	 */
 	public static String absoluteName(final Class<?> cls, final String relativeName)
 	{
-		return "/" + cls.getPackage().getName().replace('.', '/') + "/" + relativeName;
+		return absoluteName(cls.getPackage(), relativeName);
+	}
+
+	/**
+	 * Returns the absolute resource name for the specified class and relative resource name.
+	 * @param  cls           the class whose package contains the resource.
+	 * @param  relativeName  the relative resource name for which the absolute name is required.
+	 * @return the absolute resource name for {@code relativeName}.
+	 */
+	public static String absoluteName(final Package pkg, final String relativeName)
+	{
+		return "/" + pkg.getName().replace('.', '/') + "/" + relativeName;
 	}
 
 	/**

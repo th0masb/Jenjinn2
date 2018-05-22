@@ -27,15 +27,16 @@ public final class StringifyBoard {
 	{
 		return fromSquareToCharMapping(
 				Iterate.over(getSetBitIndices(bitboard))
-				.mapToObject(BoardSquare::fromIndex)
-				.toMap(x -> x, x -> new char[] {'X', 'X'})
+				.toMap(BoardSquare::fromIndex, x -> new char[] {'X', 'X'})
 				);
 	}
 
 	public static String fromPieceLocations(final PieceLocations locations)
 	{
-		final Map<BoardSquare, char[]> locs = Iterate.over(getSetBitIndices(locations.getWhite())).toMap(BoardSquare::fromIndex, i -> new char[] {'X', 'W'});
-		locs.putAll(Iterate.over(getSetBitIndices(locations.getBlack())).toMap(BoardSquare::fromIndex, i -> new char[] {'X', 'B'}));
+		final int[] whiteLocs = getSetBitIndices(locations.getWhite()), blackLocs = getSetBitIndices(locations.getBlack());
+
+		final Map<BoardSquare, char[]> locs = Iterate.over(whiteLocs).toMap(BoardSquare::fromIndex, i -> new char[] {'X', 'W'});
+		locs.putAll(Iterate.over(blackLocs).toMap(BoardSquare::fromIndex, i -> new char[] {'X', 'B'}));
 		return fromSquareToCharMapping(locs);
 	}
 

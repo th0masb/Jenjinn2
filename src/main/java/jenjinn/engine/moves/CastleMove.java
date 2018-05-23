@@ -66,7 +66,27 @@ public final class CastleMove extends AbstractChessMove
 	@Override
 	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		// TODO Auto-generated method stub
+		state.switchActiveSide();
+		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
+		resetPieceLocations(state, unmakeDataStore);
+		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
+	}
+
+	private void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		// Reset half move clock
+		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());
+		// Reset enpassant stuff
+		state.setEnPassantSquare(unmakeDataStore.getDiscardedEnpassantSquare());
+		// Reset locations
+		final ChessPiece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());
+		state.getPieceLocations().removePieceAt(getTarget(), previouslyMovedPiece);
+		state.getPieceLocations().addPieceAt(getSource(), previouslyMovedPiece);
+
+		final ChessPiece previouslyRemovedPiece = unmakeDataStore.getPieceTaken();
+		if (previouslyMovedPiece != null) {
+			state.getPieceLocations().addPieceAt(getTarget(), previouslyRemovedPiece);
+		}
 	}
 
 	public CastleZone getWrappedZone()

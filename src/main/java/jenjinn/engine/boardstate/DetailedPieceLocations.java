@@ -61,12 +61,12 @@ public final class DetailedPieceLocations
 		}
 	}
 
-	public void removePieceAt(BoardSquare location, ChessPiece pieceToAdd)
+	public void removePieceAt(BoardSquare location, ChessPiece pieceToRemove)
 	{
 		final long newLocation = location.asBitboard();
-		assert bitboardsIntersect(pieceLocations[pieceToAdd.ordinal()], newLocation);
-		pieceLocations[pieceToAdd.ordinal()] ^= newLocation;
-		if (pieceToAdd.isWhite()) {
+		assert bitboardsIntersect(pieceLocations[pieceToRemove.ordinal()], newLocation);
+		pieceLocations[pieceToRemove.ordinal()] ^= newLocation;
+		if (pieceToRemove.isWhite()) {
 			assert bitboardsIntersect(whiteLocations, newLocation);
 			whiteLocations ^= newLocation;
 		}

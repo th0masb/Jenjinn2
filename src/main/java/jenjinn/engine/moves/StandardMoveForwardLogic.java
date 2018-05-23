@@ -3,6 +3,7 @@ package jenjinn.engine.moves;
 import static java.lang.Math.abs;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
@@ -88,7 +89,7 @@ final class StandardMoveForwardLogic
 	static void updateCastlingRights(final StandardMove move, final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
-			final EnumSet<CastleZone> rightsRemoved = CastleRightsRemoval.getRightsRemovedBy(move);
+			final Set<CastleZone> rightsRemoved = CastleRightsRemoval.getRightsRemovedBy(move);
 			state.getCastlingStatus().getCastlingRights().removeAll(rightsRemoved);
 			for (final CastleZone rightRemoved : rightsRemoved) {
 				state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getCastleRightsFeature(rightRemoved));

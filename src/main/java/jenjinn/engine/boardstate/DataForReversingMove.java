@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.boardstate;
 
-import java.util.EnumSet;
+import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
@@ -16,7 +16,7 @@ import jenjinn.engine.enums.DevelopmentPiece;
  */
 public class DataForReversingMove {
 
-	private EnumSet<CastleZone> discardedCastlingRights;
+	private Set<CastleZone> discardedCastlingRights;
 	private ChessPiece pieceTaken;
 	private DevelopmentPiece pieceDeveloped;
 	private BoardSquare discardedEnpassantSquare;
@@ -26,12 +26,12 @@ public class DataForReversingMove {
 	public DataForReversingMove() {
 	}
 
-	public EnumSet<CastleZone> getDiscardedCastlingRights()
+	public Set<CastleZone> getDiscardedCastlingRights()
 	{
 		return discardedCastlingRights;
 	}
 
-	public void setDiscardedCastlingRights(final EnumSet<CastleZone> discardedCastlingRights)
+	public void setDiscardedCastlingRights(final Set<CastleZone> discardedCastlingRights)
 	{
 		this.discardedCastlingRights = discardedCastlingRights;
 	}

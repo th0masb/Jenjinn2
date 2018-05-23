@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.moves;
 
+import static java.util.Collections.unmodifiableSet;
 import static jenjinn.engine.enums.CastleZone.BLACK_KINGSIDE;
 import static jenjinn.engine.enums.CastleZone.BLACK_QUEENSIDE;
 import static jenjinn.engine.enums.CastleZone.WHITE_KINGSIDE;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
@@ -25,31 +27,43 @@ public final class CastleRightsRemoval
 	private CastleRightsRemoval() {
 	}
 
-	private static final Map<BoardSquare, EnumSet<CastleZone>> RIGHTS_REMOVAL_MAP = initRemovalMap();
+	private static final Map<BoardSquare, Set<CastleZone>> RIGHTS_MOVE_REMOVAL_MAP = initMoveRemovalMap();
+	private static final Map<CastleZone, Set<CastleZone>> RIGHTS_CASTLE_REMOVAL_MAP = initCastleRemovalMap();
 
-	public static EnumSet<CastleZone> getRightsRemovedBy(StandardMove move)
+	private static Map<BoardSquare, Set<CastleZone>> initMoveRemovalMap()
 	{
-		final EnumSet<CastleZone> rightsRemoved = getRightsRemovedByMovesInvolving(move.getSource());
+		final Map<BoardSquare, Set<CastleZone>> removalMap = new HashMap<>();
+		removalMap.put(BoardSquare.A1, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE)));
+		removalMap.put(BoardSquare.E1, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE)));
+		removalMap.put(BoardSquare.H1, unmodifiableSet(EnumSet.of(WHITE_KINGSIDE)));
+
+		removalMap.put(BoardSquare.A8, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE)));
+		removalMap.put(BoardSquare.E8, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE)));
+		removalMap.put(BoardSquare.H8, unmodifiableSet(EnumSet.of(BLACK_KINGSIDE)));
+
+		return Collections.unmodifiableMap(removalMap);
+	}
+
+	private static Map<CastleZone, Set<CastleZone>> initCastleRemovalMap()
+	{
+		final Map<CastleZone, Set<CastleZone>> removalMap = new HashMap<>();
+		removalMap.put(CastleZone.WHITE_KINGSIDE, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE)));
+		removalMap.put(CastleZone.WHITE_QUEENSIDE, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE)));
+		removalMap.put(CastleZone.BLACK_KINGSIDE, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE)));
+		removalMap.put(CastleZone.BLACK_QUEENSIDE, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE)));
+		return Collections.unmodifiableMap(removalMap);
+	}
+
+	public static Set<CastleZone> getRightsRemovedBy(final StandardMove move)
+	{
+		final Set<CastleZone> rightsRemoved = getRightsRemovedByMovesInvolving(move.getSource());
 		rightsRemoved.addAll(getRightsRemovedByMovesInvolving(move.getTarget()));
 		return rightsRemoved;
 	}
 
-	public static EnumSet<CastleZone> getRightsRemovedByMovesInvolving(final BoardSquare square)
+	static Set<CastleZone> getRightsRemovedByMovesInvolving(final BoardSquare square)
 	{
-		return RIGHTS_REMOVAL_MAP.containsKey(square)? RIGHTS_REMOVAL_MAP.get(square) : EnumSet.noneOf(CastleZone.class);
+		return RIGHTS_MOVE_REMOVAL_MAP.containsKey(square)? RIGHTS_MOVE_REMOVAL_MAP.get(square) : EnumSet.noneOf(CastleZone.class);
 	}
 
-	private static Map<BoardSquare, EnumSet<CastleZone>> initRemovalMap()
-	{
-		final Map<BoardSquare, EnumSet<CastleZone>> removalMap = new HashMap<>();
-		removalMap.put(BoardSquare.A1, EnumSet.of(WHITE_QUEENSIDE));
-		removalMap.put(BoardSquare.E1, EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE));
-		removalMap.put(BoardSquare.H1, EnumSet.of(WHITE_KINGSIDE));
-
-		removalMap.put(BoardSquare.A8, EnumSet.of(BLACK_QUEENSIDE));
-		removalMap.put(BoardSquare.E8, EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE));
-		removalMap.put(BoardSquare.H8, EnumSet.of(BLACK_KINGSIDE));
-
-		return Collections.unmodifiableMap(removalMap);
-	}
 }

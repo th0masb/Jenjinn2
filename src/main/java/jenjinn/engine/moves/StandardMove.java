@@ -23,7 +23,7 @@ public final class StandardMove extends AbstractChessMove
 	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
-		StandardMoveForwardLogic.updateCastlingRights(this, state, unmakeDataStore);
+		updateCastlingRights(state, unmakeDataStore);
 		StandardMoveForwardLogic.updatePieceLocations(this, state, unmakeDataStore);
 		StandardMoveForwardLogic.updateDevelopedPieces(this, state, unmakeDataStore);
 		state.switchActiveSide();
@@ -33,20 +33,10 @@ public final class StandardMove extends AbstractChessMove
 	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		state.switchActiveSide();
-		resetDevelopedPieces(state, unmakeDataStore);
-		resetPieceLocations(state, unmakeDataStore);
-		resetCastlingRights(state, unmakeDataStore);
-		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
-	}
-
-	private void resetDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
-	{
 		state.getDevelopedPieces().remove(unmakeDataStore.getPieceDeveloped());
-	}
-
-	private void resetCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
-	{
 		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
+		resetPieceLocations(state, unmakeDataStore);
+		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
 	}
 
 	private void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
@@ -55,9 +45,6 @@ public final class StandardMove extends AbstractChessMove
 		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());
 		// Reset enpassant stuff
 		state.setEnPassantSquare(unmakeDataStore.getDiscardedEnpassantSquare());
-		// Reset location scores
-		state.setMidgamePieceLocationEvaluation(unmakeDataStore.getDiscardedMidgameScore());
-		state.setEndgamePieceLocationEvaluation(unmakeDataStore.getDiscardedEndgameScore());
 		// Reset locations
 		final ChessPiece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());
 		state.getPieceLocations().removePieceAt(getTarget(), previouslyMovedPiece);

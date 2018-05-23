@@ -4,6 +4,7 @@
 package jenjinn.engine.boardstate;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import jenjinn.engine.enums.CastleZone;
 
@@ -13,17 +14,17 @@ import jenjinn.engine.enums.CastleZone;
  */
 public final class CastlingStatus
 {
-	private final EnumSet<CastleZone> castlingRights;
-	private final CastleZone whiteCastlingStatus, blackCastlingStatus;
+	private final Set<CastleZone> castlingRights;
+	private CastleZone whiteCastlingStatus, blackCastlingStatus;
 
-	public CastlingStatus(final EnumSet<CastleZone> castlingRights, final CastleZone whiteCastlingStatus, final CastleZone blackCastlingStatus)
+	public CastlingStatus(final Set<CastleZone> castlingRights, final CastleZone whiteCastlingStatus, final CastleZone blackCastlingStatus)
 	{
 		this.castlingRights = castlingRights;
 		this.whiteCastlingStatus = whiteCastlingStatus;
 		this.blackCastlingStatus = blackCastlingStatus;
 	}
 
-	public EnumSet<CastleZone> getCastlingRights()
+	public Set<CastleZone> getCastlingRights()
 	{
 		return castlingRights;
 	}
@@ -36,6 +37,16 @@ public final class CastlingStatus
 	public CastleZone getBlackCastlingStatus()
 	{
 		return blackCastlingStatus;
+	}
+
+	public void setCastlingStatus(CastleZone newStatus)
+	{
+		if (newStatus.isWhiteZone()) {
+			whiteCastlingStatus = newStatus;
+		}
+		else {
+			blackCastlingStatus = newStatus;
+		}
 	}
 
 	public static CastlingStatus getStartStatus()

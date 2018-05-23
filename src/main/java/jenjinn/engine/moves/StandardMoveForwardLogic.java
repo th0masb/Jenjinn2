@@ -3,12 +3,10 @@ package jenjinn.engine.moves;
 import static java.lang.Math.abs;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
@@ -30,6 +28,8 @@ final class StandardMoveForwardLogic
 		final boolean pieceWasRemoved = removedPiece != null;
 
 		// Update locations
+		unmakeDataStore.setDiscardedMidgameScore(state.getPieceLocations().getMidgameEval());
+		unmakeDataStore.setDiscardedEndgameScore(state.getPieceLocations().getEndgameEval());
 		unmakeDataStore.setPieceTaken(removedPiece);
 		state.getPieceLocations().removePieceAt(source, movingPiece);
 		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(source, movingPiece));
@@ -39,22 +39,6 @@ final class StandardMoveForwardLogic
 			state.getPieceLocations().removePieceAt(target, removedPiece);
 			state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(target, removedPiece));
 		}
-
-		// Update location scores
-		int midgameScore = state.getMidgamePieceLocationEvaluation(), endgameScore = state.getEndgamePieceLocationEvaluation();
-		unmakeDataStore.setDiscardedMidgameScore(midgameScore);
-		unmakeDataStore.setDiscardedEndgameScore(endgameScore);
-
-		midgameScore -= state.getMidgameTables().getLocationValue(movingPiece, source);
-		midgameScore += state.getMidgameTables().getLocationValue(movingPiece, target);
-		endgameScore -= state.getEndgameTables().getLocationValue(movingPiece, source);
-		endgameScore += state.getEndgameTables().getLocationValue(movingPiece, target);
-		if (pieceWasRemoved) {
-			midgameScore -= state.getMidgameTables().getLocationValue(removedPiece, target);
-			endgameScore -= state.getEndgameTables().getLocationValue(removedPiece, target);
-		}
-		state.setMidgamePieceLocationEvaluation(midgameScore);
-		state.setEndgamePieceLocationEvaluation(endgameScore);
 
 		// Update enpassant stuff
 		final BoardSquare oldEnpassantSquare = state.getEnPassantSquare();
@@ -83,21 +67,6 @@ final class StandardMoveForwardLogic
 		}
 		else {
 			state.getHalfMoveClock().incrementValue();
-		}
-	}
-
-	static void updateCastlingRights(final StandardMove move, final BoardState state, final DataForReversingMove unmakeDataStore)
-	{
-		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
-			final Set<CastleZone> rightsRemoved = CastleRightsRemoval.getRightsRemovedBy(move);
-			state.getCastlingStatus().getCastlingRights().removeAll(rightsRemoved);
-			for (final CastleZone rightRemoved : rightsRemoved) {
-				state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getCastleRightsFeature(rightRemoved));
-			}
-			unmakeDataStore.setDiscardedCastlingRights(rightsRemoved);
-		}
-		else if (unmakeDataStore.getDiscardedCastlingRights().size() > 0){
-			unmakeDataStore.setDiscardedCastlingRights(EnumSet.noneOf(CastleZone.class));
 		}
 	}
 

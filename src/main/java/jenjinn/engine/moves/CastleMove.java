@@ -26,13 +26,20 @@ public final class CastleMove extends AbstractChessMove
 	@Override
 	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		// TODO Auto-generated method stub
+		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
+		unmakeDataStore.setPieceDeveloped(null);
+		updateCastlingRights(state, unmakeDataStore);
+		updatePieceLocations(this, state, unmakeDataStore);
+		state.switchActiveSide();
 	}
 
 	static void updatePieceLocations(final CastleMove move, final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		final Side currentActiveSide = state.getActiveSide(), nextActiveSide = currentActiveSide.otherSide();
+		final Side currentActiveSide = state.getActiveSide();
 		final boolean whiteActive = currentActiveSide.isWhite();
+
+		unmakeDataStore.setDiscardedMidgameScore(state.getPieceLocations().getMidgameEval());
+		unmakeDataStore.setDiscardedEndgameScore(state.getPieceLocations().getEndgameEval());
 
 		final ChessPiece king = whiteActive ? ChessPiece.WHITE_KING : ChessPiece.BLACK_KING;
 		state.getPieceLocations().removePieceAt(move.getWrappedZone().getKingSource(), king);
@@ -47,9 +54,13 @@ public final class CastleMove extends AbstractChessMove
 		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(move.getWrappedZone().getRookTarget(), rook));
 
 		unmakeDataStore.setPieceTaken(null);
+
+		// handle enpassant
 		unmakeDataStore.setDiscardedEnpassantSquare(state.getEnPassantSquare());
 		state.setEnPassantSquare(null);
-		state.getCastlingStatus();
+		// handle half move clock
+		unmakeDataStore.setDiscardedHalfMoveClock(state.getHalfMoveClock().getValue());
+		state.getHalfMoveClock().incrementValue();
 	}
 
 	@Override

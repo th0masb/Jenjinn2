@@ -12,14 +12,21 @@ import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 
 /**
+ * Handles piece locations as well as tracking the positional evaluation.
+ *
  * @author ThomasB
  */
 public final class DetailedPieceLocations
 {
 	private final long[] pieceLocations;
 	private long whiteLocations, blackLocations;
+
+	// TODO initialise me
+	private final PieceSquareTables midgameTables = null, endgameTables = null;
+	private int midgameEval = 0, endgameEval = 0;
 
 	public DetailedPieceLocations(final long[] pieceLocations)
 	{
@@ -48,6 +55,8 @@ public final class DetailedPieceLocations
 
 	public void addPieceAt(BoardSquare location, ChessPiece pieceToAdd)
 	{
+		midgameEval += midgameTables.getLocationValue(pieceToAdd, location);
+		endgameEval += endgameTables.getLocationValue(pieceToAdd, location);
 		final long newLocation = location.asBitboard();
 		assert !bitboardsIntersect(pieceLocations[pieceToAdd.ordinal()], newLocation);
 		pieceLocations[pieceToAdd.ordinal()] |= newLocation;
@@ -63,6 +72,8 @@ public final class DetailedPieceLocations
 
 	public void removePieceAt(BoardSquare location, ChessPiece pieceToRemove)
 	{
+		midgameEval -= midgameTables.getLocationValue(pieceToRemove, location);
+		endgameEval -= endgameTables.getLocationValue(pieceToRemove, location);
 		final long newLocation = location.asBitboard();
 		assert bitboardsIntersect(pieceLocations[pieceToRemove.ordinal()], newLocation);
 		pieceLocations[pieceToRemove.ordinal()] ^= newLocation;
@@ -97,6 +108,16 @@ public final class DetailedPieceLocations
 			}
 		}
 		return null;
+	}
+
+	public int getMidgameEval()
+	{
+		return midgameEval;
+	}
+
+	public int getEndgameEval()
+	{
+		return endgameEval;
 	}
 
 	public static DetailedPieceLocations getStartLocations()

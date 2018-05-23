@@ -11,9 +11,7 @@ public final class StateHashCache
 	private static final int CACHE_SIZE = 12;
 
 	private final long[] hashCache = new long[CACHE_SIZE];
-
-	// For checking repetition draws
-	private boolean enoughMovesPlayedToDraw = false;
+	private int totalHalfMoveCount = 0, cacheIndexer = 0;
 
 	private StateHashCache() {
 	}
@@ -23,16 +21,30 @@ public final class StateHashCache
 		throw new RuntimeException();
 	}
 
-	public void insertHashValue(final long hash, final int overallClockValue)
+	public long incrementHalfMoveCount()
 	{
-		assert overallClockValue > 0;
-		hashCache[overallClockValue % CACHE_SIZE] = hash;
-		enoughMovesPlayedToDraw = overallClockValue > 8;
+		final long currentHash = hashCache[cacheIndexer];
+		totalHalfMoveCount++;
+		updateCacheIndexer();
+		final long discardedHash = hashCache[cacheIndexer];
+		hashCache[cacheIndexer] = currentHash;
+		return discardedHash;
 	}
 
-	public long getHashValueAt(final int overallClockValue)
+	public void decrementHalfMoveCount(final long replacementHash)
 	{
-		assert overallClockValue > 0;
-		return hashCache[overallClockValue % CACHE_SIZE];
+		hashCache[cacheIndexer] = replacementHash;
+		totalHalfMoveCount--;
+		updateCacheIndexer();
+	}
+
+	private void updateCacheIndexer()
+	{
+		cacheIndexer = totalHalfMoveCount % CACHE_SIZE;
+	}
+
+	public void xorFeatureWithCurrentHash(final long feature)
+	{
+		hashCache[cacheIndexer] ^= feature;
 	}
 }

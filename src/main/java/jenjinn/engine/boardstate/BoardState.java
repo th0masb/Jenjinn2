@@ -19,7 +19,8 @@ public final class BoardState
 {
 	private final ZobristHasher stateHasher = BoardStateHasher.getDefault();
 	private final PieceSquareTables midgameTables = null, endGameTables = null;
-	private final GameClock gameClock = new GameClock();
+
+	private final HalfMoveClock gameClock = new HalfMoveClock();
 	private final StateHashCache hashCache = StateHashCache.getGameStartCache();
 	private final DetailedPieceLocations pieceLocations;
 	private final CastlingStatus castlingStatus;
@@ -35,7 +36,6 @@ public final class BoardState
 			final BoardSquare enPassantSquare,
 			final CastlingStatus castlingStatus,
 			final EnumSet<DevelopmentPiece> developedPieces,
-			final long[] recentHashes,
 			final int midgamePieceLocationEvaluation,
 			final int endgamePieceLocationEvaluation)
 	{
@@ -53,9 +53,9 @@ public final class BoardState
 		return activeSide;
 	}
 
-	public void setActiveSide(final Side activeSide)
+	public void switchActiveSide()
 	{
-		this.activeSide = activeSide;
+		this.activeSide = activeSide.otherSide();
 	}
 
 	public BoardSquare getEnPassantSquare()
@@ -113,12 +113,12 @@ public final class BoardState
 		return midgameTables;
 	}
 
-	public PieceSquareTables getEndGameTables()
+	public PieceSquareTables getEndgameTables()
 	{
 		return endGameTables;
 	}
 
-	public GameClock getGameClock()
+	public HalfMoveClock getHalfMoveClock()
 	{
 		return gameClock;
 	}
@@ -137,7 +137,6 @@ public final class BoardState
 				null,
 				CastlingStatus.getStartStatus(),
 				EnumSet.noneOf(DevelopmentPiece.class),
-				new long[4],
 				0,
 				0);
 	}

@@ -21,6 +21,7 @@ public class DataForReversingMove {
 	private DevelopmentPiece pieceDeveloped;
 	private BoardSquare discardedEnpassantSquare;
 	private long discardedHash;
+	private int discardedMidgameScore, discardedEndgameScore, discardedHalfMoveClock;
 
 	public DataForReversingMove() {
 	}
@@ -73,5 +74,35 @@ public class DataForReversingMove {
 	public void setDiscardedHash(final long discardedHash)
 	{
 		this.discardedHash = discardedHash;
+	}
+
+	public int getDiscardedMidgameScore()
+	{
+		return discardedMidgameScore;
+	}
+
+	public void setDiscardedMidgameScore(final int discardedMidgameScore)
+	{
+		this.discardedMidgameScore = discardedMidgameScore;
+	}
+
+	public int getDiscardedEndgameScore()
+	{
+		return discardedEndgameScore;
+	}
+
+	public void setDiscardedEndgameScore(final int discardedEndgameScore)
+	{
+		this.discardedEndgameScore = discardedEndgameScore;
+	}
+
+	public int getDiscardedHalfMoveClockValue()
+	{
+		return discardedHalfMoveClock;
+	}
+
+	public void setDiscardedHalfMoveClock(final int discardedHalfMoveClock)
+	{
+		this.discardedHalfMoveClock = discardedHalfMoveClock;
 	}
 }

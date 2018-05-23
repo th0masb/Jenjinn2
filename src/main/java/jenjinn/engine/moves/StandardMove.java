@@ -3,22 +3,17 @@
  */
 package jenjinn.engine.moves;
 
-import java.util.EnumSet;
-
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
 
 /**
  * @author ThomasB
  *
  */
-public final class StandardMove extends AbstractChessMove {
-
+public final class StandardMove extends AbstractChessMove
+{
 	public StandardMove(final BoardSquare start, final BoardSquare target)
 	{
 		super(start, target);
@@ -27,54 +22,50 @@ public final class StandardMove extends AbstractChessMove {
 	@Override
 	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		updateCastlingRights(state, unmakeDataStore);
-		updatePieceLocations(state, unmakeDataStore);
-		updateDevelopedPieces(state, unmakeDataStore);
-	}
-
-	private void updateDevelopedPieces(BoardState state, DataForReversingMove unmakeDataStore)
-	{
-		final EnumSet<DevelopmentPiece> developedPieces = state.getDevelopedPieces();
-		if (developedPieces.size() < 12) {
-			final DevelopmentPiece potentialDevelopment = DevelopmentPiece.fromStartSquare(getSource());
-			if (potentialDevelopment != null && !developedPieces.contains(potentialDevelopment)) {
-				developedPieces.add(potentialDevelopment);
-				unmakeDataStore.setPieceDeveloped(potentialDevelopment);
-			}
-			else {
-				unmakeDataStore.setPieceDeveloped(null);
-			}
-		}
-	}
-
-	private void updatePieceLocations(BoardState state, DataForReversingMove unmakeDataStore)
-	{
-		final Side currentActiveSide = state.getActiveSide(), nextActiveSide = currentActiveSide.otherSide();
-		final ChessPiece movingPiece = state.getPieceLocations().getPieceAt(getSource(), currentActiveSide);
-		final ChessPiece removedPiece = state.getPieceLocations().getPieceAt(getTarget(), nextActiveSide);
-		unmakeDataStore.setPieceTaken(removedPiece);
-		state.getPieceLocations().removePieceAt(getSource(), movingPiece);
-		state.getPieceLocations().addPieceAt(getTarget(), movingPiece);
-		if (removedPiece != null) {
-			state.getPieceLocations().removePieceAt(getTarget(), removedPiece);
-		}
-	}
-
-	private void updateCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
-	{
-		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
-			final EnumSet<CastleZone> rightsRemoved = CastleRightsRemoval.getRightsRemovedBy(this);
-			state.getCastlingStatus().getCastlingRights().removeAll(rightsRemoved);
-			unmakeDataStore.setDiscardedCastlingRights(rightsRemoved);
-		}
-		else if (unmakeDataStore.getDiscardedCastlingRights().size() > 0){
-			unmakeDataStore.setDiscardedCastlingRights(EnumSet.noneOf(CastleZone.class));
-		}
+		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
+		StandardMoveForwardLogic.updateCastlingRights(this, state, unmakeDataStore);
+		StandardMoveForwardLogic.updatePieceLocations(this, state, unmakeDataStore);
+		StandardMoveForwardLogic.updateDevelopedPieces(this, state, unmakeDataStore);
+		state.switchActiveSide();
 	}
 
 	@Override
 	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		throw new RuntimeException();
+		state.switchActiveSide();
+		resetDevelopedPieces(state, unmakeDataStore);
+		resetPieceLocations(state, unmakeDataStore);
+		resetCastlingRights(state, unmakeDataStore);
+		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
+	}
+
+	private void resetDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		state.getDevelopedPieces().remove(unmakeDataStore.getPieceDeveloped());
+	}
+
+	private void resetCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
+	}
+
+	private void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		// Reset half move clock
+		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());
+		// Reset enpassant stuff
+		state.setEnPassantSquare(unmakeDataStore.getDiscardedEnpassantSquare());
+		// Reset location scores
+		state.setMidgamePieceLocationEvaluation(unmakeDataStore.getDiscardedMidgameScore());
+		state.setEndgamePieceLocationEvaluation(unmakeDataStore.getDiscardedEndgameScore());
+		// Reset locations
+		final ChessPiece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());
+		state.getPieceLocations().removePieceAt(getTarget(), previouslyMovedPiece);
+		state.getPieceLocations().addPieceAt(getSource(), previouslyMovedPiece);
+
+		final ChessPiece previouslyRemovedPiece = unmakeDataStore.getPieceTaken();
+		if (previouslyMovedPiece != null) {
+			state.getPieceLocations().addPieceAt(getTarget(), previouslyRemovedPiece);
+		}
 	}
 }

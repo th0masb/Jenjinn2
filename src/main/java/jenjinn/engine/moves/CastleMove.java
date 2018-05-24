@@ -24,34 +24,28 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
-	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
 		unmakeDataStore.setPieceDeveloped(null);
-		updateCastlingRights(state, unmakeDataStore);
-		updatePieceLocations(this, state, unmakeDataStore);
-		state.switchActiveSide();
 	}
 
-	static void updatePieceLocations(final CastleMove move, final BoardState state, final DataForReversingMove unmakeDataStore)
+	@Override
+	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		final Side currentActiveSide = state.getActiveSide();
 		final boolean whiteActive = currentActiveSide.isWhite();
 
-		unmakeDataStore.setDiscardedMidgameScore(state.getPieceLocations().getMidgameEval());
-		unmakeDataStore.setDiscardedEndgameScore(state.getPieceLocations().getEndgameEval());
-
 		final ChessPiece king = whiteActive ? ChessPiece.WHITE_KING : ChessPiece.BLACK_KING;
-		state.getPieceLocations().removePieceAt(move.getWrappedZone().getKingSource(), king);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(move.getWrappedZone().getKingSource(), king));
-		state.getPieceLocations().addPieceAt(move.getWrappedZone().getKingTarget(), king);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(move.getWrappedZone().getKingTarget(), king));
+		state.getPieceLocations().removePieceAt(wrappedZone.getKingSource(), king);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(wrappedZone.getKingSource(), king));
+		state.getPieceLocations().addPieceAt(wrappedZone.getKingTarget(), king);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(wrappedZone.getKingTarget(), king));
 
 		final ChessPiece rook = whiteActive ? ChessPiece.WHITE_ROOK : ChessPiece.BLACK_ROOK;
-		state.getPieceLocations().removePieceAt(move.getWrappedZone().getRookSource(), rook);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(move.getWrappedZone().getRookSource(), rook));
-		state.getPieceLocations().addPieceAt(move.getWrappedZone().getRookTarget(), rook);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(move.getWrappedZone().getRookTarget(), rook));
+		state.getPieceLocations().removePieceAt(wrappedZone.getRookSource(), rook);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(wrappedZone.getRookSource(), rook));
+		state.getPieceLocations().addPieceAt(wrappedZone.getRookTarget(), rook);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(wrappedZone.getRookTarget(), rook));
 
 		unmakeDataStore.setPieceTaken(null);
 
@@ -64,29 +58,21 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
-	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
-	{
-		state.switchActiveSide();
-		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
-		resetPieceLocations(state, unmakeDataStore);
-		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
-	}
-
-	private void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		// Reset half move clock
 		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());
 		// Reset enpassant stuff
 		state.setEnPassantSquare(unmakeDataStore.getDiscardedEnpassantSquare());
 		// Reset locations
-		final ChessPiece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());
-		state.getPieceLocations().removePieceAt(getTarget(), previouslyMovedPiece);
-		state.getPieceLocations().addPieceAt(getSource(), previouslyMovedPiece);
+		final boolean whiteActive = state.getActiveSide().isWhite();
+		final ChessPiece king = whiteActive ? ChessPiece.WHITE_KING : ChessPiece.BLACK_KING;
+		state.getPieceLocations().removePieceAt(wrappedZone.getKingTarget(), king);
+		state.getPieceLocations().addPieceAt(wrappedZone.getKingSource(), king);
 
-		final ChessPiece previouslyRemovedPiece = unmakeDataStore.getPieceTaken();
-		if (previouslyMovedPiece != null) {
-			state.getPieceLocations().addPieceAt(getTarget(), previouslyRemovedPiece);
-		}
+		final ChessPiece rook = whiteActive ? ChessPiece.WHITE_ROOK : ChessPiece.BLACK_ROOK;
+		state.getPieceLocations().removePieceAt(wrappedZone.getRookTarget(), rook);
+		state.getPieceLocations().addPieceAt(wrappedZone.getRookSource(), rook);
 	}
 
 	public CastleZone getWrappedZone()

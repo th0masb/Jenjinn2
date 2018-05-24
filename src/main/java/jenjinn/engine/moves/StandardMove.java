@@ -3,10 +3,16 @@
  */
 package jenjinn.engine.moves;
 
+import static java.lang.Math.abs;
+
+import java.util.EnumSet;
+
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.DevelopmentPiece;
+import jenjinn.engine.enums.Side;
 
 /**
  * @author ThomasB
@@ -20,26 +26,73 @@ public final class StandardMove extends AbstractChessMove
 	}
 
 	@Override
-	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
-		updateCastlingRights(state, unmakeDataStore);
-		StandardMoveForwardLogic.updatePieceLocations(this, state, unmakeDataStore);
-		StandardMoveForwardLogic.updateDevelopedPieces(this, state, unmakeDataStore);
-		state.switchActiveSide();
+		final BoardSquare source = getSource(), target = getTarget();
+		final Side activeSide = state.getActiveSide(), passiveSide = activeSide.otherSide();
+		final ChessPiece movingPiece = state.getPieceLocations().getPieceAt(source, activeSide);
+		final ChessPiece removedPiece = state.getPieceLocations().getPieceAt(target, passiveSide);
+		final boolean pieceWasRemoved = removedPiece != null;
+
+		// Update locations
+		unmakeDataStore.setPieceTaken(removedPiece);
+		state.getPieceLocations().removePieceAt(source, movingPiece);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(source, movingPiece));
+		state.getPieceLocations().addPieceAt(target, movingPiece);
+		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(target, movingPiece));
+		if (pieceWasRemoved) {
+			state.getPieceLocations().removePieceAt(target, removedPiece);
+			state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(target, removedPiece));
+		}
+
+		// Update enpassant stuff
+		final BoardSquare oldEnpassantSquare = state.getEnPassantSquare();
+		unmakeDataStore.setDiscardedEnpassantSquare(oldEnpassantSquare);
+		if (oldEnpassantSquare != null) {
+			state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getEnpassantFileFeature(oldEnpassantSquare));
+		}
+
+		final boolean pawnWasMoved = movingPiece.isPawn();
+		if (pawnWasMoved) {
+			final int squareOrdinalDifference = target.ordinal() - source.ordinal();
+			if (abs(squareOrdinalDifference) == 16) {
+				final BoardSquare newEnpassantSquare = BoardSquare.fromIndex(source.ordinal() + squareOrdinalDifference/2);
+				state.setEnPassantSquare(newEnpassantSquare);
+				state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getEnpassantFileFeature(newEnpassantSquare));
+			}
+			else {
+				state.setEnPassantSquare(null);
+			}
+		}
+
+		// Update half move clock
+		unmakeDataStore.setDiscardedHalfMoveClock(state.getHalfMoveClock().getValue());
+		if (pawnWasMoved || pieceWasRemoved) {
+			state.getHalfMoveClock().resetValue();
+		}
+		else {
+			state.getHalfMoveClock().incrementValue();
+		}
 	}
 
 	@Override
-	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		state.switchActiveSide();
-		state.getDevelopedPieces().remove(unmakeDataStore.getPieceDeveloped());
-		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
-		resetPieceLocations(state, unmakeDataStore);
-		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
+		final EnumSet<DevelopmentPiece> developedPieces = state.getDevelopedPieces();
+		if (developedPieces.size() < 12) {
+			final DevelopmentPiece potentialDevelopment = DevelopmentPiece.fromStartSquare(getSource());
+			if (potentialDevelopment != null && !developedPieces.contains(potentialDevelopment)) {
+				developedPieces.add(potentialDevelopment);
+				unmakeDataStore.setPieceDeveloped(potentialDevelopment);
+			}
+			else {
+				unmakeDataStore.setPieceDeveloped(null);
+			}
+		}
 	}
 
-	private void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	@Override
+	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		// Reset half move clock
 		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());

@@ -36,7 +36,19 @@ public abstract class AbstractChessMove implements ChessMove
 		return target;
 	}
 
-	protected void updateCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
+	@Override
+	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		assert unmakeDataStore.isConsumed();
+		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount());
+		updateCastlingRights(state, unmakeDataStore);
+		updatePieceLocations(state, unmakeDataStore);
+		updateDevelopedPieces(state, unmakeDataStore);
+		state.switchActiveSide();
+		unmakeDataStore.setConsumed(false);
+	}
+
+	void updateCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		if (state.getCastlingStatus().getCastlingRights().size() > 0)
 		{
@@ -54,4 +66,22 @@ public abstract class AbstractChessMove implements ChessMove
 			unmakeDataStore.setDiscardedCastlingRights(EnumSet.noneOf(CastleZone.class));
 		}
 	}
+
+	abstract void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore);
+
+	abstract void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore);
+
+	@Override
+	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		assert !unmakeDataStore.isConsumed();
+		state.switchActiveSide();
+		state.getDevelopedPieces().remove(unmakeDataStore.getPieceDeveloped());
+		state.getCastlingStatus().getCastlingRights().addAll(unmakeDataStore.getDiscardedCastlingRights());
+		resetPieceLocations(state, unmakeDataStore);
+		state.getHashCache().decrementHalfMoveCount(unmakeDataStore.getDiscardedHash());
+		unmakeDataStore.setConsumed(true);
+	}
+
+	abstract void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore);
 }

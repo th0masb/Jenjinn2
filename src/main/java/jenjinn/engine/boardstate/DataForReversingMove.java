@@ -16,14 +16,26 @@ import jenjinn.engine.enums.DevelopmentPiece;
  */
 public class DataForReversingMove {
 
+	private boolean consumed = false;
+
 	private Set<CastleZone> discardedCastlingRights;
 	private ChessPiece pieceTaken;
 	private DevelopmentPiece pieceDeveloped;
 	private BoardSquare discardedEnpassantSquare;
 	private long discardedHash;
-	private int discardedMidgameScore, discardedEndgameScore, discardedHalfMoveClock;
+	private int discardedHalfMoveClock;
 
 	public DataForReversingMove() {
+	}
+
+	public boolean isConsumed()
+	{
+		return consumed;
+	}
+
+	public void setConsumed(final boolean consumed)
+	{
+		this.consumed = consumed;
 	}
 
 	public Set<CastleZone> getDiscardedCastlingRights()
@@ -74,26 +86,6 @@ public class DataForReversingMove {
 	public void setDiscardedHash(final long discardedHash)
 	{
 		this.discardedHash = discardedHash;
-	}
-
-	public int getDiscardedMidgameScore()
-	{
-		return discardedMidgameScore;
-	}
-
-	public void setDiscardedMidgameScore(final int discardedMidgameScore)
-	{
-		this.discardedMidgameScore = discardedMidgameScore;
-	}
-
-	public int getDiscardedEndgameScore()
-	{
-		return discardedEndgameScore;
-	}
-
-	public void setDiscardedEndgameScore(final int discardedEndgameScore)
-	{
-		this.discardedEndgameScore = discardedEndgameScore;
 	}
 
 	public int getDiscardedHalfMoveClockValue()

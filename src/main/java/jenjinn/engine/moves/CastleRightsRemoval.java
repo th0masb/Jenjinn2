@@ -29,8 +29,9 @@ public final class CastleRightsRemoval
 
 	private static final Map<BoardSquare, Set<CastleZone>> RIGHTS_MOVE_REMOVAL_MAP = initMoveRemovalMap();
 	private static final Map<CastleZone, Set<CastleZone>> RIGHTS_CASTLE_REMOVAL_MAP = initCastleRemovalMap();
+	private static final Set<CastleZone> EMPTY_RIGHTS = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
 
-	public static Set<CastleZone> getRightsRemovedBy(ChessMove move)
+	public static Set<CastleZone> getRightsRemovedBy(final ChessMove move)
 	{
 		if (move instanceof StandardMove) {
 			return getRightsRemovedBy((StandardMove) move);
@@ -39,11 +40,11 @@ public final class CastleRightsRemoval
 			return getRightsRemovedBy((CastleMove) move);
 		}
 		else {
-			throw new AssertionError("not yet impl");
+			return EMPTY_RIGHTS;
 		}
 	}
 
-	static Set<CastleZone> getRightsRemovedBy(CastleMove move)
+	static Set<CastleZone> getRightsRemovedBy(final CastleMove move)
 	{
 		return RIGHTS_CASTLE_REMOVAL_MAP.get(move.getWrappedZone());
 	}

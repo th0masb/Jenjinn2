@@ -19,7 +19,9 @@ public interface ChessMove
 	/**
 	 * Mutate the state of the parameter {@linkplain BoardState} according
 	 * to this move. Store required data for reversing this move in the parameter
-	 * {@linkplain DataForReversingMove} instance.
+	 * {@linkplain DataForReversingMove} instance. Upon mutation of the state of
+	 * the board in this forward direction a {@linkplain ChessMove} <b>must
+	 * update all</b> the parameters in the {@linkplain DataForReversingMove} instance.
 	 *
 	 * @param state
 	 * @param unmakeDataStore

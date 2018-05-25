@@ -63,22 +63,22 @@ final class CharGrid
 		return Arrays.copyOf(BLANK_GRID, BLANK_GRID.length);
 	}
 
-//	private static String testGrid()
-//	{
-//		final char[] grid = getNewGrid();
-//
-//		BoardSquare.iterateAll().forEach(square ->
-//		{
-//			final int gridIndex = mapToGridIndex(square);
-//			final char[] entry = reverse(square.name().toCharArray());
-//			System.arraycopy(entry, 0, grid, gridIndex, 2);
-//		});
-//
-//		return FormatBoard.formatGrid(grid);
-//	}
-//
-//	public static void main(final String[] args)
-//	{
-//		System.out.println(testGrid());
-//	}
+	//	private static String testGrid()
+	//	{
+	//		final char[] grid = getNewGrid();
+	//
+	//		BoardSquare.iterateAll().forEach(square ->
+	//		{
+	//			final int gridIndex = mapToGridIndex(square);
+	//			final char[] entry = reverse(square.name().toCharArray());
+	//			System.arraycopy(entry, 0, grid, gridIndex, 2);
+	//		});
+	//
+	//		return FormatBoard.formatGrid(grid);
+	//	}
+
+	public static void main(final String[] args)
+	{
+		System.out.println(Arrays.toString(BLANK_GRID));
+	}
 }

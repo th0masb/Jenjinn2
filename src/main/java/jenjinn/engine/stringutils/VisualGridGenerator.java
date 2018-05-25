@@ -13,6 +13,7 @@ import java.util.Map;
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.misc.PieceLocations;
 import xawd.jflow.iterators.construction.Iterate;
 
@@ -23,6 +24,11 @@ import xawd.jflow.iterators.construction.Iterate;
 public final class VisualGridGenerator
 {
 	private VisualGridGenerator() {
+	}
+
+	public static TitledVisualGrid from(String title, Map<BoardSquare, ChessPiece> locations)
+	{
+		return new TitledVisualGrid(title, Iterate.over(locations.keySet()).toMap(x -> x, x -> CharPair.from(locations.get(x))));
 	}
 
 	public static List<TitledVisualGrid> from(final DetailedPieceLocations locations)

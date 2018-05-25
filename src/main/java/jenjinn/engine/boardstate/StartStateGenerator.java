@@ -8,6 +8,8 @@ import java.util.EnumSet;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.stringutils.StringifyBoard;
+import jenjinn.engine.stringutils.VisualGridGenerator;
 
 /**
  * @author ThomasB
@@ -51,5 +53,14 @@ public final class StartStateGenerator
 				null,
 				getStartStatus(),
 				EnumSet.noneOf(DevelopmentPiece.class));
+	}
+
+	public static void main(String[] args)
+	{
+		//		VisualGridGenerator.from("Test", new HashMap<>()).getGridLines().forEach(System.out::println);
+
+		//		System.out.println(StringifyBoard.formatGrid(VisualGridGenerator.from("Test", new HashMap<>())));
+
+		System.out.println(StringifyBoard.formatGrids(VisualGridGenerator.from(getStartLocations())));
 	}
 }

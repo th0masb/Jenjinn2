@@ -66,10 +66,9 @@ public final class TitledVisualGrid
 	private char[] convertVisualGridToCharArray()
 	{
 		final char[] grid = CharGrid.getNewGrid();
-		BoardSquare.iterateAll().forEach(square ->
-		{
+		BoardSquare.iterateAll().forEach(square -> {
 			final int gridIndex = CharGrid.mapToGridIndex(square);
-			final char[] entry = visualGrid.containsKey(square)? visualGrid.get(square).toArray() : new char[2];
+			final char[] entry = visualGrid.containsKey(square)? visualGrid.get(square).toArray() : new char[] {' ', ' '};
 			System.arraycopy(entry, 0, grid, gridIndex, 2);
 		});
 		return grid;

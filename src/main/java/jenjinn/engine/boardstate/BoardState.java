@@ -90,15 +90,4 @@ public final class BoardState
 	{
 		return hashCache;
 	}
-
-	// Move to own file?
-	public static BoardState getStartBoard()
-	{
-		return new BoardState(
-				Side.W,
-				DetailedPieceLocations.getStartLocations(),
-				null,
-				CastlingStatus.getStartStatus(),
-				EnumSet.noneOf(DevelopmentPiece.class));
-	}
 }

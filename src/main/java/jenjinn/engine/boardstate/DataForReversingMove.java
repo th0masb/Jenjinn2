@@ -16,6 +16,13 @@ import jenjinn.engine.enums.DevelopmentPiece;
  */
 public class DataForReversingMove {
 
+	/**
+	 * Populating instance in forward direction sets consumed to false. Using
+	 * instance to undo a move sets consumed to true.
+	 *
+	 * Can only be populated in forward direction if consumed. Can only be used to
+	 * undo a move if not consumed.
+	 */
 	private boolean consumed = false;
 
 	private Set<CastleZone> discardedCastlingRights;

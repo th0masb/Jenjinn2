@@ -17,7 +17,7 @@ final class CharGrid
 {
 	private CharGrid() {}
 
-	static final int BOARD_CHAR_WIDTH = 3*8 + 1, BOARD_LINE_HEIGHT = 2*8 + 1;
+	public static final int BOARD_CHAR_WIDTH = 3*8 + 1, BOARD_LINE_HEIGHT = 2*8 + 1;
 
 	private static final char[] BLANK_GRID = initGrid();
 

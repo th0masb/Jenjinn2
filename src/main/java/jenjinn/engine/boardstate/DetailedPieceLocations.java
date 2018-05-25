@@ -8,6 +8,8 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
+import java.util.Arrays;
+
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
@@ -48,12 +50,12 @@ public final class DetailedPieceLocations
 		return blackLocations;
 	}
 
-	public long getPieceLocations(ChessPiece piece)
+	public long getPieceLocations(final ChessPiece piece)
 	{
 		return pieceLocations[piece.ordinal()];
 	}
 
-	public void addPieceAt(BoardSquare location, ChessPiece pieceToAdd)
+	public void addPieceAt(final BoardSquare location, final ChessPiece pieceToAdd)
 	{
 		midgameEval += midgameTables.getLocationValue(pieceToAdd, location);
 		endgameEval += endgameTables.getLocationValue(pieceToAdd, location);
@@ -70,7 +72,7 @@ public final class DetailedPieceLocations
 		}
 	}
 
-	public void removePieceAt(BoardSquare location, ChessPiece pieceToRemove)
+	public void removePieceAt(final BoardSquare location, final ChessPiece pieceToRemove)
 	{
 		midgameEval -= midgameTables.getLocationValue(pieceToRemove, location);
 		endgameEval -= endgameTables.getLocationValue(pieceToRemove, location);
@@ -120,23 +122,49 @@ public final class DetailedPieceLocations
 		return endgameEval;
 	}
 
-	public static DetailedPieceLocations getStartLocations()
-	{
-		final long[] startLocs = new long[] {
-				0b11111111L << 8,
-				0b01000010L,
-				0b00100100L,
-				0b10000001L,
-				0b00010000L,
-				0b00001000L,
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (blackLocations ^ (blackLocations >>> 32));
+		result = prime * result + endgameEval;
+		result = prime * result + ((endgameTables == null) ? 0 : endgameTables.hashCode());
+		result = prime * result + midgameEval;
+		result = prime * result + ((midgameTables == null) ? 0 : midgameTables.hashCode());
+		result = prime * result + Arrays.hashCode(pieceLocations);
+		result = prime * result + (int) (whiteLocations ^ (whiteLocations >>> 32));
+		return result;
+	}
 
-				0b11111111L << 48,
-				0b01000010L << 56,
-				0b00100100L << 56,
-				0b10000001L << 56,
-				0b00010000L << 56,
-				0b00001000L << 56,
-		};
-		return new DetailedPieceLocations(startLocs);
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final DetailedPieceLocations other = (DetailedPieceLocations) obj;
+		if (blackLocations != other.blackLocations)
+			return false;
+		if (endgameEval != other.endgameEval)
+			return false;
+		if (endgameTables == null) {
+			if (other.endgameTables != null)
+				return false;
+		} else if (!endgameTables.equals(other.endgameTables))
+			return false;
+		if (midgameEval != other.midgameEval)
+			return false;
+		if (midgameTables == null) {
+			if (other.midgameTables != null)
+				return false;
+		} else if (!midgameTables.equals(other.midgameTables))
+			return false;
+		if (!Arrays.equals(pieceLocations, other.pieceLocations))
+			return false;
+		if (whiteLocations != other.whiteLocations)
+			return false;
+		return true;
 	}
 }

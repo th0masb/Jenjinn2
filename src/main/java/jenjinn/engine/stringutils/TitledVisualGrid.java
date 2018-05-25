@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.utils;
+package jenjinn.engine.stringutils;
 
 import static xawd.jflow.utilities.CollectionUtil.reverse;
 

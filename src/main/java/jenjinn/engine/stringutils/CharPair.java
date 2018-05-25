@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.utils;
+package jenjinn.engine.stringutils;
 
 import jenjinn.engine.enums.ChessPiece;
 
@@ -26,14 +26,17 @@ public final class CharPair
 
 	public static CharPair from(final ChessPiece piece)
 	{
-		final String[] split = piece.name().split("_");
-		return new CharPair(split[1].charAt(0), split[0].charAt(0));
+		if (piece == ChessPiece.WHITE_KNIGHT) {
+			return of('N', 'W');
+		}
+		else if (piece == ChessPiece.BLACK_KNIGHT) {
+			return of('N', 'B');
+		}
+		else {
+			final String[] split = piece.name().split("_");
+			return new CharPair(split[1].charAt(0), split[0].charAt(0));
+		}
 	}
-
-//	public static CharPair blank()
-//	{
-//		return new CharPair(' ', ' ');
-//	}
 
 	public char[] toArray()
 	{

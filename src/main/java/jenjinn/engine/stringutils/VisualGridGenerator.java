@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.utils;
+package jenjinn.engine.stringutils;
 
 import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
@@ -25,7 +25,7 @@ public final class VisualGridGenerator
 	private VisualGridGenerator() {
 	}
 
-	public static List<TitledVisualGrid> fromDetailPieceLocations(final DetailedPieceLocations locations)
+	public static List<TitledVisualGrid> from(final DetailedPieceLocations locations)
 	{
 		final Map<BoardSquare, CharPair> pieceMapping = new HashMap<>();
 		ChessPieces.iterate().forEach(piece -> {
@@ -38,12 +38,12 @@ public final class VisualGridGenerator
 
 		return asList(
 				new TitledVisualGrid("Pieces", pieceMapping),
-				fromBitboard("White pieces", locations.getWhiteLocations()),
-				fromBitboard("Black pieces", locations.getBlackLocations())
+				from("White pieces", locations.getWhiteLocations()),
+				from("Black pieces", locations.getBlackLocations())
 				);
 	}
 
-	public static TitledVisualGrid fromBitboard(final String title, final long bitboard)
+	public static TitledVisualGrid from(final String title, final long bitboard)
 	{
 		return new TitledVisualGrid(
 				title,
@@ -51,12 +51,12 @@ public final class VisualGridGenerator
 				);
 	}
 
-	public static TitledVisualGrid fromBitboard(final long bitboard)
+	public static TitledVisualGrid from(final long bitboard)
 	{
-		return fromBitboard("", bitboard);
+		return from("", bitboard);
 	}
 
-	public static TitledVisualGrid fromPieceLocations(final String title, final PieceLocations locations)
+	public static TitledVisualGrid from(final String title, final PieceLocations locations)
 	{
 		final int[] whiteLocs = getSetBitIndices(locations.getWhite()), blackLocs = getSetBitIndices(locations.getBlack());
 		final Map<BoardSquare, CharPair> locs = Iterate.over(whiteLocs).toMap(BoardSquare::fromIndex, i -> new CharPair('X', 'W'));
@@ -67,6 +67,6 @@ public final class VisualGridGenerator
 
 	public static TitledVisualGrid fromPieceLocations(final PieceLocations locations)
 	{
-		return fromPieceLocations("", locations);
+		return from("", locations);
 	}
 }

@@ -1,12 +1,11 @@
 /**
  *
  */
-package jenjinn.engine.utils;
+package jenjinn.engine.stringutils;
 
 import java.util.Arrays;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
 import xawd.jflow.iterators.construction.IterRange;
 
 /**
@@ -62,26 +61,6 @@ final class CharGrid
 	static char[] getNewGrid()
 	{
 		return Arrays.copyOf(BLANK_GRID, BLANK_GRID.length);
-	}
-
-	static char[] createPieceChars(final ChessPiece piece)
-	{
-		final char[] pieceRep = new char[2];
-		final String pieceName = piece.name();
-
-		pieceRep[1] = pieceName.charAt(0);
-
-		final int underscoreIndex = pieceName.indexOf('_');
-		assert underscoreIndex > -1;
-
-		if (piece.ordinal() % 6 != 1) {
-			pieceRep[0] = pieceName.charAt(underscoreIndex + 1);
-		}
-		else {
-			pieceRep[0] = 'N';
-		}
-
-		return pieceRep;
 	}
 
 //	private static String testGrid()

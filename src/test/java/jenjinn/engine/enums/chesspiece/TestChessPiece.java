@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.enums.chesspiece;
+package jenjinn.engine.enums.chesspiece;
 
 import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;

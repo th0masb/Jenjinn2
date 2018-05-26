@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.enums.chesspiece;
+package jenjinn.engine.enums.chesspiece;
 
 import static java.util.stream.Collectors.toList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;

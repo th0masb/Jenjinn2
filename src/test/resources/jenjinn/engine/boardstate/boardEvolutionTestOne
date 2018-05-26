@@ -1,0 +1,9 @@
+white_pieces: [(), (), (), (), (), ()]
+black_pieces: [(), (), (), (), (), ()]
+half_move_clock: 0
+castling_rights: []
+white_castle_status: none
+black_castle_status: none
+developed_pieces: []
+active_side: white
+enpassant_square: none

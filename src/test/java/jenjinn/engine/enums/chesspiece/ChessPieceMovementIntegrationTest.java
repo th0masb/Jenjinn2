@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.enums.chesspiece;
+package jenjinn.engine.enums.chesspiece;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;

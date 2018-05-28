@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.utils.FileUtils;
-import xawd.jflow.iterators.construction.IterRange;
 import xawd.jflow.iterators.construction.ReverseIterate;
 
 /**
@@ -30,8 +29,11 @@ public final class TableParser
 
 	public static PieceSquareTable parseFile(final ChessPiece piece, final Class<?> packageProvider, final String filename)
 	{
+		if (!piece.isWhite()) {
+			throw new IllegalArgumentException();
+		}
 		final List<String> lines = FileUtils.loadResourceFromPackageOf(packageProvider, filename).collect(toList());
-		final Pattern numberPattern = Pattern.compile("-*[0-9]+");
+		final Pattern numberPattern = Pattern.compile("-?[0-9]+");
 
 		final int[] parseResult = ReverseIterate.over(lines)
 				.map(line -> getAllMatches(line, numberPattern))
@@ -39,15 +41,6 @@ public final class TableParser
 				.flattenToInts(ReverseIterate::over)
 				.toArray();
 
-		return new PieceSquareTable(piece, piece.isWhite()? parseResult : invertValues(parseResult));
-	}
-
-	/**
-	 * The corresponding piece square table for black pieces is horizontally symmetric to the one for
-	 * white pieces.
-	 */
-	static int[] invertValues(final int[] whiteValues)
-	{
-		return IterRange.to(64).map(i -> -whiteValues[63 - 1 - 8*(i/8) - (7 - (i % 8))]).toArray();
+		return new PieceSquareTable(piece, parseResult);
 	}
 }

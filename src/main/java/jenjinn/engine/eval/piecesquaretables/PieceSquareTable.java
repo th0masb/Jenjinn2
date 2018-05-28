@@ -5,8 +5,10 @@ package jenjinn.engine.eval.piecesquaretables;
 
 import java.util.Arrays;
 
+import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
+import xawd.jflow.iterators.construction.IterRange;
 
 /**
  * @author ThomasB
@@ -33,6 +35,14 @@ public final class PieceSquareTable
 	public int getValueAt(final BoardSquare location)
 	{
 		return locationValues[location.ordinal()];
+	}
+
+	public PieceSquareTable invertValues()
+	{
+		return new PieceSquareTable(
+				ChessPieces.fromIndex((associatedPiece.ordinal() + 6) % 12),
+				IterRange.to(64).map(i -> -locationValues[63  - 8*(i/8) - (7 - (i % 8))]).toArray()
+				);
 	}
 
 	@Override

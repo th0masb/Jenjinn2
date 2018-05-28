@@ -47,7 +47,7 @@ final class BitboardsInitialisationSection3
 
 			for (final long occVar : singleSquareOccupancyVariations) {
 				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
-				singleSquareMagicMoveDatabase[magicIndex] = findControlSetFromOccupancyVariation(BoardSquare.fromIndex(i), occVar, movementDirections);
+				singleSquareMagicMoveDatabase[magicIndex] = findControlSetFromOccupancyVariation(BoardSquare.of(i), occVar, movementDirections);
 			}
 			magicMoveDatabase[i] = singleSquareMagicMoveDatabase;
 		}

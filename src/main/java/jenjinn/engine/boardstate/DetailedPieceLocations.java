@@ -5,6 +5,7 @@ package jenjinn.engine.boardstate;
 
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
@@ -15,6 +16,8 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * Handles piece locations as well as tracking the positional evaluation.
@@ -26,18 +29,43 @@ public final class DetailedPieceLocations
 	private final long[] pieceLocations;
 	private long whiteLocations, blackLocations;
 
-	// TODO initialise me
-	private final PieceSquareTables midgameTables = null, endgameTables = null;
+	private final PieceSquareTables midgameTables, endgameTables;
 	private int midgameEval = 0, endgameEval = 0;
 
-	public DetailedPieceLocations(final long[] pieceLocations)
+	public DetailedPieceLocations(
+			Flow<Long> pieceLocations,
+			PieceSquareTables midgameTables,
+			PieceSquareTables endgameTables)
+	{
+		this(pieceLocations.mapToLong(Long::longValue).toArray(), midgameTables, endgameTables);
+	}
+
+	public DetailedPieceLocations(
+			long[] pieceLocations,
+			PieceSquareTables midgameTables,
+			PieceSquareTables endgameTables)
 	{
 		if (pieceLocations.length != 12) {
 			throw new IllegalArgumentException();
 		}
 		this.pieceLocations = pieceLocations;
-		whiteLocations = bitwiseOr(take(6, pieceLocations));
-		blackLocations = bitwiseOr(drop(6, pieceLocations));
+		this.whiteLocations = bitwiseOr(take(6, pieceLocations));
+		this.blackLocations = bitwiseOr(drop(6, pieceLocations));
+		this.midgameTables = midgameTables;
+		this.endgameTables = endgameTables;
+		this.midgameEval = evalPieceLocs(pieceLocations, midgameTables);
+		this.endgameEval = evalPieceLocs(pieceLocations, endgameTables);
+	}
+
+	private int evalPieceLocs(long[] locations, PieceSquareTables tables)
+	{
+		return ChessPieces.iterate()
+				.mapToInt(piece -> {
+					return Iterate.over(getSetBitIndices(locations[piece.ordinal()]))
+							.map(loc -> tables.getLocationValue(piece, BoardSquare.of(loc)))
+							.reduce(0, (a, b) -> a + b);
+				})
+				.reduce(0, (a, b) -> a + b);
 	}
 
 	public long getWhiteLocations()

@@ -6,8 +6,6 @@ package jenjinn.engine.boardstate;
 import java.util.EnumSet;
 
 import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
 import jenjinn.engine.stringutils.StringifyBoard;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 
@@ -27,32 +25,34 @@ public final class StartStateGenerator
 
 	public static DetailedPieceLocations getStartLocations()
 	{
-		final long[] startLocs = new long[] {
-				0b11111111L << 8,
-				0b01000010L,
-				0b00100100L,
-				0b10000001L,
-				0b00010000L,
-				0b00001000L,
-
-				0b11111111L << 48,
-				0b01000010L << 56,
-				0b00100100L << 56,
-				0b10000001L << 56,
-				0b00010000L << 56,
-				0b00001000L << 56,
-		};
-		return new DetailedPieceLocations(startLocs);
+		throw new RuntimeException();
+		//		final long[] startLocs = new long[] {
+		//				0b11111111L << 8,
+		//				0b01000010L,
+		//				0b00100100L,
+		//				0b10000001L,
+		//				0b00010000L,
+		//				0b00001000L,
+		//
+		//				0b11111111L << 48,
+		//				0b01000010L << 56,
+		//				0b00100100L << 56,
+		//				0b10000001L << 56,
+		//				0b00010000L << 56,
+		//				0b00001000L << 56,
+		//		};
+		//		return new DetailedPieceLocations(startLocs);
 	}
 
 	public static BoardState getStartBoard()
 	{
-		return new BoardState(
-				Side.W,
-				getStartLocations(),
-				null,
-				getStartStatus(),
-				EnumSet.noneOf(DevelopmentPiece.class));
+		throw new RuntimeException();
+		//		return new BoardState(
+		//				Side.W,
+		//				getStartLocations(),
+		//				null,
+		//				getStartStatus(),
+		//				EnumSet.noneOf(DevelopmentPiece.class));
 	}
 
 	public static void main(String[] args)

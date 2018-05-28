@@ -36,7 +36,7 @@ public final class VisualGridGenerator
 		final Map<BoardSquare, CharPair> pieceMapping = new HashMap<>();
 		ChessPieces.iterate().forEach(piece -> {
 			Iterate.over(getSetBitIndices(locations.getPieceLocations(piece)))
-			.mapToObject(BoardSquare::fromIndex)
+			.mapToObject(BoardSquare::of)
 			.forEach(square -> {
 				pieceMapping.put(square, CharPair.from(piece));
 			});
@@ -53,7 +53,7 @@ public final class VisualGridGenerator
 	{
 		return new TitledVisualGrid(
 				title,
-				Iterate.over(getSetBitIndices(bitboard)).toMap(BoardSquare::fromIndex, x -> new CharPair('X', 'X'))
+				Iterate.over(getSetBitIndices(bitboard)).toMap(BoardSquare::of, x -> new CharPair('X', 'X'))
 				);
 	}
 
@@ -65,8 +65,8 @@ public final class VisualGridGenerator
 	public static TitledVisualGrid from(final String title, final PieceLocations locations)
 	{
 		final int[] whiteLocs = getSetBitIndices(locations.getWhite()), blackLocs = getSetBitIndices(locations.getBlack());
-		final Map<BoardSquare, CharPair> locs = Iterate.over(whiteLocs).toMap(BoardSquare::fromIndex, i -> new CharPair('X', 'W'));
-		locs.putAll(Iterate.over(blackLocs).toMap(BoardSquare::fromIndex, i -> new CharPair('X', 'B')));
+		final Map<BoardSquare, CharPair> locs = Iterate.over(whiteLocs).toMap(BoardSquare::of, i -> new CharPair('X', 'W'));
+		locs.putAll(Iterate.over(blackLocs).toMap(BoardSquare::of, i -> new CharPair('X', 'B')));
 
 		return new TitledVisualGrid(title, locs);
 	}

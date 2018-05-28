@@ -5,7 +5,7 @@ package jenjinn.engine.moves;
 
 import static java.lang.Math.abs;
 
-import java.util.EnumSet;
+import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
@@ -56,7 +56,7 @@ public final class StandardMove extends AbstractChessMove
 		if (pawnWasMoved) {
 			final int squareOrdinalDifference = target.ordinal() - source.ordinal();
 			if (abs(squareOrdinalDifference) == 16) {
-				final BoardSquare newEnpassantSquare = BoardSquare.fromIndex(source.ordinal() + squareOrdinalDifference/2);
+				final BoardSquare newEnpassantSquare = BoardSquare.of(source.ordinal() + squareOrdinalDifference/2);
 				state.setEnPassantSquare(newEnpassantSquare);
 				state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getEnpassantFileFeature(newEnpassantSquare));
 			}
@@ -78,7 +78,7 @@ public final class StandardMove extends AbstractChessMove
 	@Override
 	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		final EnumSet<DevelopmentPiece> developedPieces = state.getDevelopedPieces();
+		final Set<DevelopmentPiece> developedPieces = state.getDevelopedPieces();
 		if (developedPieces.size() < 12) {
 			final DevelopmentPiece potentialDevelopment = DevelopmentPiece.fromStartSquare(getSource());
 			if (potentialDevelopment != null && !developedPieces.contains(potentialDevelopment)) {

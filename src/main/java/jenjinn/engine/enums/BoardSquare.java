@@ -95,7 +95,7 @@ public enum BoardSquare
 	//		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
 	//	}
 
-	public static BoardSquare fromIndex(final int index)
+	public static BoardSquare of(final int index)
 	{
 		return values()[index];
 	}

@@ -11,7 +11,9 @@ public final class HalfMoveClock
 {
 	private int halfMoveClock;
 
-	public HalfMoveClock() {
+	public HalfMoveClock(int initialValue)
+	{
+		this.halfMoveClock = initialValue;
 	}
 
 	public int getValue()

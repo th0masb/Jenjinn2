@@ -209,7 +209,7 @@ class BoardSquareTest
 	@Test
 	void testFromIndex()
 	{
-		IterRange.to(64).forEach(i -> assertEquals(BoardSquare.values()[i], BoardSquare.fromIndex(i)));
+		IterRange.to(64).forEach(i -> assertEquals(BoardSquare.values()[i], BoardSquare.of(i)));
 	}
 
 	@Test

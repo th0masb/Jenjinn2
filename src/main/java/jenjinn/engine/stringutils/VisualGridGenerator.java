@@ -35,7 +35,7 @@ public final class VisualGridGenerator
 	{
 		final Map<BoardSquare, CharPair> pieceMapping = new HashMap<>();
 		ChessPieces.iterate().forEach(piece -> {
-			Iterate.over(getSetBitIndices(locations.getPieceLocations(piece)))
+			Iterate.over(getSetBitIndices(locations.locationsOf(piece)))
 			.mapToObject(BoardSquare::of)
 			.forEach(square -> {
 				pieceMapping.put(square, CharPair.from(piece));

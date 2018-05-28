@@ -78,7 +78,7 @@ public final class DetailedPieceLocations
 		return blackLocations;
 	}
 
-	public long getPieceLocations(final ChessPiece piece)
+	public long locationsOf(final ChessPiece piece)
 	{
 		return pieceLocations[piece.ordinal()];
 	}

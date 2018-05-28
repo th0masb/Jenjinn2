@@ -3,14 +3,20 @@
  */
 package jenjinn.engine.utils;
 
+import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
+import static xawd.jflow.utilities.MapUtil.longMap;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import jenjinn.engine.ChessPieces;
+import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -54,6 +60,21 @@ public final class ZobristHasher
 	public long getBlackToMoveFeature()
 	{
 		return blackToMoveFeature;
+	}
+
+	public long hashBoardState(BoardState state)
+	{
+		long hash = state.getEnPassantSquare() == null ? 0L : getEnpassantFileFeature(state.getEnPassantSquare());
+		hash ^= state.getActiveSide().isWhite() ? 0L : getBlackToMoveFeature();
+		hash ^= Iterate.over(state.getCastlingStatus().getCastlingRights())
+				.mapToLong(this::getCastleRightsFeature)
+				.reduce(0L, (a, b) -> a ^ b);
+		for (final ChessPiece p : ChessPieces.all()) {
+			final int[] locs = getSetBitIndices(state.getPieceLocations().locationsOf(p));
+			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), p), locs);
+			hash ^= Iterate.over(features).reduce(0L, (a, b) -> a ^ b);
+		}
+		return hash;
 	}
 
 	/*

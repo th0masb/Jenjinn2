@@ -1,7 +1,7 @@
 e2 e4
 
-white_pieces: [(e4 d5), (), (), (), (), ()]
-black_pieces: [(), (), (), (), (), ()]
+white_pieces: (e4 d5), (), (), (), (), ()
+black_pieces: (), (), (), (), (), ()
 half_move_clock: 0
 castling_rights: []
 white_castle_status: none
@@ -10,8 +10,8 @@ developed_pieces: []
 active_side: white
 enpassant_square: none
 
-white_pieces: [(), (), (), (), (), ()]
-black_pieces: [(), (), (), (), (), ()]
+white_pieces: (), (), (), (), (), ()
+black_pieces: (), (), (), (), (), ()
 half_move_clock: 0
 castling_rights: []
 white_castle_status: none

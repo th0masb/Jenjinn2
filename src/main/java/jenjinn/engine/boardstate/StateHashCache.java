@@ -12,15 +12,22 @@ public final class StateHashCache
 {
 	private static final int CACHE_SIZE = 12;
 
-	private final long[] hashCache = new long[CACHE_SIZE];
-	private int totalHalfMoveCount = 0, cacheIndexer = 0;
+	private final long[] hashCache;
+	private int totalHalfMoveCount, cacheIndexer;
 
-	private StateHashCache() {
+	public StateHashCache(long[] hashCache, int halfMoveCount)
+	{
+		if (hashCache.length != CACHE_SIZE) {
+			throw new IllegalArgumentException();
+		}
+		this.hashCache = Arrays.copyOf(hashCache, CACHE_SIZE);
+		this.totalHalfMoveCount = halfMoveCount;
+		updateCacheIndexer();
 	}
 
-	public static StateHashCache getGameStartCache()
+	public StateHashCache()
 	{
-		throw new RuntimeException();
+		this(new long[CACHE_SIZE], 0);
 	}
 
 	public long incrementHalfMoveCount()

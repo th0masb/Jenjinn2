@@ -1,13 +1,14 @@
 /**
  *
  */
-package jenjinn.engine.boardstate;
+package jenjinn.engine.moves;
 
 import static jenjinn.engine.stringutils.StringifyBoard.formatGrids;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 
 /**

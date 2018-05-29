@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate;
+package jenjinn.engine.moves;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static xawd.jflow.utilities.MapUtil.objMap;
@@ -13,18 +13,25 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import jenjinn.engine.bitboards.BitboardUtils;
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.CastlingStatus;
+import jenjinn.engine.boardstate.DetailedPieceLocations;
+import jenjinn.engine.boardstate.HalfMoveClock;
+import jenjinn.engine.boardstate.StateHashCache;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
+import jenjinn.engine.eval.piecesquaretables.TestingPieceSquareTables;
+import jenjinn.engine.utils.BoardStateHasher;
+import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author t
- *
  */
-public final class BoardParseUtils {
-
+public final class BoardParseUtils
+{
 	private BoardParseUtils() {}
 
 	public static BoardState parseBoard(final List<String> attributes)
@@ -39,9 +46,16 @@ public final class BoardParseUtils {
 		final Set<DevelopmentPiece> developedPieces = constructDevelopedPieces(atts.get(6));
 		final Side activeSide = constructActiveSide(atts.get(7));
 		final BoardSquare enpassantSquare = constructEnpassantSquare(atts.get(8));
+		final ZobristHasher stateHasher = BoardStateHasher.getDefault();
+		final long hashOfConstructedState = stateHasher.hashBoardState(activeSide, enpassantSquare, castlingStatus, pieceLocations);
+		final StateHashCache hashCache = constructDummyHashCache(hashOfConstructedState);
+		return new BoardState(stateHasher, hashCache, pieceLocations, clock,
+				castlingStatus, developedPieces, activeSide, enpassantSquare);
+	}
 
+	private static StateHashCache constructDummyHashCache(long initializedBoardHash)
+	{
 		throw new RuntimeException();
-		//		return new BoardState(stateHasher, hashCache, pieceLocations, gameClock, castlingStatus, developedPieces, activeSide, enPassantSquare)
 	}
 
 	private static BoardSquare constructEnpassantSquare(String string)
@@ -64,13 +78,13 @@ public final class BoardParseUtils {
 		throw new RuntimeException();
 	}
 
-	public static HalfMoveClock constructHalfMoveClock(String clockString)
+	private static HalfMoveClock constructHalfMoveClock(String clockString)
 	{
 		assertTrue(clockString.trim().matches("^half_move_clock: *[0-9]+$"));
 		return new HalfMoveClock(Integer.parseInt(findFirstMatch(clockString, "[0-9]+").get()));
 	}
 
-	public static DetailedPieceLocations constructPieceLocations(String whiteLocs, String blackLocs)
+	private static DetailedPieceLocations constructPieceLocations(String whiteLocs, String blackLocs)
 	{
 		assertTrue(whiteLocs.trim().matches("^white_locs:.*$"));
 		assertTrue(blackLocs.trim().matches("^black_locs:.*$"));

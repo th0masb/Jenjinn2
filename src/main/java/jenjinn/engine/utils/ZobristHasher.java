@@ -12,9 +12,12 @@ import java.util.Random;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.CastlingStatus;
+import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.Side;
 import xawd.jflow.iterators.construction.IterRange;
 import xawd.jflow.iterators.construction.Iterate;
 
@@ -62,19 +65,32 @@ public final class ZobristHasher
 		return blackToMoveFeature;
 	}
 
-	public long hashBoardState(BoardState state)
+	public long hashBoardState(
+			Side activeSide,
+			BoardSquare enpassantSquare,
+			CastlingStatus castlingStatus,
+			DetailedPieceLocations pieceLocations)
 	{
-		long hash = state.getEnPassantSquare() == null ? 0L : getEnpassantFileFeature(state.getEnPassantSquare());
-		hash ^= state.getActiveSide().isWhite() ? 0L : getBlackToMoveFeature();
-		hash ^= Iterate.over(state.getCastlingStatus().getCastlingRights())
+		long hash = enpassantSquare == null ? 0L : getEnpassantFileFeature(enpassantSquare);
+		hash ^= activeSide.isWhite() ? 0L : getBlackToMoveFeature();
+		hash ^= Iterate.over(castlingStatus.getCastlingRights())
 				.mapToLong(this::getCastleRightsFeature)
 				.reduce(0L, (a, b) -> a ^ b);
-		for (final ChessPiece p : ChessPieces.all()) {
-			final int[] locs = getSetBitIndices(state.getPieceLocations().locationsOf(p));
-			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), p), locs);
+		for (final ChessPiece piece : ChessPieces.all()) {
+			final int[] locs = getSetBitIndices(pieceLocations.locationsOf(piece));
+			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), piece), locs);
 			hash ^= Iterate.over(features).reduce(0L, (a, b) -> a ^ b);
 		}
 		return hash;
+	}
+
+	public long hashBoardState(BoardState state)
+	{
+		return hashBoardState(
+				state.getActiveSide(),
+				state.getEnPassantSquare(),
+				state.getCastlingStatus(),
+				state.getPieceLocations());
 	}
 
 	/*

@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate;
+package jenjinn.engine.eval.piecesquaretables;
 
 import java.util.List;
 

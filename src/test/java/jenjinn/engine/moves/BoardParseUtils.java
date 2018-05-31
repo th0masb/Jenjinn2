@@ -91,7 +91,7 @@ public final class BoardParseUtils
 
 		final Pattern squareSequencePattern = Pattern.compile("\\([a-hA-H1-8, ]*\\)");
 		final Pattern squarePattern = Pattern.compile("[a-hA-H1-8]{2}");
-		final PieceSquareTables testingTables = TestingPieceSquareTables.get();
+		final PieceSquareTables testingTables = TestingPieceSquareTables.getMidgameTables();
 		return Iterate.over(getAllMatches(whiteLocs + blackLocs, squareSequencePattern))
 				.map(x -> getAllMatches(x, squarePattern))
 				.map(xs -> objMap(String::toUpperCase, xs))

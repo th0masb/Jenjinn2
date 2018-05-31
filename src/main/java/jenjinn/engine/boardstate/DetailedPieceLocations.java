@@ -5,7 +5,6 @@ package jenjinn.engine.boardstate;
 
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.BitboardUtils.bitwiseOr;
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
@@ -17,7 +16,6 @@ import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * Handles piece locations as well as tracking the positional evaluation.
@@ -33,17 +31,17 @@ public final class DetailedPieceLocations
 	private int midgameEval = 0, endgameEval = 0;
 
 	public DetailedPieceLocations(
-			Flow<Long> pieceLocations,
-			PieceSquareTables midgameTables,
-			PieceSquareTables endgameTables)
+			final Flow<Long> pieceLocations,
+			final PieceSquareTables midgameTables,
+			final PieceSquareTables endgameTables)
 	{
 		this(pieceLocations.mapToLong(Long::longValue).toArray(), midgameTables, endgameTables);
 	}
 
 	public DetailedPieceLocations(
-			long[] pieceLocations,
-			PieceSquareTables midgameTables,
-			PieceSquareTables endgameTables)
+			final long[] pieceLocations,
+			final PieceSquareTables midgameTables,
+			final PieceSquareTables endgameTables)
 	{
 		if (pieceLocations.length != 12) {
 			throw new IllegalArgumentException();
@@ -53,19 +51,8 @@ public final class DetailedPieceLocations
 		this.blackLocations = bitwiseOr(drop(6, pieceLocations));
 		this.midgameTables = midgameTables;
 		this.endgameTables = endgameTables;
-		this.midgameEval = evalPieceLocs(pieceLocations, midgameTables);
-		this.endgameEval = evalPieceLocs(pieceLocations, endgameTables);
-	}
-
-	private int evalPieceLocs(long[] locations, PieceSquareTables tables)
-	{
-		return ChessPieces.iterate()
-				.mapToInt(piece -> {
-					return Iterate.over(getSetBitIndices(locations[piece.ordinal()]))
-							.map(loc -> tables.getLocationValue(piece, BoardSquare.of(loc)))
-							.reduce(0, (a, b) -> a + b);
-				})
-				.reduce(0, (a, b) -> a + b);
+		this.midgameEval = midgameTables.evaluateLocations(pieceLocations);
+		this.endgameEval = endgameTables.evaluateLocations(pieceLocations);
 	}
 
 	public long getWhiteLocations()
@@ -91,11 +78,11 @@ public final class DetailedPieceLocations
 		assert !bitboardsIntersect(pieceLocations[pieceToAdd.ordinal()], newLocation);
 		pieceLocations[pieceToAdd.ordinal()] |= newLocation;
 		if (pieceToAdd.isWhite()) {
-			assert bitboardsIntersect(whiteLocations, newLocation);
+			assert !bitboardsIntersect(whiteLocations, newLocation);
 			whiteLocations |= newLocation;
 		}
 		else {
-			assert bitboardsIntersect(blackLocations, newLocation);
+			assert !bitboardsIntersect(blackLocations, newLocation);
 			blackLocations |= newLocation;
 		}
 	}

@@ -10,12 +10,12 @@ import java.util.Arrays;
  */
 public final class StateHashCache
 {
-	private static final int CACHE_SIZE = 12;
+	public static final int CACHE_SIZE = 12;
 
 	private final long[] hashCache;
 	private int totalHalfMoveCount, cacheIndexer;
 
-	public StateHashCache(long[] hashCache, int halfMoveCount)
+	public StateHashCache(final long[] hashCache, final int halfMoveCount)
 	{
 		if (hashCache.length != CACHE_SIZE) {
 			throw new IllegalArgumentException();
@@ -55,6 +55,23 @@ public final class StateHashCache
 	public void xorFeatureWithCurrentHash(final long feature)
 	{
 		hashCache[cacheIndexer] ^= feature;
+	}
+
+	public long getHashAt(final int halfMoveClockValue)
+	{
+		return hashCache[halfMoveClockValue % CACHE_SIZE];
+	}
+
+	@Override
+	public String toString()
+	{
+		return new StringBuilder("StateHashCache[")
+				.append("hash values:")
+				.append(Arrays.toString(hashCache))
+				.append(", clock value:")
+				.append(totalHalfMoveCount)
+				.append("]")
+				.toString();
 	}
 
 	/*

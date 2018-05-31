@@ -3,6 +3,8 @@
  */
 package jenjinn.engine.eval.piecesquaretables;
 
+import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
+
 import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -29,6 +31,22 @@ public final class PieceSquareTables
 	public int getLocationValue(final ChessPiece piece, final BoardSquare location)
 	{
 		return tables.get(piece.ordinal()).getValueAt(location);
+	}
+
+	public int evaluateLocations(final long[] pieceLocations)
+	{
+		if (pieceLocations.length != 12) {
+			throw new IllegalArgumentException();
+		}
+		int eval = 0;
+		for (int i = 0; i < pieceLocations.length; i++) {
+			final PieceSquareTable pieceTable = tables.get(i);
+			eval += Iterate.over(getSetBitIndices(pieceLocations[i]))
+					.mapToObject(BoardSquare::of)
+					.mapToInt(loc -> pieceTable.getValueAt(loc))
+					.reduce(0, (a, b) -> a + b);
+		}
+		return eval;
 	}
 
 	@Override

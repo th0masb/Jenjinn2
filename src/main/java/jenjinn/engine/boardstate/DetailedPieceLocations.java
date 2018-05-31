@@ -100,7 +100,7 @@ public final class DetailedPieceLocations
 		}
 		else {
 			assert bitboardsIntersect(blackLocations, newLocation);
-			blackLocations |= location.asBitboard();
+			blackLocations ^= location.asBitboard();
 		}
 	}
 

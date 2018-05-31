@@ -323,6 +323,11 @@ public enum ChessPiece implements Moveable
 		return ordinal() % 6 == 0;
 	}
 
+	public Side getSide()
+	{
+		return isWhite()? Side.WHITE : Side.BLACK;
+	}
+
 	public boolean isWhite()
 	{
 		return ordinal() < 6;

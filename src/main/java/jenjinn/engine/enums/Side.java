@@ -8,7 +8,7 @@ package jenjinn.engine.enums;
  */
 public enum Side 
 {
-	W(0, 1), B(6, -1);
+	WHITE(0, 1), BLACK(6, -1);
 
 	public final int pawnPieceIndex;
 	public final int pawnDirection;
@@ -21,16 +21,16 @@ public enum Side
 
 	public boolean isWhite()
 	{
-		return this == Side.W;
+		return this == Side.WHITE;
 	}
 
 	public Side otherSide()
 	{
-		if (this == B) {
-			return W;
+		if (this == BLACK) {
+			return WHITE;
 		}
 		else {
-			return B;
+			return BLACK;
 		}
 	}
 
@@ -41,7 +41,7 @@ public enum Side
 
 	public boolean isMaximising()
 	{
-		if (this == W) {
+		if (this == WHITE) {
 			return true;
 		}
 		else {

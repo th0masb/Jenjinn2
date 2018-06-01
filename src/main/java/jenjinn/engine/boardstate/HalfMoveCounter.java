@@ -11,7 +11,7 @@ public final class HalfMoveCounter
 {
 	private int halfMoveClock;
 
-	public HalfMoveCounter(int initialValue)
+	public HalfMoveCounter(final int initialValue)
 	{
 		this.halfMoveClock = initialValue;
 	}
@@ -43,6 +43,11 @@ public final class HalfMoveCounter
 				.append(halfMoveClock)
 				.append("]")
 				.toString();
+	}
+
+	public HalfMoveCounter copy()
+	{
+		return new HalfMoveCounter(halfMoveClock);
 	}
 
 	/*

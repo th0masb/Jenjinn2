@@ -56,6 +56,11 @@ public final class HashCache
 		return hashCache[cacheIndexer];
 	}
 
+	public HashCache copy()
+	{
+		return new HashCache(Arrays.copyOf(hashCache, CACHE_SIZE), totalHalfMoveCount);
+	}
+
 	@Override
 	public String toString()
 	{

@@ -148,6 +148,10 @@ public final class DetailedPieceLocations
 		return squarePieceFeatureHash;
 	}
 
+	public DetailedPieceLocations copy()
+	{
+		return new DetailedPieceLocations(Arrays.copyOf(pieceLocations, 12), midgameTables, endgameTables, hashFeatureProvider);
+	}
 
 	// Eclipse generated.
 	@Override

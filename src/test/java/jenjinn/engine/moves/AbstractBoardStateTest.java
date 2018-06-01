@@ -17,12 +17,12 @@ import jenjinn.engine.stringutils.VisualGridGenerator;
  */
 public abstract class AbstractBoardStateTest
 {
-	public BoardState constructBoardState(final List<String> lines)
+	public BoardState constructBoardState(List<String> lines)
 	{
 		throw new RuntimeException();
 	}
 
-	public void assertBoardStatesAreEqual(final BoardState constraint, final BoardState toTest)
+	public void assertBoardStatesAreEqual(BoardState constraint, BoardState toTest)
 	{
 		assertEquals(constraint.getActiveSide(), toTest.getActiveSide());
 		assertEquals(constraint.getEnPassantSquare(), toTest.getEnPassantSquare());
@@ -33,7 +33,7 @@ public abstract class AbstractBoardStateTest
 		assertEquals(constraint.getPieceLocations(), toTest.getPieceLocations(), formatPieceLocationsErrorOutput(constraint, toTest));
 	}
 
-	private String formatPieceLocationsErrorOutput(final BoardState constraint, final BoardState toTest)
+	private String formatPieceLocationsErrorOutput(BoardState constraint, BoardState toTest)
 	{
 		return new StringBuilder()
 				.append(formatGrids(VisualGridGenerator.from(constraint.getPieceLocations())))

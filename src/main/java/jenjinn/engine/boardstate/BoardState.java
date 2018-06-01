@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.boardstate;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -92,5 +93,12 @@ public final class BoardState
 	{
 		final ZobristHasher stateHasher = getPieceLocations().getHashFeatureProvider();
 		return getPieceLocations().getSquarePieceFeatureHash() ^ stateHasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
+	}
+
+	public BoardState copy()
+	{
+		return new BoardState(
+				hashCache.copy(), pieceLocations.copy(), gameClock.copy(), castlingStatus.copy(),
+				EnumSet.copyOf(developedPieces), activeSide, enpassantSquare);
 	}
 }

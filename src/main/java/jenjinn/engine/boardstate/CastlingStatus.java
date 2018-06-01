@@ -5,6 +5,7 @@ package jenjinn.engine.boardstate;
 
 import static xawd.jflow.utilities.CollectionUtil.str;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.enums.CastleZone;
@@ -60,6 +61,11 @@ public final class CastlingStatus
 				.append(str(blackCastlingStatus))
 				.append("]")
 				.toString();
+	}
+
+	public CastlingStatus copy()
+	{
+		return new CastlingStatus(EnumSet.copyOf(castlingRights), whiteCastlingStatus, blackCastlingStatus);
 	}
 
 	/*

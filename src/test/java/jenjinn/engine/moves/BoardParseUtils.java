@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 import jenjinn.engine.bitboards.BitboardUtils;
 import jenjinn.engine.boardstate.BoardState;
@@ -60,8 +59,7 @@ public final class BoardParseUtils
 		final long hashOfConstructedState = stateHasher.hashBoardState(activeSide, enpassantSquare, castlingStatus, pieceLocations);
 		final StateHashCache hashCache = constructDummyHashCache(hashOfConstructedState, moveCount.getValue());
 
-		return new BoardState(stateHasher, hashCache, pieceLocations, moveCount,
-				castlingStatus, developedPieces, activeSide, enpassantSquare);
+		return new BoardState(stateHasher, hashCache, pieceLocations, moveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
 	}
 
 	private static StateHashCache constructDummyHashCache(final long initializedBoardHash, final int halfMoveCount)
@@ -130,22 +128,29 @@ public final class BoardParseUtils
 		return new HalfMoveCounter(Integer.parseInt(findFirstMatch(clockString, "[0-9]+").get()));
 	}
 
-	/*
-	 * TODO - can improve regex precision here, may as well remove comma separation.
-	 */
 	private static DetailedPieceLocations constructPieceLocations(final String whiteLocs, final String blackLocs)
 	{
-		assertTrue(whiteLocs.trim().matches("^white_locs:.*$"));
-		assertTrue(blackLocs.trim().matches("^black_locs:.*$"));
+		/* Arbitrary number of boardsquare separated by whitespace in parentheses */
+		final String groupedSquares = "\\( *([a-h][1-8] *)?( +[a-h][1-8])* *\\)";
+		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquares).reduce(" *", (a, b) -> a + " +" + b);
 
-		final Pattern squareSequencePattern = Pattern.compile("\\([a-hA-H1-8, ]*\\)");
-		final Pattern squarePattern = Pattern.compile("[a-h][1-8]");
+		assertTrue(whiteLocs.trim().matches("^white_pieces:" + sixGroupedSquareSets + "$"));
+		assertTrue(blackLocs.trim().matches("^black_pieces:" + sixGroupedSquareSets + "$"));
+
 		final PieceSquareTables midTables = getMidgameTables(), endTables = getEndgameTables();
-		return Iterate.over(getAllMatches(whiteLocs + blackLocs, squareSequencePattern))
-				.map(x -> getAllMatches(x, squarePattern))
+		return Iterate.over(getAllMatches(whiteLocs + blackLocs, groupedSquares))
+				.map(x -> getAllMatches(x, "[a-h][1-8]"))
 				.map(xs -> objMap(String::toUpperCase, xs))
 				.map(xs -> objMap(BoardSquare::valueOf, xs))
 				.map(BitboardUtils::bitwiseOr)
 				.build(flow -> new DetailedPieceLocations(flow, midTables, endTables));
 	}
+
+//	public static void main(final String[] args) {
+//		final String groupedSquaresGroup = "\\( *([a-h][1-8] *)?( +[a-h][1-8])* *\\)";
+//		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquaresGroup).reduce(" *", (a, b) -> a + " +" + b);
+//
+//		final String whiteLocs = "white_pieces: ( e1 h8  ) (f2) ()  (c7 c8) () ()";
+//		System.out.println(whiteLocs.trim().matches("^white_pieces:" + sixGroupedSquareSets + "$"));
+//	}
 }

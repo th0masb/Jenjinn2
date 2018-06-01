@@ -14,11 +14,11 @@ import jenjinn.engine.enums.Side;
  * @author ThomasB
  *
  */
-public final class EnPassantMove extends AbstractChessMove
+public final class EnpassantMove extends AbstractChessMove
 {
 	private final BoardSquare enPassantSquare;
 
-	public EnPassantMove(final BoardSquare start, final BoardSquare target)
+	public EnpassantMove(final BoardSquare start, final BoardSquare target)
 	{
 		super(start, target);
 		enPassantSquare = target.getNextSquareInDirection(start.ordinal() - target.ordinal() > 0? Direction.N : Direction.S);

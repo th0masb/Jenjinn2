@@ -24,6 +24,15 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
+	public String toString()
+	{
+		return new StringBuilder("CastleMove[zone=")
+				.append(wrappedZone.name())
+				.append("]")
+				.toString();
+	}
+
+	@Override
 	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		unmakeDataStore.setPieceDeveloped(null);

@@ -1,6 +1,3 @@
-/**
- *
- */
 package jenjinn.engine.moves;
 
 import java.util.EnumSet;
@@ -19,9 +16,22 @@ public abstract class AbstractChessMove implements ChessMove
 {
 	private final BoardSquare source, target;
 
-	public AbstractChessMove(final BoardSquare start, final BoardSquare target) {
+	public AbstractChessMove(final BoardSquare start, final BoardSquare target)
+	{
 		this.source = start;
 		this.target = target;
+	}
+
+	@Override
+	public String toString()
+	{
+		return new StringBuilder(getClass().getSimpleName())
+				.append("[source=")
+				.append(source.name())
+				.append("|target=")
+				.append(target.name())
+				.append("]")
+				.toString();
 	}
 
 	@Override
@@ -84,4 +94,30 @@ public abstract class AbstractChessMove implements ChessMove
 	}
 
 	abstract void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore);
+
+	// Eclipse generated
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		result = prime * result + ((target == null) ? 0 : target.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final AbstractChessMove other = (AbstractChessMove) obj;
+		if (source != other.source)
+			return false;
+		if (target != other.target)
+			return false;
+		return true;
+	}
 }

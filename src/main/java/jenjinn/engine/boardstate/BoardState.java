@@ -19,7 +19,7 @@ public final class BoardState
 
 	private final StateHashCache hashCache;// = StateHashCache.getGameStartCache();
 	private final DetailedPieceLocations pieceLocations;
-	private final HalfMoveClock gameClock;// = new HalfMoveClock(0);
+	private final HalfMoveCounter gameClock;// = new HalfMoveClock(0);
 	private final CastlingStatus castlingStatus;
 	private final Set<DevelopmentPiece> developedPieces;
 
@@ -30,7 +30,7 @@ public final class BoardState
 			ZobristHasher stateHasher,
 			StateHashCache hashCache,
 			DetailedPieceLocations pieceLocations,
-			HalfMoveClock gameClock,
+			HalfMoveCounter gameClock,
 			CastlingStatus castlingStatus,
 			Set<DevelopmentPiece> developedPieces,
 			Side activeSide,
@@ -86,7 +86,7 @@ public final class BoardState
 		return stateHasher;
 	}
 
-	public HalfMoveClock getHalfMoveClock()
+	public HalfMoveCounter getHalfMoveClock()
 	{
 		return gameClock;
 	}

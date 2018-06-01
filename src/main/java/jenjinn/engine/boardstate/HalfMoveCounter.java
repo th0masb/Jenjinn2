@@ -7,11 +7,11 @@ package jenjinn.engine.boardstate;
  * @author ThomasB
  *
  */
-public final class HalfMoveClock
+public final class HalfMoveCounter
 {
 	private int halfMoveClock;
 
-	public HalfMoveClock(int initialValue)
+	public HalfMoveCounter(int initialValue)
 	{
 		this.halfMoveClock = initialValue;
 	}
@@ -64,7 +64,7 @@ public final class HalfMoveClock
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final HalfMoveClock other = (HalfMoveClock) obj;
+		final HalfMoveCounter other = (HalfMoveCounter) obj;
 		if (halfMoveClock != other.halfMoveClock)
 			return false;
 		return true;

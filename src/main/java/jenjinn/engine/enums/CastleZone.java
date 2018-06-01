@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.enums;
 
+import static java.util.Arrays.asList;
 import static jenjinn.engine.enums.BoardSquare.A1;
 import static jenjinn.engine.enums.BoardSquare.A8;
 import static jenjinn.engine.enums.BoardSquare.B1;
@@ -17,6 +18,9 @@ import static jenjinn.engine.enums.BoardSquare.G1;
 import static jenjinn.engine.enums.BoardSquare.G8;
 import static jenjinn.engine.enums.BoardSquare.H1;
 import static jenjinn.engine.enums.BoardSquare.H8;
+
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -63,5 +67,16 @@ public enum CastleZone
 	public boolean isWhiteZone()
 	{
 		return ordinal() < 2;
+	}
+
+	public String getSimpleIdentifier()
+	{
+		final String[] split = name().toLowerCase().split("_");
+		return new String(new char[] {split[0].charAt(0), split[1].charAt(0)});
+	}
+
+	public static Flow<CastleZone> iterateAll()
+	{
+		return Iterate.over(asList(values()));
 	}
 }

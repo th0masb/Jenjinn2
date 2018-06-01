@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import jenjinn.engine.ChessPieces;
-import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.CastlingStatus;
-import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
@@ -65,32 +63,26 @@ public final class ZobristHasher
 		return blackToMoveFeature;
 	}
 
-	public long hashBoardState(
-			Side activeSide,
-			BoardSquare enpassantSquare,
-			CastlingStatus castlingStatus,
-			DetailedPieceLocations pieceLocations)
+	public long hashPieceLocations(final long[] pieceLocations)
 	{
-		long hash = enpassantSquare == null ? 0L : getEnpassantFileFeature(enpassantSquare);
-		hash ^= activeSide.isWhite() ? 0L : getBlackToMoveFeature();
-		hash ^= Iterate.over(castlingStatus.getCastlingRights())
-				.mapToLong(this::getCastleRightsFeature)
-				.reduce(0L, (a, b) -> a ^ b);
+		if (pieceLocations.length != 12) {
+			throw new IllegalArgumentException();
+		}
+		long hash = 0L;
 		for (final ChessPiece piece : ChessPieces.all()) {
-			final int[] locs = getSetBitIndices(pieceLocations.locationsOf(piece));
+			final int[] locs = getSetBitIndices(pieceLocations[piece.ordinal()]);
 			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), piece), locs);
 			hash ^= Iterate.over(features).reduce(0L, (a, b) -> a ^ b);
 		}
 		return hash;
 	}
 
-	public long hashBoardState(BoardState state)
+	public long hashNonPieceFeatures(final Side activeSide, final BoardSquare enpassantSquare, final CastlingStatus castlingStatus)
 	{
-		return hashBoardState(
-				state.getActiveSide(),
-				state.getEnPassantSquare(),
-				state.getCastlingStatus(),
-				state.getPieceLocations());
+		long hash = activeSide.isWhite()? 0L : getBlackToMoveFeature();
+		hash ^= enpassantSquare == null? 0L : getEnpassantFileFeature(enpassantSquare);
+		hash ^= Iterate.over(castlingStatus.getCastlingRights()).mapToLong(this::getCastleRightsFeature).reduce(0L, (a, b) -> a ^ b);
+		return hash;
 	}
 
 	/*

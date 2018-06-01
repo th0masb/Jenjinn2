@@ -64,7 +64,7 @@ public interface ChessMove
 				case 'E':
 					return new EnpassantMove(source, target);
 				case 'P':
-					throw new RuntimeException();
+					return new PromotionMove(source, target);
 				default:
 					throw new RuntimeException();
 			}

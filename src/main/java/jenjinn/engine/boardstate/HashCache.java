@@ -8,14 +8,14 @@ import java.util.Arrays;
 /**
  * @author ThomasB
  */
-public final class StateHashCache
+public final class HashCache
 {
 	public static final int CACHE_SIZE = 12;
 
 	private final long[] hashCache;
 	private int totalHalfMoveCount, cacheIndexer;
 
-	public StateHashCache(final long[] hashCache, final int halfMoveCount)
+	public HashCache(final long[] hashCache, final int halfMoveCount)
 	{
 		if (hashCache.length != CACHE_SIZE) {
 			throw new IllegalArgumentException();
@@ -25,18 +25,17 @@ public final class StateHashCache
 		updateCacheIndexer();
 	}
 
-	public StateHashCache()
+	public HashCache()
 	{
 		this(new long[CACHE_SIZE], 0);
 	}
 
-	public long incrementHalfMoveCount()
+	public long incrementHalfMoveCount(final long newHash)
 	{
-		final long currentHash = hashCache[cacheIndexer];
 		totalHalfMoveCount++;
 		updateCacheIndexer();
 		final long discardedHash = hashCache[cacheIndexer];
-		hashCache[cacheIndexer] = currentHash;
+		hashCache[cacheIndexer] = newHash;
 		return discardedHash;
 	}
 
@@ -52,14 +51,9 @@ public final class StateHashCache
 		cacheIndexer = totalHalfMoveCount % CACHE_SIZE;
 	}
 
-	public void xorFeatureWithCurrentHash(final long feature)
+	public long getCurrentHash()
 	{
-		hashCache[cacheIndexer] ^= feature;
-	}
-
-	public long getHashAt(final int halfMoveClockValue)
-	{
-		return hashCache[halfMoveClockValue % CACHE_SIZE];
+		return hashCache[cacheIndexer];
 	}
 
 	@Override
@@ -97,7 +91,7 @@ public final class StateHashCache
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final StateHashCache other = (StateHashCache) obj;
+		final HashCache other = (HashCache) obj;
 		if (cacheIndexer != other.cacheIndexer)
 			return false;
 		if (!Arrays.equals(hashCache, other.hashCache))

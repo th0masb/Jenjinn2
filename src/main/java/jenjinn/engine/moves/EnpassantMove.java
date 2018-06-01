@@ -3,10 +3,17 @@
  */
 package jenjinn.engine.moves;
 
+import static java.util.Collections.unmodifiableSet;
+
+import java.util.EnumSet;
+import java.util.Set;
+
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
 
@@ -16,6 +23,8 @@ import jenjinn.engine.enums.Side;
  */
 public final class EnpassantMove extends AbstractChessMove
 {
+	private static final Set<CastleZone> EMPTY_RIGHTS = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
+
 	private final BoardSquare enPassantSquare;
 
 	public EnpassantMove(final BoardSquare start, final BoardSquare target)
@@ -27,17 +36,13 @@ public final class EnpassantMove extends AbstractChessMove
 	@Override
 	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		final Side activeSide = state.getActiveSide(), passiveSide = activeSide.otherSide();
-		final ChessPiece activePawn = state.getPieceLocations().getPieceAt(getSource(), activeSide);
-		final ChessPiece passivePawn = state.getPieceLocations().getPieceAt(enPassantSquare, passiveSide);
-		assert activePawn.isPawn() && passivePawn.isPawn();
+		final Side activeSide = state.getActiveSide();
+		final ChessPiece activePawn = activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN;
+		final ChessPiece passivePawn = activeSide.isWhite() ? ChessPiece.BLACK_PAWN : ChessPiece.WHITE_PAWN;
 
 		state.getPieceLocations().removePieceAt(getSource(), activePawn);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(getSource(), activePawn));
 		state.getPieceLocations().addPieceAt(getTarget(), activePawn);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(getTarget(), activePawn));
 		state.getPieceLocations().removePieceAt(enPassantSquare, passivePawn);
-		state.getHashCache().xorFeatureWithCurrentHash(state.getStateHasher().getSquarePieceFeature(enPassantSquare, passivePawn));
 
 		unmakeDataStore.setPieceTaken(passivePawn);
 		unmakeDataStore.setDiscardedEnpassantSquare(state.getEnPassantSquare());
@@ -55,11 +60,6 @@ public final class EnpassantMove extends AbstractChessMove
 	@Override
 	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		// Reset half move clock
-		state.getHalfMoveClock().setValue(unmakeDataStore.getDiscardedHalfMoveClockValue());
-		// Reset enpassant stuff
-		state.setEnPassantSquare(unmakeDataStore.getDiscardedEnpassantSquare());
-
 		// Reset locations
 		final boolean whiteActive = state.getActiveSide().isWhite();
 		final ChessPiece activePawn = whiteActive ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN;
@@ -68,5 +68,17 @@ public final class EnpassantMove extends AbstractChessMove
 
 		final ChessPiece passivePawn = whiteActive ? ChessPiece.BLACK_PAWN : ChessPiece.WHITE_PAWN;
 		state.getPieceLocations().addPieceAt(enPassantSquare, passivePawn);
+	}
+
+	@Override
+	Set<CastleZone> getAllRightsToBeRemoved()
+	{
+		return EMPTY_RIGHTS;
+	}
+
+	@Override
+	DevelopmentPiece getPieceDeveloped()
+	{
+		return null;
 	}
 }

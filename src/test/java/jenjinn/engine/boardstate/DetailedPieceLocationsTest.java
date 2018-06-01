@@ -20,6 +20,8 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
+import jenjinn.engine.utils.BoardStateHasher;
+import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.construction.IterRange;
 import xawd.jflow.iterators.construction.Iterate;
 
@@ -33,34 +35,40 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final PieceSquareTables midTables = getMidgameTables(), endTables = getEndgameTables();
-		final DetailedPieceLocations locations = new DetailedPieceLocations(new long[12], midTables, endTables);
+		final ZobristHasher hashFeatureProvider = BoardStateHasher.getDefault();
+		final DetailedPieceLocations locations = new DetailedPieceLocations(new long[12], midTables, endTables, hashFeatureProvider);
 
-		int runningMidgameEval = 0, runningEndgameEval = 0;
-		assertEquals(runningMidgameEval, locations.getMidgameEval());
-		assertEquals(runningEndgameEval, locations.getEndgameEval());
+		int runningMidgameEval = locations.getMidgameEval(), runningEndgameEval = locations.getEndgameEval();
+		long runningHash = locations.getSquarePieceFeatureHash();
 
 		for (final ChessPiece piece : ChessPieces.white()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
-			runningMidgameEval += midTables.getLocationValue(piece, loc);
-			runningEndgameEval += endTables.getLocationValue(piece, loc);
 			assertEquals(loc.asBitboard(), locations.locationsOf(piece));
 			assertEquals(bitwiseOr(take(piece.ordinal() + 1, locationsToAddPieceAt)), locations.getWhiteLocations());
 			assertEquals(0L, locations.getBlackLocations());
+
+			runningMidgameEval += midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
+			runningEndgameEval += endTables.getLocationValue(piece, loc);
 			assertEquals(runningEndgameEval, locations.getEndgameEval());
+			runningHash ^= hashFeatureProvider.getSquarePieceFeature(loc, piece);
+			assertEquals(runningHash, locations.getSquarePieceFeatureHash());
 		}
 
 		for (final ChessPiece piece : ChessPieces.black()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
-			runningMidgameEval += midTables.getLocationValue(piece, loc);
-			runningEndgameEval += endTables.getLocationValue(piece, loc);
 			assertEquals(loc.asBitboard(), locations.locationsOf(piece));
 			assertEquals(bitwiseOr(take(6, locationsToAddPieceAt)), locations.getWhiteLocations());
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(6, piece.ordinal() + 1)), locations.getBlackLocations());
+
+			runningMidgameEval += midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
+			runningEndgameEval += endTables.getLocationValue(piece, loc);
 			assertEquals(runningEndgameEval, locations.getEndgameEval());
+			runningHash ^= hashFeatureProvider.getSquarePieceFeature(loc, piece);
+			assertEquals(runningHash, locations.getSquarePieceFeatureHash());
 		}
 	}
 
@@ -69,32 +77,41 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final PieceSquareTables midTables = getMidgameTables(), endTables = getEndgameTables();
+		final ZobristHasher hashFeatureProvider = BoardStateHasher.getDefault();
 		final long[] initialLocations = Iterate.over(locationsToAddPieceAt).mapToLong(BoardSquare::asBitboard).toArray();
-		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, midTables, endTables);
+		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, midTables, endTables, hashFeatureProvider);
+
 		int runningMidgameEval = locations.getMidgameEval(), runningEndgameEval = locations.getEndgameEval();
+		long runningHash = locations.getSquarePieceFeatureHash();
 
 		for (final ChessPiece piece : ChessPieces.white()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.removePieceAt(loc, piece);
-			runningMidgameEval -= midTables.getLocationValue(piece, loc);
-			runningEndgameEval -= endTables.getLocationValue(piece, loc);
 			assertEquals(0L, locations.locationsOf(piece));
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 6)), locations.getWhiteLocations());
 			assertEquals(bitwiseOr(drop(6, locationsToAddPieceAt)), locations.getBlackLocations());
+
+			runningMidgameEval -= midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
+			runningEndgameEval -= endTables.getLocationValue(piece, loc);
 			assertEquals(runningEndgameEval, locations.getEndgameEval());
+			runningHash ^= hashFeatureProvider.getSquarePieceFeature(loc, piece);
+			assertEquals(runningHash, locations.getSquarePieceFeatureHash());
 		}
 
 		for (final ChessPiece piece : ChessPieces.black()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.removePieceAt(loc, piece);
-			runningMidgameEval -= midTables.getLocationValue(piece, loc);
-			runningEndgameEval -= endTables.getLocationValue(piece, loc);
 			assertEquals(0L, locations.locationsOf(piece));
 			assertEquals(0L, locations.getWhiteLocations());
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 12)), locations.getBlackLocations());
+
+			runningMidgameEval -= midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
+			runningEndgameEval -= endTables.getLocationValue(piece, loc);
 			assertEquals(runningEndgameEval, locations.getEndgameEval());
+			runningHash ^= hashFeatureProvider.getSquarePieceFeature(loc, piece);
+			assertEquals(runningHash, locations.getSquarePieceFeatureHash());
 		}
 	}
 
@@ -103,7 +120,7 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final long[] initialLocations = Iterate.over(locationsToAddPieceAt).mapToLong(BoardSquare::asBitboard).toArray();
-		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, getMidgameTables(), getEndgameTables());
+		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, getMidgameTables(), getEndgameTables(), BoardStateHasher.getDefault());
 
 		for (final ChessPiece piece : ChessPieces.all()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());

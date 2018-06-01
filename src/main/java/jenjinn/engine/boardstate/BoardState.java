@@ -15,35 +15,32 @@ import jenjinn.engine.utils.ZobristHasher;
  */
 public final class BoardState
 {
-	private final ZobristHasher stateHasher;// = BoardStateHasher.getDefault();
+	private final HashCache hashCache;
 
-	private final StateHashCache hashCache;// = StateHashCache.getGameStartCache();
 	private final DetailedPieceLocations pieceLocations;
-	private final HalfMoveCounter gameClock;// = new HalfMoveClock(0);
+	private final HalfMoveCounter gameClock;
 	private final CastlingStatus castlingStatus;
 	private final Set<DevelopmentPiece> developedPieces;
 
 	private Side activeSide;
-	private BoardSquare enPassantSquare;
+	private BoardSquare enpassantSquare;
 
 	public BoardState(
-			ZobristHasher stateHasher,
-			StateHashCache hashCache,
-			DetailedPieceLocations pieceLocations,
-			HalfMoveCounter gameClock,
-			CastlingStatus castlingStatus,
-			Set<DevelopmentPiece> developedPieces,
-			Side activeSide,
-			BoardSquare enPassantSquare)
+			final HashCache hashCache,
+			final DetailedPieceLocations pieceLocations,
+			final HalfMoveCounter gameClock,
+			final CastlingStatus castlingStatus,
+			final Set<DevelopmentPiece> developedPieces,
+			final Side activeSide,
+			final BoardSquare enPassantSquare)
 	{
-		this.stateHasher = stateHasher;
 		this.hashCache = hashCache;
 		this.pieceLocations = pieceLocations;
 		this.gameClock = gameClock;
 		this.castlingStatus = castlingStatus;
 		this.developedPieces = developedPieces;
 		this.activeSide = activeSide;
-		this.enPassantSquare = enPassantSquare;
+		this.enpassantSquare = enPassantSquare;
 	}
 
 	public Side getActiveSide()
@@ -58,12 +55,12 @@ public final class BoardState
 
 	public BoardSquare getEnPassantSquare()
 	{
-		return enPassantSquare;
+		return enpassantSquare;
 	}
 
 	public void setEnPassantSquare(final BoardSquare enPassantSquare)
 	{
-		this.enPassantSquare = enPassantSquare;
+		this.enpassantSquare = enPassantSquare;
 	}
 
 	public Set<DevelopmentPiece> getDevelopedPieces()
@@ -81,18 +78,19 @@ public final class BoardState
 		return castlingStatus;
 	}
 
-	public ZobristHasher getStateHasher()
-	{
-		return stateHasher;
-	}
-
 	public HalfMoveCounter getHalfMoveClock()
 	{
 		return gameClock;
 	}
 
-	public StateHashCache getHashCache()
+	public HashCache getHashCache()
 	{
 		return hashCache;
+	}
+
+	public long calculateHash()
+	{
+		final ZobristHasher stateHasher = getPieceLocations().getHashFeatureProvider();
+		return getPieceLocations().getSquarePieceFeatureHash() ^ stateHasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
 	}
 }

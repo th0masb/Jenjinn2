@@ -22,7 +22,7 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.CastlingStatus;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.HalfMoveCounter;
-import jenjinn.engine.boardstate.StateHashCache;
+import jenjinn.engine.boardstate.HashCache;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
@@ -55,19 +55,19 @@ public final class BoardParseUtils
 		final Set<DevelopmentPiece> developedPieces = constructDevelopedPieces(atts.get(6));
 		final Side activeSide = constructActiveSide(atts.get(7));
 		final BoardSquare enpassantSquare = constructEnpassantSquare(atts.get(8));
-		final ZobristHasher stateHasher = BoardStateHasher.getDefault();
-		final long hashOfConstructedState = stateHasher.hashBoardState(activeSide, enpassantSquare, castlingStatus, pieceLocations);
-		final StateHashCache hashCache = constructDummyHashCache(hashOfConstructedState, moveCount.getValue());
+		final ZobristHasher hasher = pieceLocations.getHashFeatureProvider();
+		final long hashOfConstructedState = pieceLocations.getSquarePieceFeatureHash() ^ hasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
+		final HashCache hashCache = constructDummyHashCache(hashOfConstructedState, moveCount.getValue());
 
-		return new BoardState(stateHasher, hashCache, pieceLocations, moveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
+		return new BoardState(hashCache, pieceLocations, moveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
 	}
 
-	private static StateHashCache constructDummyHashCache(final long initializedBoardHash, final int halfMoveCount)
+	private static HashCache constructDummyHashCache(final long initializedBoardHash, final int halfMoveCount)
 	{
-		final int cacheSize = StateHashCache.CACHE_SIZE;
+		final int cacheSize = HashCache.CACHE_SIZE;
 		final long[] cache = IterRange.to(cacheSize).mapToLong(i -> i + 1).toArray();
 		cache[halfMoveCount % cacheSize] = initializedBoardHash;
-		return new StateHashCache(cache, halfMoveCount);
+		return new HashCache(cache, halfMoveCount);
 	}
 
 	private static BoardSquare constructEnpassantSquare(final String enpassantSquare)
@@ -142,8 +142,8 @@ public final class BoardParseUtils
 				.map(x -> getAllMatches(x, "[a-h][1-8]"))
 				.map(xs -> objMap(String::toUpperCase, xs))
 				.map(xs -> objMap(BoardSquare::valueOf, xs))
-				.map(BitboardUtils::bitwiseOr)
-				.build(flow -> new DetailedPieceLocations(flow, midTables, endTables));
+				.mapToLong(BitboardUtils::bitwiseOr)
+				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables, BoardStateHasher.getDefault()));
 	}
 
 //	public static void main(final String[] args) {

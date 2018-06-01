@@ -15,7 +15,6 @@ import jenjinn.engine.boardstate.BoardState;
 
 /**
  * @author ThomasB
- *
  */
 public final class TestFileParser {
 

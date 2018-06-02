@@ -6,10 +6,10 @@ package jenjinn.engine.enums;
 import static java.util.Arrays.asList;
 import static jenjinn.engine.enums.BoardSquare.A1;
 import static jenjinn.engine.enums.BoardSquare.A8;
-import static jenjinn.engine.enums.BoardSquare.B1;
-import static jenjinn.engine.enums.BoardSquare.B8;
 import static jenjinn.engine.enums.BoardSquare.C1;
 import static jenjinn.engine.enums.BoardSquare.C8;
+import static jenjinn.engine.enums.BoardSquare.D1;
+import static jenjinn.engine.enums.BoardSquare.D8;
 import static jenjinn.engine.enums.BoardSquare.E1;
 import static jenjinn.engine.enums.BoardSquare.E8;
 import static jenjinn.engine.enums.BoardSquare.F1;
@@ -30,9 +30,9 @@ public enum CastleZone
 {
 	// Don't change order
 	WHITE_KINGSIDE(E1, G1, H1, F1),
-	WHITE_QUEENSIDE(E1, B1, A1, C1),
+	WHITE_QUEENSIDE(E1, C1, A1, D1),
 	BLACK_KINGSIDE(E8, G8, H8, F8),
-	BLACK_QUEENSIDE(E8, B8, A8, C8);
+	BLACK_QUEENSIDE(E8, C8, A8, D8);
 
 	private final BoardSquare kingSource, kingTarget, rookSource, rookTarget;
 

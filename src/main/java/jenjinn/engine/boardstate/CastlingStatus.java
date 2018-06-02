@@ -43,10 +43,24 @@ public final class CastlingStatus
 	public void setCastlingStatus(final CastleZone newStatus)
 	{
 		if (newStatus.isWhiteZone()) {
+			assert whiteCastlingStatus == null;
 			whiteCastlingStatus = newStatus;
 		}
 		else {
+			assert blackCastlingStatus == null;
 			blackCastlingStatus = newStatus;
+		}
+	}
+
+	public void removeCastlingStatus(CastleZone toRemove)
+	{
+		if (toRemove.isWhiteZone()) {
+			assert toRemove == whiteCastlingStatus;
+			whiteCastlingStatus = null;
+		}
+		else {
+			assert toRemove == blackCastlingStatus;
+			blackCastlingStatus = null;
 		}
 	}
 

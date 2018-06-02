@@ -28,7 +28,7 @@ public abstract class AbstractChessMove implements ChessMove
 	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		assert unmakeDataStore.isConsumed();
-		updateCastlingRights(state, unmakeDataStore);
+		updateCastlingStatus(state, unmakeDataStore);
 		updatePieceLocations(state, unmakeDataStore);
 		updateDevelopedPieces(state, unmakeDataStore);
 		state.switchActiveSide();
@@ -36,7 +36,7 @@ public abstract class AbstractChessMove implements ChessMove
 		unmakeDataStore.setConsumed(false);
 	}
 
-	void updateCastlingRights(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateCastlingStatus(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
 			final Set<CastleZone> rightsRemoved = EnumSet.copyOf(getAllRightsToBeRemoved());

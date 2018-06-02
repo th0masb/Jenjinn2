@@ -69,6 +69,20 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
+	void updateCastlingStatus(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		super.updateCastlingStatus(state, unmakeDataStore);
+		state.getCastlingStatus().setCastlingStatus(wrappedZone);
+	}
+
+	@Override
+	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	{
+		super.reverseMove(state, unmakeDataStore);
+		state.getCastlingStatus().removeCastlingStatus(wrappedZone);
+	}
+
+	@Override
 	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		final boolean whiteActive = state.getActiveSide().isWhite();

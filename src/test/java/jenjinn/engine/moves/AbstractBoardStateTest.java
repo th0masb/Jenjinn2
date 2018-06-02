@@ -35,9 +35,13 @@ public abstract class AbstractBoardStateTest
 
 	private String formatPieceLocationsErrorOutput(BoardState constraint, BoardState toTest)
 	{
-		return new StringBuilder()
+		return new StringBuilder(System.lineSeparator())
+				.append("Expected:")
+				.append(System.lineSeparator())
 				.append(formatGrids(VisualGridGenerator.from(constraint.getPieceLocations())))
 				.append(System.lineSeparator())
+				.append(System.lineSeparator())
+				.append("Actual:")
 				.append(System.lineSeparator())
 				.append(formatGrids(VisualGridGenerator.from(constraint.getPieceLocations())))
 				.toString();

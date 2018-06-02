@@ -3,12 +3,15 @@
  */
 package jenjinn.engine.boardstate;
 
-import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 import static xawd.jflow.utilities.PredicateUtil.any;
 
 import java.util.Arrays;
 
 import jenjinn.engine.enums.BoardSquare;
+import xawd.jflow.iterators.IntFlow;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author t
@@ -19,16 +22,18 @@ public final class LocationTracker {
 	private final int[] locs = new int[9];
 	private int pieceCount = 0;
 
-	public LocationTracker() {
-	}
-
 	public LocationTracker(int[] locations)
 	{
 		if (any(i -> i < 0 || i > 63, locations)) {
 			throw new IllegalArgumentException();
 		}
-		pieceCount = max(9, locations.length);
+		pieceCount = min(9, locations.length);
 		System.arraycopy(locations, 0, locs, 0, pieceCount);
+	}
+
+	public LocationTracker(long locations)
+	{
+		this(getSetBitIndices(locations));
 	}
 
 	public long allLocs()
@@ -58,6 +63,11 @@ public final class LocationTracker {
 	public int pieceCount()
 	{
 		return pieceCount;
+	}
+
+	public IntFlow iterateLocations()
+	{
+		return Iterate.over(locs).take(pieceCount);
 	}
 
 	public LocationTracker copy()

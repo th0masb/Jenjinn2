@@ -3,15 +3,13 @@
  */
 package jenjinn.engine.utils;
 
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
-import static xawd.jflow.utilities.MapUtil.longMap;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.CastlingStatus;
+import jenjinn.engine.boardstate.LocationTracker;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
@@ -63,16 +61,16 @@ public final class ZobristHasher
 		return blackToMoveFeature;
 	}
 
-	public long hashPieceLocations(final long[] pieceLocations)
+	public long hashPieceLocations(final List<LocationTracker> pieceLocations)
 	{
-		if (pieceLocations.length != 12) {
+		if (pieceLocations.size() != 12) {
 			throw new IllegalArgumentException();
 		}
 		long hash = 0L;
 		for (final ChessPiece piece : ChessPieces.all()) {
-			final int[] locs = getSetBitIndices(pieceLocations[piece.ordinal()]);
-			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), piece), locs);
-			hash ^= Iterate.over(features).reduce(0L, (a, b) -> a ^ b);
+			hash ^= pieceLocations.get(piece.ordinal()).iterateLocations()
+					.mapToLong(loc -> getSquarePieceFeature(BoardSquare.of(loc), piece))
+					.reduce(0L, (a, b) -> a ^ b);
 		}
 		return hash;
 	}

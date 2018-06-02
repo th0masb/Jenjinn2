@@ -49,13 +49,24 @@ public final class DetailedPieceLocations
 		this.blackLocations = Iterate.over(pieceLocations).skip(6)
 				.mapToLong(x -> x.allLocs())
 				.reduce(0L, LONG_OR);
-
 		this.midgameTables = midgameTables;
 		this.endgameTables = endgameTables;
 		this.midgameEval = midgameTables.evaluateLocations(pieceLocations);
 		this.endgameEval = endgameTables.evaluateLocations(pieceLocations);
 		this.hashFeatureProvider = hashFeatureProvider;
 		this.squarePieceFeatureHash = hashFeatureProvider.hashPieceLocations(pieceLocations);
+	}
+
+	public DetailedPieceLocations(
+			final long[] pieceLocations,
+			final PieceSquareTables midgameTables,
+			final PieceSquareTables endgameTables,
+			final ZobristHasher hashFeatureProvider)
+	{
+		this (Iterate.over(pieceLocations).mapToObject(LocationTracker::new).toList(),
+				midgameTables,
+				endgameTables,
+				hashFeatureProvider);
 	}
 
 	public void addPieceAt(final BoardSquare location, final ChessPiece pieceToAdd)

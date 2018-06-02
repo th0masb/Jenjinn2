@@ -3,7 +3,10 @@
  */
 package jenjinn.engine.moves;
 
+import static xawd.jflow.utilities.CollectionUtil.str;
+
 import java.util.Iterator;
+import java.util.function.IntFunction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.IterRepeat;
 
 /**
  * @author ThomasB
@@ -34,6 +38,8 @@ class MoveTest extends AbstractBoardStateTest
 
 	static Iterator<Arguments> test()
 	{
-		return IterRange.between(1, 8).mapToObject(i -> "boardEvolutionTestCase" + i).map(TestFileParser::parse);
+		final IntFunction<String> indexFormatter = i -> "testCase" + IterRepeat.of("9")
+		.take(i / 10).reduce("", (a, b) -> a + b) + str(i % 10);
+		return IterRange.to(10).mapToObject(indexFormatter).map(TestFileParser::parse);
 	}
 }

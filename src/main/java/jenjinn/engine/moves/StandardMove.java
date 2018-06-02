@@ -108,7 +108,7 @@ public final class StandardMove extends AbstractChessMove
 		state.getPieceLocations().addPieceAt(getSource(), previouslyMovedPiece);
 
 		final ChessPiece previouslyRemovedPiece = unmakeDataStore.getPieceTaken();
-		if (previouslyMovedPiece != null) {
+		if (previouslyRemovedPiece != null) {
 			state.getPieceLocations().addPieceAt(getTarget(), previouslyRemovedPiece);
 		}
 	}

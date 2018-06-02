@@ -1,0 +1,22 @@
+// Testing white king move results in lost rights
+StandardMove[source=e1|target=f1]
+
+white_pieces: (f2 g2)    (b3) (c4) (a1 h1) (c2) (e1)
+black_pieces: (c5 e7 f7) (b6) (d6) (a8 h8) (d7) (e8)
+half_move_clock: 23
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7 g1
+active_side: white
+enpassant_square: c6
+
+white_pieces: (f2 g2)    (b3) (c4) (a1 h1) (c2) (f1)
+black_pieces: (c5 e7 f7) (b6) (d6) (a8 h8) (d7) (e8)
+half_move_clock: 24
+castling_rights: bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7 g1
+active_side: black
+enpassant_square: none

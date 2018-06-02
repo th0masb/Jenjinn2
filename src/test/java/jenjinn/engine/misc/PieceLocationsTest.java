@@ -9,7 +9,6 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import jenjinn.engine.misc.PieceLocations;
 import xawd.jflow.iterators.construction.IterRange;
 
 /**
@@ -25,7 +24,8 @@ class PieceLocationsTest
 
 		IterRange.to(1000).forEach(i ->
 		{
-			final PieceLocations locations = new PieceLocations(random.nextLong(), random.nextLong());
+			final long whiteLocs = random.nextLong(), blackLocs = random.nextLong() & ~whiteLocs;
+			final PieceLocations locations = new PieceLocations(whiteLocs, blackLocs);
 			final PieceLocations reconstructed = PieceLocations.reconstructFrom(locations.toString());
 			assertEquals(locations, reconstructed);
 		});

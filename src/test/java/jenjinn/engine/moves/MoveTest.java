@@ -34,6 +34,6 @@ class MoveTest extends AbstractBoardStateTest
 
 	static Iterator<Arguments> test()
 	{
-		return IterRange.between(1, 2).mapToObject(i -> "boardEvolutionTestCase" + i).map(TestFileParser::parse);
+		return IterRange.between(1, 5).mapToObject(i -> "boardEvolutionTestCase" + i).map(TestFileParser::parse);
 	}
 }

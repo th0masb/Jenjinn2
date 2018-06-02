@@ -72,21 +72,21 @@ public final class BoardParseUtils
 
 	private static BoardSquare constructEnpassantSquare(final String enpassantSquare)
 	{
-		assertTrue(enpassantSquare.trim().matches("^enpassant_square: *(none)|([a-h][1-8])$"));
+		assertTrue(enpassantSquare.trim().matches("^enpassant_square: *((none)|([a-h][1-8]))$"));
 		final Optional<String> squareMatch = StringUtils.findFirstMatch(enpassantSquare, "[a-h][1-8]");
 		return squareMatch.isPresent()? BoardSquare.valueOf(squareMatch.get().toUpperCase()) : null;
 	}
 
 	private static Side constructActiveSide(final String activeSide)
 	{
-		assertTrue(activeSide.trim().matches("^active_side: *(white)|(black)$"));
+		assertTrue(activeSide.trim().matches("^active_side: *(white|black)$"));
 		final Optional<String> whiteMatch = StringUtils.findFirstMatch(activeSide, "white");
 		return whiteMatch.isPresent()? Side.WHITE : Side.BLACK;
 	}
 
 	private static Set<DevelopmentPiece> constructDevelopedPieces(final String developedPieces)
 	{
-		assertTrue(developedPieces.trim().matches("^developed_pieces:( *[a-h][1-8])?( +[a-h][1-8]){0 : 5}$"));
+		assertTrue(developedPieces.trim().matches("^developed_pieces:( *[a-h][1-8])?( +[a-h][1-8]){0,5}$"));
 		final List<String> squaresMatched = StringUtils.getAllMatches(developedPieces, "[a-h][1-8]");
 		final Set<BoardSquare> uniqueSquares = Iterate.over(squaresMatched).map(String::toUpperCase).map(BoardSquare::valueOf).toSet();
 		if (uniqueSquares.size() != squaresMatched.size()) {
@@ -99,8 +99,8 @@ public final class BoardParseUtils
 	private static CastlingStatus constructCastlingStatus(final String rights, final String whiteStatus, final String blackStatus)
 	{
 		assertTrue(rights.trim().matches("^castling_rights:( *wk)?( +wq)?( +bk)?( +bq)?$"));
-		assertTrue(whiteStatus.trim().matches("^white_castle_status: *(wk)|(wq)|(bk)|(bq)$"));
-		assertTrue(blackStatus.trim().matches("^black_castle_status: *(wk)|(wq)|(bk)|(bq)$"));
+		assertTrue(whiteStatus.trim().matches("^white_castle_status: *(none|wk|wq|bk|bq)$"));
+		assertTrue(blackStatus.trim().matches("^black_castle_status: *(none|wk|wq|bk|bq)$"));
 
 		final Map<String, CastleZone> regexMatchers = CastleZone.iterateAll().toMap(CastleZone::getSimpleIdentifier, Function.identity());
 
@@ -112,12 +112,12 @@ public final class BoardParseUtils
 		final CastleZone whiteCastleStatus = Iterate.over(regexMatchers.keySet())
 				.filter(rx -> StringUtils.matchesAnywhere(whiteStatus, rx))
 				.map(regexMatchers::get)
-				.safeNext().orElseThrow(AssertionError::new);
+				.safeNext().orElse(null);
 
 		final CastleZone blackCastleStatus = Iterate.over(regexMatchers.keySet())
 				.filter(rx -> StringUtils.matchesAnywhere(blackStatus, rx))
 				.map(regexMatchers::get)
-				.safeNext().orElseThrow(AssertionError::new);
+				.safeNext().orElse(null);
 
 		return new CastlingStatus(rightSet, whiteCastleStatus, blackCastleStatus);
 	}
@@ -146,11 +146,11 @@ public final class BoardParseUtils
 				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables, BoardStateHasher.getDefault()));
 	}
 
-//	public static void main(final String[] args) {
-//		final String groupedSquaresGroup = "\\( *([a-h][1-8] *)?( +[a-h][1-8])* *\\)";
-//		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquaresGroup).reduce(" *", (a, b) -> a + " +" + b);
-//
-//		final String whiteLocs = "white_pieces: ( e1 h8  ) (f2) ()  (c7 c8) () ()";
-//		System.out.println(whiteLocs.trim().matches("^white_pieces:" + sixGroupedSquareSets + "$"));
-//	}
+	//	public static void main(final String[] args) {
+	//		final String groupedSquaresGroup = "\\( *([a-h][1-8] *)?( +[a-h][1-8])* *\\)";
+	//		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquaresGroup).reduce(" *", (a, b) -> a + " +" + b);
+	//
+	//		final String whiteLocs = "white_pieces: ( e1 h8  ) (f2) ()  (c7 c8) () ()";
+	//		System.out.println(whiteLocs.trim().matches("^white_pieces:" + sixGroupedSquareSets + "$"));
+	//	}
 }

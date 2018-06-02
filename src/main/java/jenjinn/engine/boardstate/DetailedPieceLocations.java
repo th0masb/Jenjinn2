@@ -19,7 +19,7 @@ import jenjinn.engine.utils.ZobristHasher;
 
 /**
  * Handles piece locations as well as tracking the positional evaluation and hash arising
- * from square, piece features.
+ * from (square, piece) features.
  *
  * @author ThomasB
  */
@@ -86,7 +86,7 @@ public final class DetailedPieceLocations
 		}
 		else {
 			assert bitboardsIntersect(blackLocations, newLocation);
-			blackLocations ^= location.asBitboard();
+			blackLocations ^= newLocation;
 		}
 	}
 

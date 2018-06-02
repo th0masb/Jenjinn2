@@ -23,7 +23,7 @@ public class DataForReversingMove {
 	 * Can only be populated in forward direction if consumed. Can only be used to
 	 * undo a move if not consumed.
 	 */
-	private boolean consumed = false;
+	private boolean consumed = true;
 
 	private Set<CastleZone> discardedCastlingRights;
 	private ChessPiece pieceTaken;

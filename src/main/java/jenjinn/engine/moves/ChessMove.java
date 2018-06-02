@@ -52,21 +52,21 @@ public interface ChessMove
 	static ChessMove decode(final String repr)
 	{
 		final String nonCastleMoveRegex = "^[SECP][a-z]+Move\\[source=[A-H][1-8]\\|target=[A-H][1-8]\\]$";
-		final String castleMoveRegex = "^CastleMove\\[zone=(wk)|(wq)|(bk)|(bq)\\]$";
+		final String castleMoveRegex = "^CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\]$";
 
 		if (repr.matches(nonCastleMoveRegex)) {
 			final List<String> squares = StringUtils.getAllMatches(repr, "[A-H][1-8]");
 			final BoardSquare source = BoardSquare.valueOf(head(squares)), target = BoardSquare.valueOf(tail(squares));
 			final char firstChar = repr.charAt(0);
 			switch (firstChar)  {
-				case 'S':
-					return new StandardMove(source, target);
-				case 'E':
-					return new EnpassantMove(source, target);
-				case 'P':
-					return new PromotionMove(source, target);
-				default:
-					throw new RuntimeException();
+			case 'S':
+				return new StandardMove(source, target);
+			case 'E':
+				return new EnpassantMove(source, target);
+			case 'P':
+				return new PromotionMove(source, target);
+			default:
+				throw new RuntimeException();
 			}
 		}
 		else if (repr.matches(castleMoveRegex)) {

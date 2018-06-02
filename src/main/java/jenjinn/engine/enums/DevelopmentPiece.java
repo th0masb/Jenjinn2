@@ -25,7 +25,7 @@ public enum DevelopmentPiece
 	BLACK_KINGSIDE_KNIGHT(BoardSquare.G8),
 	BLACK_KINGSIDE_BISHOP(BoardSquare.F8),
 	BLACK_E_PAWN(BoardSquare.E7),
-	BLACK_D_PAWN(BoardSquare.G8),
+	BLACK_D_PAWN(BoardSquare.G7),
 	BLACK_QUEENSIDE_BISHOP(BoardSquare.C8),
 	BLACK_QUEENSIDE_KNIGHT(BoardSquare.B8);
 

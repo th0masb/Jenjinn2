@@ -31,8 +31,8 @@ public abstract class AbstractChessMove implements ChessMove
 		updateCastlingRights(state, unmakeDataStore);
 		updatePieceLocations(state, unmakeDataStore);
 		updateDevelopedPieces(state, unmakeDataStore);
-		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount(state.calculateHash()));
 		state.switchActiveSide();
+		unmakeDataStore.setDiscardedHash(state.getHashCache().incrementHalfMoveCount(state.calculateHash()));
 		unmakeDataStore.setConsumed(false);
 	}
 

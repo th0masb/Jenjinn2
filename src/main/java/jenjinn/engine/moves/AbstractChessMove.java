@@ -106,9 +106,9 @@ public abstract class AbstractChessMove implements ChessMove
 	{
 		return new StringBuilder(getClass().getSimpleName())
 				.append("[source=")
-				.append(source.name())
+				.append(source.name().toLowerCase())
 				.append("|target=")
-				.append(target.name())
+				.append(target.name().toLowerCase())
 				.append("]")
 				.toString();
 	}

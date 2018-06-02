@@ -29,8 +29,8 @@ public abstract class AbstractBoardStateTest
 		assertEquals(constraint.getDevelopedPieces(), toTest.getDevelopedPieces());
 		assertEquals(constraint.getHalfMoveClock(), toTest.getHalfMoveClock());
 		assertEquals(constraint.getCastlingStatus(), toTest.getCastlingStatus());
-		assertEquals(constraint.getHashCache(), toTest.getHashCache());
 		assertEquals(constraint.getPieceLocations(), toTest.getPieceLocations(), formatPieceLocationsErrorOutput(constraint, toTest));
+		assertEquals(constraint.getHashCache(), toTest.getHashCache());
 	}
 
 	private String formatPieceLocationsErrorOutput(BoardState constraint, BoardState toTest)

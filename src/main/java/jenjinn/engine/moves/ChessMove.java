@@ -51,12 +51,13 @@ public interface ChessMove
 	 */
 	static ChessMove decode(final String repr)
 	{
-		final String nonCastleMoveRegex = "^[SECP][a-z]+Move\\[source=[A-H][1-8]\\|target=[A-H][1-8]\\]$";
+		final String nonCastleMoveRegex = "^[SECP][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\]$";
 		final String castleMoveRegex = "^CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\]$";
 
 		if (repr.matches(nonCastleMoveRegex)) {
-			final List<String> squares = StringUtils.getAllMatches(repr, "[A-H][1-8]");
-			final BoardSquare source = BoardSquare.valueOf(head(squares)), target = BoardSquare.valueOf(tail(squares));
+			final List<String> squares = StringUtils.getAllMatches(repr, "[a-h][1-8]");
+			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
+			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
 			final char firstChar = repr.charAt(0);
 			switch (firstChar)  {
 			case 'S':
@@ -75,7 +76,7 @@ public interface ChessMove
 			return new CastleMove(matching);
 		}
 		else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(repr);
 		}
 	}
 }

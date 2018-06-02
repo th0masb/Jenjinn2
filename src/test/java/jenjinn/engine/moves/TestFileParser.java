@@ -4,6 +4,7 @@
 package jenjinn.engine.moves;
 
 import static java.util.stream.Collectors.toList;
+import static jenjinn.engine.moves.BoardParseUtils.parseBoard;
 import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static xawd.jflow.utilities.CollectionUtil.head;
@@ -20,6 +21,8 @@ import jenjinn.engine.boardstate.HashCache;
  */
 public final class TestFileParser {
 
+	private static final int STARTING_MOVE_COUNT = 10;
+
 	private TestFileParser() {}
 
 	/**
@@ -35,7 +38,7 @@ public final class TestFileParser {
 	{
 		final List<String> lines = loadResourceFromPackageOf(TestFileParser.class, fileName)
 				.map(String::trim)
-				.filter(s -> !s.isEmpty())
+				.filter(s -> !s.isEmpty() && !s.startsWith("//"))
 				.collect(toList());
 
 		if (lines.size() != 19) {
@@ -43,9 +46,9 @@ public final class TestFileParser {
 		}
 
 		final ChessMove reconstructedMove = ChessMove.decode(head(lines));
-		final BoardState startState = BoardParseUtils.parseBoard(lines.subList(1, 10));
+		final BoardState startState = parseBoard(lines.subList(1, 10), STARTING_MOVE_COUNT);
 		final long expectedOldHash = startState.calculateHash();
-		final BoardState expectedEvolutionResult = BoardParseUtils.parseBoard(lines.subList(10, 19));
+		final BoardState expectedEvolutionResult = parseBoard(lines.subList(10, 19), STARTING_MOVE_COUNT + 1);
 		final BoardState updatedExpected = insertPreviousHash(expectedEvolutionResult, expectedOldHash);
 		return Arguments.of(reconstructedMove, startState, updatedExpected);
 	}

@@ -43,31 +43,31 @@ public final class BoardParseUtils
 {
 	private BoardParseUtils() {}
 
-	public static BoardState parseBoard(final List<String> attributes)
+	public static BoardState parseBoard(final List<String> attributes, int totalMoveCount)
 	{
 		if (attributes.size() != 9) {
 			throw new IllegalArgumentException();
 		}
 		final List<String> atts = Iterate.over(attributes).map(String::trim).map(String::toLowerCase).toList();
 		final DetailedPieceLocations pieceLocations = constructPieceLocations(atts.get(0), atts.get(1));
-		final HalfMoveCounter moveCount = constructHalfMoveCounter(atts.get(2));
+		final HalfMoveCounter halfMoveCount = constructHalfMoveCounter(atts.get(2));
 		final CastlingStatus castlingStatus = constructCastlingStatus(atts.get(3), atts.get(4), atts.get(5));
 		final Set<DevelopmentPiece> developedPieces = constructDevelopedPieces(atts.get(6));
 		final Side activeSide = constructActiveSide(atts.get(7));
 		final BoardSquare enpassantSquare = constructEnpassantSquare(atts.get(8));
 		final ZobristHasher hasher = pieceLocations.getHashFeatureProvider();
 		final long hashOfConstructedState = pieceLocations.getSquarePieceFeatureHash() ^ hasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
-		final HashCache hashCache = constructDummyHashCache(hashOfConstructedState, moveCount.getValue());
+		final HashCache hashCache = constructDummyHashCache(hashOfConstructedState, totalMoveCount);
 
-		return new BoardState(hashCache, pieceLocations, moveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
+		return new BoardState(hashCache, pieceLocations, halfMoveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
 	}
 
-	private static HashCache constructDummyHashCache(final long initializedBoardHash, final int halfMoveCount)
+	private static HashCache constructDummyHashCache(final long initializedBoardHash, int totalMoveCount)
 	{
 		final int cacheSize = HashCache.CACHE_SIZE;
 		final long[] cache = IterRange.to(cacheSize).mapToLong(i -> i + 1).toArray();
-		cache[halfMoveCount % cacheSize] = initializedBoardHash;
-		return new HashCache(cache, halfMoveCount);
+		cache[totalMoveCount % cacheSize] = initializedBoardHash;
+		return new HashCache(cache, totalMoveCount);
 	}
 
 	private static BoardSquare constructEnpassantSquare(final String enpassantSquare)

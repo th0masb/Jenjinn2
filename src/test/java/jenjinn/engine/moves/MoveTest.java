@@ -40,6 +40,6 @@ class MoveTest extends AbstractBoardStateTest
 	{
 		final IntFunction<String> indexFormatter = i -> "testCase" + IterRepeat.of("9")
 		.take(i / 10).reduce("", (a, b) -> a + b) + str(i % 10);
-		return IterRange.to(10).mapToObject(indexFormatter).map(TestFileParser::parse);
+		return IterRange.to(16).mapToObject(indexFormatter).map(TestFileParser::parse);
 	}
 }

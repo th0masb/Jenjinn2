@@ -43,7 +43,7 @@ public abstract class AbstractBoardStateTest
 				.append(System.lineSeparator())
 				.append("Actual:")
 				.append(System.lineSeparator())
-				.append(formatGrids(VisualGridGenerator.from(constraint.getPieceLocations())))
+				.append(formatGrids(VisualGridGenerator.from(toTest.getPieceLocations())))
 				.toString();
 	}
 }

@@ -1,5 +1,8 @@
 package jenjinn.engine.moves;
 
+import static java.util.EnumSet.copyOf;
+import static java.util.EnumSet.noneOf;
+
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -39,7 +42,8 @@ public abstract class AbstractChessMove implements ChessMove
 	void updateCastlingStatus(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
-			final Set<CastleZone> rightsRemoved = EnumSet.copyOf(getAllRightsToBeRemoved());
+			final Set<CastleZone> toBeRemoved = getAllRightsToBeRemoved();
+			final Set<CastleZone> rightsRemoved = toBeRemoved.isEmpty() ? noneOf(CastleZone.class) : copyOf(toBeRemoved);
 			rightsRemoved.retainAll(state.getCastlingStatus().getCastlingRights());
 			state.getCastlingStatus().getCastlingRights().removeAll(rightsRemoved);
 			unmakeDataStore.setDiscardedCastlingRights(rightsRemoved);

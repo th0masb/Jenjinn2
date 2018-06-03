@@ -1,0 +1,22 @@
+// Testing black queenside knight development
+StandardMove[source=b8|target=c6]
+
+white_pieces: (d2 e2) (b1 g1) (c1 f1) () () ()
+black_pieces: (d7 e7) (b8 g8) (c8 f8) () () ()
+half_move_clock: 5
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces:
+active_side: black
+enpassant_square: none
+
+white_pieces: (d2 e2) (b1 g1) (c1 f1) () () ()
+black_pieces: (d7 e7) (c6 g8) (c8 f8) () () ()
+half_move_clock: 6
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: b8
+active_side: white
+enpassant_square: none

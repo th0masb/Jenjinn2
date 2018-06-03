@@ -1,5 +1,5 @@
-// Testing white bishop move + black bishop removal
-StandardMove[source=c4|target=d6]
+// Testing white queen attack and black queen removal
+StandardMove[source=c2|target=d7]
 
 white_pieces: (f2 g2)    (b3) (c4) (a1 h1) (c2) (e1)
 black_pieces: (c5 e7 f7) (b6) (d6) (a8 h8) (d7) (e8)
@@ -11,8 +11,8 @@ developed_pieces: e2 e7 g1
 active_side: white
 enpassant_square: c6
 
-white_pieces: (f2 g2)    (b3) (d6) (a1 h1) (c2) (e1)
-black_pieces: (c5 e7 f7) (b6) () (a8 h8) (d7) (e8)
+white_pieces: (f2 g2)    (b3) (c4) (a1 h1) (d7) (e1)
+black_pieces: (c5 f7 e7) (b6) (d6) (a8 h8) () (e8)
 half_move_clock: 0
 castling_rights: wk wq bk bq
 white_castle_status: none

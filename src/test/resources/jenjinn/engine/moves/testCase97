@@ -1,4 +1,4 @@
-// Testing black bishop attack (note this is not a legal move)
+// Testing black bishop move + white bishop removal
 StandardMove[source=d6|target=c4]
 
 white_pieces: (f2 g2)    (b3) (c4) (a1 h1) (c2) (e1)

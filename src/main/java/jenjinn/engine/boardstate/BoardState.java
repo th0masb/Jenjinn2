@@ -92,7 +92,8 @@ public final class BoardState
 	public long calculateHash()
 	{
 		final ZobristHasher stateHasher = getPieceLocations().getHashFeatureProvider();
-		return getPieceLocations().getSquarePieceFeatureHash() ^ stateHasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
+		return getPieceLocations().getSquarePieceFeatureHash()
+				^ stateHasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
 	}
 
 	public BoardState copy()

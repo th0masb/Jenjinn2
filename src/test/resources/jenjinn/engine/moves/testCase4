@@ -1,4 +1,4 @@
-// Testing white rook capture + kingside rights loss
+// Testing white rook capture black rook + kingside rights loss
 StandardMove[source=h1|target=h8]
 
 white_pieces: (f2 g2) (b3) (c4) (a1 h1) (c2) (e1)

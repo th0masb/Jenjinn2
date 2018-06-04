@@ -25,7 +25,7 @@ import xawd.jflow.iterators.construction.IterRange;
  * @author ThomasB
  *
  */
-public final class MovementIntegrationTestDataWriter
+public final class IntegrationTestDataWriter
 {
 	private static final int SIDE_PIECE_COUNT = 10;
 

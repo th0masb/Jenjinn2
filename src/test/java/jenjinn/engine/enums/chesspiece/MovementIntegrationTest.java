@@ -21,7 +21,7 @@ import jenjinn.engine.utils.FileUtils;
  *
  * @author ThomasB
  */
-class ChessPieceMovementIntegrationTest
+class MovementIntegrationTest
 {
 	static final String INPUT_FILE_NAME = "movementIntegrationTestData";
 

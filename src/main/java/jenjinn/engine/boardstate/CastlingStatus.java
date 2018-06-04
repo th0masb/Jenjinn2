@@ -9,6 +9,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.enums.CastleZone;
+import jenjinn.engine.enums.Side;
 
 /**
  * @author ThomasB
@@ -40,6 +41,11 @@ public final class CastlingStatus
 		return blackCastlingStatus;
 	}
 
+	public CastleZone getStatusFor(final Side side)
+	{
+		return side.isWhite()? whiteCastlingStatus : blackCastlingStatus;
+	}
+
 	public void setCastlingStatus(final CastleZone newStatus)
 	{
 		if (newStatus.isWhiteZone()) {
@@ -52,7 +58,7 @@ public final class CastlingStatus
 		}
 	}
 
-	public void removeCastlingStatus(CastleZone toRemove)
+	public void removeCastlingStatus(final CastleZone toRemove)
 	{
 		if (toRemove.isWhiteZone()) {
 			assert toRemove == whiteCastlingStatus;

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.Side;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.construction.Iterate;
 
@@ -37,6 +38,11 @@ public final class ChessPieces
 	public static List<ChessPiece> black()
 	{
 		return BLACK_PIECES;
+	}
+
+	public static List<ChessPiece> ofSide(final Side side)
+	{
+		return side.isWhite()? white() : black();
 	}
 
 	public static Flow<ChessPiece> iterate()

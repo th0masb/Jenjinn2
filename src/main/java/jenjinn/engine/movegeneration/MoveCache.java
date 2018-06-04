@@ -4,17 +4,15 @@
 package jenjinn.engine.movegeneration;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 
 import java.util.List;
 
+import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.StandardMove;
-import xawd.jflow.iterators.IntFlow;
-import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -30,11 +28,11 @@ public final class MoveCache {
 	{
 		final List<StandardMove[]> moveCache = BoardSquare.iterateAll().map(i -> new StandardMove[64]).toImmutableList();
 
-		for (final ChessPiece piece : asList(ChessPiece.WHITE_KNIGHT, ChessPiece.WHITE_QUEEN))
-		{
-			BoardSquare.iterateAll().forEach(square -> {
-				final IntFlow targetFlow = Iterate.over(getSetBitIndices(piece.getSquaresOfControl(square, 0L, 0L)));
-				targetFlow.forEach(loc -> moveCache.get(square.ordinal())[loc] = new StandardMove(square, BoardSquare.of(loc)));
+		for (final ChessPiece piece : asList(ChessPiece.WHITE_KNIGHT, ChessPiece.WHITE_QUEEN)) {
+			BoardSquare.iterateAll().forEach(square ->
+			{
+				BitboardIterator.from(piece.getSquaresOfControl(square, 0L, 0L))
+				.forEach(loc -> moveCache.get(square.ordinal())[loc.ordinal()] = new StandardMove(square, loc));
 			});
 		}
 		return moveCache;

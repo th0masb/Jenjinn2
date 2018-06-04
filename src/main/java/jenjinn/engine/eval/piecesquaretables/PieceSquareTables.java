@@ -3,10 +3,9 @@
  */
 package jenjinn.engine.eval.piecesquaretables;
 
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
-
 import java.util.List;
 
+import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import xawd.jflow.iterators.construction.IterRange;
@@ -41,8 +40,7 @@ public final class PieceSquareTables
 		int eval = 0;
 		for (int i = 0; i < pieceLocations.length; i++) {
 			final PieceSquareTable pieceTable = tables.get(i);
-			eval += Iterate.over(getSetBitIndices(pieceLocations[i]))
-					.mapToObject(BoardSquare::of)
+			eval += BitboardIterator.from(pieceLocations[i])
 					.mapToInt(loc -> pieceTable.getValueAt(loc))
 					.reduce(0, (a, b) -> a + b);
 		}

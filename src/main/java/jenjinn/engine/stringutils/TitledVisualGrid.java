@@ -42,6 +42,12 @@ public final class TitledVisualGrid
 		return title;
 	}
 
+	@Override
+	public String toString()
+	{
+		return StringifyBoard.formatGrid(this);
+	}
+
 	public CharPair getEntryAt(final BoardSquare square)
 	{
 		return visualGrid.get(square);

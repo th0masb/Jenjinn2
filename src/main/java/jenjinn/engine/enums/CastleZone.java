@@ -19,6 +19,7 @@ import static jenjinn.engine.enums.BoardSquare.G8;
 import static jenjinn.engine.enums.BoardSquare.H1;
 import static jenjinn.engine.enums.BoardSquare.H8;
 
+import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.construction.Iterate;
 
@@ -69,6 +70,30 @@ public enum CastleZone
 		return ordinal() < 2;
 	}
 
+	public boolean isKingsideZone()
+	{
+		return ordinal() % 2 == 0;
+	}
+
+	/**
+	 * @return a bitboard representing the squares which must be clear in order for a player to castle
+	 * in this zone.
+	 */
+	public long getRequiredFreeSquares()
+	{
+		if (isKingsideZone()) {
+			long requiredFreeSquares = kingSource.asBitboard() >>> 1;
+			requiredFreeSquares |= requiredFreeSquares >>> 1;
+			return requiredFreeSquares;
+		}
+		else {
+			long requiredFreeSquares = kingSource.asBitboard() << 1;
+			requiredFreeSquares |= requiredFreeSquares << 1;
+			requiredFreeSquares |= requiredFreeSquares << 1;
+			return requiredFreeSquares;
+		}
+	}
+
 	public String getSimpleIdentifier()
 	{
 		final String[] split = name().toLowerCase().split("_");
@@ -78,5 +103,9 @@ public enum CastleZone
 	public static Flow<CastleZone> iterateAll()
 	{
 		return Iterate.over(asList(values()));
+	}
+
+	public static void main(final String[] args) {
+		System.out.println(VisualGridGenerator.from(BLACK_QUEENSIDE.getRequiredFreeSquares()));
 	}
 }

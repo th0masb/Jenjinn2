@@ -3,14 +3,12 @@
  */
 package jenjinn.engine.utils;
 
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
-import static xawd.jflow.utilities.MapUtil.longMap;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import jenjinn.engine.ChessPieces;
+import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.CastlingStatus;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
@@ -70,9 +68,9 @@ public final class ZobristHasher
 		}
 		long hash = 0L;
 		for (final ChessPiece piece : ChessPieces.all()) {
-			final int[] locs = getSetBitIndices(pieceLocations[piece.ordinal()]);
-			final long[] features = longMap(loc -> getSquarePieceFeature(BoardSquare.of(loc), piece), locs);
-			hash ^= Iterate.over(features).reduce(0L, (a, b) -> a ^ b);
+			hash ^= BitboardIterator.from(pieceLocations[piece.ordinal()])
+					.mapToLong(loc -> getSquarePieceFeature(loc, piece))
+					.reduce(0L, (a, b) -> a ^ b);
 		}
 		return hash;
 	}

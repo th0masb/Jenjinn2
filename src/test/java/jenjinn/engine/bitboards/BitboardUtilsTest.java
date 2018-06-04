@@ -7,10 +7,8 @@ import static java.util.Arrays.asList;
 import static jenjinn.engine.enums.BoardSquare.C1;
 import static jenjinn.engine.enums.BoardSquare.D2;
 import static jenjinn.engine.enums.BoardSquare.H1;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -83,18 +81,17 @@ class BitboardUtilsTest
 
 	@ParameterizedTest
 	@MethodSource
-	void testGetSetBitIndices(final int[] expectedIndices, final Long bitboard)
+	void testGetSetBitIndices(final List<BoardSquare> expectedSquares, final Long bitboard)
 	{
-		Arrays.sort(expectedIndices);
-		assertArrayEquals(expectedIndices, BitboardUtils.getSetBitIndices(bitboard.longValue()));
+		assertEquals(expectedSquares, BitboardIterator.from(bitboard.longValue()).toList());
 	}
 
 	static Stream<Arguments> testGetSetBitIndices()
 	{
 		return Stream.of(
-				Arguments.of(new int[] {}, 0L),
-				Arguments.of(new int[] {5}, 0b100000L),
-				Arguments.of(new int[] {3, 10}, 0b10000001000L)
+				Arguments.of(asList(), 0L),
+				Arguments.of(asList(BoardSquare.C1), 0b100000L),
+				Arguments.of(asList(BoardSquare.E1, BoardSquare.F2), 0b10000001000L)
 				);
 	}
 }

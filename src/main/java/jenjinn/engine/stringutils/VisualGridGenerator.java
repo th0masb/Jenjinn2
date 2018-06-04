@@ -4,13 +4,13 @@
 package jenjinn.engine.stringutils;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.bitboards.BitboardUtils.getSetBitIndices;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jenjinn.engine.ChessPieces;
+import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
@@ -26,7 +26,7 @@ public final class VisualGridGenerator
 	private VisualGridGenerator() {
 	}
 
-	public static TitledVisualGrid from(String title, Map<BoardSquare, ChessPiece> locations)
+	public static TitledVisualGrid from(final String title, final Map<BoardSquare, ChessPiece> locations)
 	{
 		return new TitledVisualGrid(title, Iterate.over(locations.keySet()).toMap(x -> x, x -> CharPair.from(locations.get(x))));
 	}
@@ -35,11 +35,8 @@ public final class VisualGridGenerator
 	{
 		final Map<BoardSquare, CharPair> pieceMapping = new HashMap<>();
 		ChessPieces.iterate().forEach(piece -> {
-			Iterate.over(getSetBitIndices(locations.locationsOf(piece)))
-			.mapToObject(BoardSquare::of)
-			.forEach(square -> {
-				pieceMapping.put(square, CharPair.from(piece));
-			});
+			BitboardIterator.from(locations.locationsOf(piece))
+			.forEach(square -> pieceMapping.put(square, CharPair.from(piece)));
 		});
 
 		return asList(
@@ -51,10 +48,7 @@ public final class VisualGridGenerator
 
 	public static TitledVisualGrid from(final String title, final long bitboard)
 	{
-		return new TitledVisualGrid(
-				title,
-				Iterate.over(getSetBitIndices(bitboard)).toMap(BoardSquare::of, x -> new CharPair('X', 'X'))
-				);
+		return new TitledVisualGrid(title, BitboardIterator.from(bitboard).toMap(x -> x, x -> new CharPair('X', 'X')));
 	}
 
 	public static TitledVisualGrid from(final long bitboard)
@@ -64,10 +58,8 @@ public final class VisualGridGenerator
 
 	public static TitledVisualGrid from(final String title, final PieceLocations locations)
 	{
-		final int[] whiteLocs = getSetBitIndices(locations.getWhite()), blackLocs = getSetBitIndices(locations.getBlack());
-		final Map<BoardSquare, CharPair> locs = Iterate.over(whiteLocs).toMap(BoardSquare::of, i -> new CharPair('X', 'W'));
-		locs.putAll(Iterate.over(blackLocs).toMap(BoardSquare::of, i -> new CharPair('X', 'B')));
-
+		final Map<BoardSquare, CharPair> locs = BitboardIterator.from(locations.getWhite()).toMap(x -> x, i -> new CharPair('X', 'W'));
+		locs.putAll(BitboardIterator.from(locations.getBlack()).toMap(x -> x, i -> new CharPair('X', 'B')));
 		return new TitledVisualGrid(title, locs);
 	}
 

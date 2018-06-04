@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.movegeneration;
+package jenjinn.engine.boardstate.propertycalculators;
 
 import static java.util.Arrays.asList;
 

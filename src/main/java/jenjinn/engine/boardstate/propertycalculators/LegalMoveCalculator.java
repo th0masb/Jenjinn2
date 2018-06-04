@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.movegeneration;
+package jenjinn.engine.boardstate.propertycalculators;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import xawd.jflow.iterators.construction.Iterate;
 /**
  * @author ThomasB
  */
-public final class MoveGenerator {
+public final class LegalMoveCalculator {
 
-	private MoveGenerator() {}
+	private LegalMoveCalculator() {}
 
 	public static List<ChessMove> getAvailableMoves(final BoardState state)
 	{
@@ -56,8 +56,8 @@ public final class MoveGenerator {
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(state.getActiveSide());
 
 		return Iterate.over(activePieces).flatten(piece -> {
-			final long locs = pieceLocs.locationsOf(piece);
-			return BitboardIterator.from(locs).flatten(loc -> convertBitboardToMoves(loc, piece.getMoves(loc, whiteLocs, blackLocs)));
+			return pieceLocs.iterateLocationsOf(piece)
+					.flatten(loc -> convertBitboardToMoves(loc, piece.getMoves(loc, whiteLocs, blackLocs)));
 		}).toList();
 	}
 

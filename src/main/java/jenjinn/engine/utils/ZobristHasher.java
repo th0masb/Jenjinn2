@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 import jenjinn.engine.ChessPieces;
-import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.CastlingStatus;
+import jenjinn.engine.boardstate.LocationTracker;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
@@ -61,14 +61,14 @@ public final class ZobristHasher
 		return blackToMoveFeature;
 	}
 
-	public long hashPieceLocations(final long[] pieceLocations)
+	public long hashPieceLocations(final List<LocationTracker> pieceLocations)
 	{
-		if (pieceLocations.length != 12) {
+		if (pieceLocations.size() != 12) {
 			throw new IllegalArgumentException();
 		}
 		long hash = 0L;
 		for (final ChessPiece piece : ChessPieces.all()) {
-			hash ^= BitboardIterator.from(pieceLocations[piece.ordinal()])
+			hash ^= pieceLocations.get(piece.ordinal()).iterator()
 					.mapToLong(loc -> getSquarePieceFeature(loc, piece))
 					.reduce(0L, (a, b) -> a ^ b);
 		}

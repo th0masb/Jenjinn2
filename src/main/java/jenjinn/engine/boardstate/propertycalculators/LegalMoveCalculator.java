@@ -3,6 +3,8 @@
  */
 package jenjinn.engine.boardstate.propertycalculators;
 
+import static xawd.jflow.utilities.CollectionUtil.tail;
+
 import java.util.List;
 
 import jenjinn.engine.ChessPieces;
@@ -32,36 +34,41 @@ public final class LegalMoveCalculator {
 		throw new RuntimeException();
 	}
 
-	static List<CastleMove> getCastleMoves(final BoardState state)
+	static List<CastleMove> getCastleMoves(final BoardState state, final long passiveControl)
 	{
 		throw new RuntimeException();
-//		if (state.getCastlingStatus().getStatusFor(state.getActiveSide()) == null) {
-//			final Side activeSide = state.getActiveSide();
-//			final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
-//			final Flow<CastleZone> availableRights = Iterate.over(state.getCastlingStatus().getCastlingRights()).filter(sideFilter);
-//
-//			if (availableRights.hasNext()) {
-////				long allPieces
-//			}
-//		}
-//		else {
-//			return Collections.emptyList();
-//		}
+		//		if (state.getCastlingStatus().getStatusFor(state.getActiveSide()) == null) {
+		//			final Side activeSide = state.getActiveSide();
+		//			final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
+		//			final Flow<CastleZone> availableRights = Iterate.over(state.getCastlingStatus().getCastlingRights()).filter(sideFilter);
+		//
+		//			if (availableRights.hasNext()) {
+		////				long allPieces
+		//			}
+		//		}
+		//		else {
+		//			return Collections.emptyList();
+		//		}
 	}
 
-	static List<StandardMove> getStandardMoves(final BoardState state)
+	static List<StandardMove> getStandardMoves(final BoardState state, final long passiveControl)
 	{
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final long whiteLocs = pieceLocs.getWhiteLocations(), blackLocs = pieceLocs.getBlackLocations();
+		final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(state.getActiveSide());
 
-		return Iterate.over(activePieces).flatten(piece -> {
-			return pieceLocs.iterateLocationsOf(piece)
-					.flatten(loc -> convertBitboardToMoves(loc, piece.getMoves(loc, whiteLocs, blackLocs)));
-		}).toList();
+		final Flow<StandardMove> allMoves = Iterate.over(activePieces)
+				.take(5)
+				.flatten(piece -> pieceLocs.iterateLocs(piece).flatten(loc -> bitboard2moves(loc, piece.getMoves(loc, white, black))));
+
+		final ChessPiece activeKing = tail(activePieces);
+		final BoardSquare kingLoc = pieceLocs.iterateLocs(activeKing).next();
+		final Flow<StandardMove> kingMoves = bitboard2moves(kingLoc, activeKing.getMoves(kingLoc, white, black) & ~passiveControl);
+
+		return allMoves.append(kingMoves).toList();
 	}
 
-	static Flow<StandardMove> convertBitboardToMoves(final BoardSquare source, final long bitboard)
+	static Flow<StandardMove> bitboard2moves(final BoardSquare source, final long bitboard)
 	{
 		return BitboardIterator.from(bitboard).map(target -> MoveCache.getMove(source, target));
 	}

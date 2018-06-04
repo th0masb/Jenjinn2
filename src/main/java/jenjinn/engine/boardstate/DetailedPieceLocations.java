@@ -131,7 +131,7 @@ public final class DetailedPieceLocations
 		return pieceLocations.get(piece.ordinal()).allLocs();
 	}
 
-	public Flow<BoardSquare> iterateLocationsOf(final ChessPiece piece)
+	public Flow<BoardSquare> iterateLocs(final ChessPiece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).iterator();
 	}

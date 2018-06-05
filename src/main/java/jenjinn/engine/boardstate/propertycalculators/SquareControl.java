@@ -18,9 +18,9 @@ import xawd.jflow.iterators.construction.Iterate;
  * @author ThomasB
  *
  */
-public final class SquareControlCalculator {
+public final class SquareControl {
 
-	private SquareControlCalculator() {}
+	private SquareControl() {}
 
 	public static long calculate(final BoardState state, final Side side)
 	{

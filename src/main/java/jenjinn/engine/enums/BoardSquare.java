@@ -88,6 +88,16 @@ public enum BoardSquare
 		return 1L << ordinal();
 	}
 
+	public int rank()
+	{
+		return ordinal() / 8;
+	}
+
+	public int file()
+	{
+		return ordinal() % 8;
+	}
+
 	//	public boolean isLightSquare()
 	//	{
 	//		final RankFileCoordinate asPoint = asRankFileCoord();

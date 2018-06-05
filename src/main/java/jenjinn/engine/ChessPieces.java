@@ -4,6 +4,7 @@
 package jenjinn.engine;
 
 import static java.util.Arrays.asList;
+import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 
 import java.util.Collections;
@@ -56,8 +57,13 @@ public final class ChessPieces
 		return ChessPiece.values()[index];
 	}
 
-	public static ChessPiece king(Side side)
+	public static ChessPiece king(final Side side)
 	{
 		return side.isWhite()? tail(white()) : tail(black());
+	}
+
+	public static ChessPiece pawn(final Side side)
+	{
+		return side.isWhite()? head(white()) : head(black());
 	}
 }

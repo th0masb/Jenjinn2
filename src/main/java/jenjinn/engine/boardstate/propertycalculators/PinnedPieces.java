@@ -55,7 +55,7 @@ public final class PinnedPieces
 				/* Map each location to the cord connecting it and the king location with king
 				 * location removed. */
 				.mapToLong(loc -> getMove(loc, kingLoc).getInducedCord() ^ kloc)
-				/* Choose only those cords which have one active piece on */
+				/* Choose only those cords which have exactly one (active) piece on */
 				.filter(cord -> bitCount(cord & activeLocs) == 1 && bitCount(cord & allLocs) == 2)
 				/* This active piece must therefore be pinned. */
 				.mapToObject(cord -> {

@@ -7,14 +7,9 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Collections.unmodifiableSet;
-import static jenjinn.engine.enums.CastleZone.BLACK_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.BLACK_QUEENSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_QUEENSIDE;
 
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -25,7 +20,9 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
+import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author ThomasB
@@ -33,23 +30,6 @@ import jenjinn.engine.enums.Side;
  */
 public final class StandardMove extends AbstractChessMove
 {
-	private static final Set<CastleZone> UNMODIFIABLE_EMPTY = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
-
-	private static final Map<BoardSquare, Set<CastleZone>> RIGHTS_REMOVAL_MAP;
-	static
-	{
-		final Map<BoardSquare, Set<CastleZone>> removalMap = new HashMap<>();
-		removalMap.put(BoardSquare.A1, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE)));
-		removalMap.put(BoardSquare.E1, unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE)));
-		removalMap.put(BoardSquare.H1, unmodifiableSet(EnumSet.of(WHITE_KINGSIDE)));
-
-		removalMap.put(BoardSquare.A8, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE)));
-		removalMap.put(BoardSquare.E8, unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE)));
-		removalMap.put(BoardSquare.H8, unmodifiableSet(EnumSet.of(BLACK_KINGSIDE)));
-
-		RIGHTS_REMOVAL_MAP = Collections.unmodifiableMap(removalMap);
-	}
-
 	private final Set<CastleZone> rightsRemovedByThisMove;
 	private final long inducedCord;
 
@@ -66,23 +46,31 @@ public final class StandardMove extends AbstractChessMove
 			return Long.MIN_VALUE;
 		}
 		else {
-			throw new RuntimeException();
+			final Direction direction = Direction.ofLineBetween(getSource(), getTarget()).orElseThrow(AssertionError::new);
+			final List<BoardSquare> squares = getSource().getAllSquaresInDirections(direction, 10);
+			return Iterate.over(squares)
+					.takeWhile(sq -> sq != getTarget())
+					.append(getTarget())
+					.mapToLong(BoardSquare::asBitboard)
+					.reduce(0L, (a, b) -> a ^ b);
 		}
 	}
 
 	private Set<CastleZone> initRightsRemoved()
 	{
-		final Predicate<Object> p = RIGHTS_REMOVAL_MAP::containsKey;
+		final Map<BoardSquare, Set<CastleZone>> rightsSets = MoveConstants.STANDARDMOVE_RIGHTS_SETS;
+
+		final Predicate<Object> p = rightsSets::containsKey;
 		if (p.test(getSource()) || p.test(getTarget())) {
-			final Set<CastleZone> x = p.test(getSource())? RIGHTS_REMOVAL_MAP.get(getSource()) : EnumSet.noneOf(CastleZone.class);
-			final Set<CastleZone> y = p.test(getTarget())? RIGHTS_REMOVAL_MAP.get(getTarget()) : EnumSet.noneOf(CastleZone.class);
+			final Set<CastleZone> x = p.test(getSource())? rightsSets.get(getSource()) : EnumSet.noneOf(CastleZone.class);
+			final Set<CastleZone> y = p.test(getTarget())? rightsSets.get(getTarget()) : EnumSet.noneOf(CastleZone.class);
 			final Set<CastleZone> mutableResult = EnumSet.noneOf(CastleZone.class);
 			mutableResult.addAll(x);
 			mutableResult.addAll(y);
 			return unmodifiableSet(mutableResult);
 		}
 		else {
-			return UNMODIFIABLE_EMPTY;
+			return MoveConstants.EMPTY_RIGHTS_SET;
 		}
 	}
 

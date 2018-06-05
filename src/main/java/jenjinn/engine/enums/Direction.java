@@ -1,6 +1,11 @@
 package jenjinn.engine.enums;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.util.Arrays;
+import java.util.Optional;
 
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.construction.Iterate;
@@ -30,5 +35,24 @@ public enum Direction
 	public static Flow<Direction> iterateAll()
 	{
 		return Iterate.over(Arrays.asList(values()));
+	}
+
+	public static Optional<Direction> ofLineBetween(final BoardSquare start, final BoardSquare end)
+	{
+		if (start == end) {
+			return Optional.empty();
+		}
+
+		final int rankChange = end.rank() - start.rank(), fileChange = end.file() - start.file();
+		final int maxAbsChange = max(abs(rankChange), abs(fileChange)), minAbsChange = min(abs(rankChange), abs(fileChange));
+		final int normaliser = minAbsChange == 0? maxAbsChange : minAbsChange;
+
+		if (maxAbsChange % normaliser != 0 || minAbsChange % normaliser != 0) {
+			return Optional.empty();
+		}
+		else {
+			final int rankIndexChange = rankChange/normaliser, fileIndexChange = fileChange/normaliser;
+			return iterateAll().filter(dir -> dir.rankIndexChange == rankIndexChange && dir.fileIndexChange == fileIndexChange).safeNext();
+		}
 	}
 }

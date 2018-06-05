@@ -3,9 +3,6 @@
  */
 package jenjinn.engine.moves;
 
-import static java.util.Collections.unmodifiableSet;
-
-import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
@@ -22,8 +19,6 @@ import jenjinn.engine.enums.Side;
  */
 public final class PromotionMove extends AbstractChessMove
 {
-	private static final Set<CastleZone> EMPTY_RIGHTS = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
-
 	public PromotionMove(final BoardSquare start, final BoardSquare target)
 	{
 		super(start, target);
@@ -67,7 +62,7 @@ public final class PromotionMove extends AbstractChessMove
 	@Override
 	Set<CastleZone> getAllRightsToBeRemoved()
 	{
-		return EMPTY_RIGHTS;
+		return MoveConstants.EMPTY_RIGHTS_SET;
 	}
 
 	@Override

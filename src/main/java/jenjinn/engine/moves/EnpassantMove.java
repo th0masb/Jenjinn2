@@ -3,11 +3,9 @@
  */
 package jenjinn.engine.moves;
 
-import static java.util.Collections.unmodifiableSet;
-
-import java.util.EnumSet;
 import java.util.Set;
 
+import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
@@ -23,8 +21,6 @@ import jenjinn.engine.enums.Side;
  */
 public final class EnpassantMove extends AbstractChessMove
 {
-	private static final Set<CastleZone> EMPTY_RIGHTS = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
-
 	private final BoardSquare enPassantSquare;
 
 	public EnpassantMove(final BoardSquare start, final BoardSquare target)
@@ -37,8 +33,8 @@ public final class EnpassantMove extends AbstractChessMove
 	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
-		final ChessPiece activePawn = activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN;
-		final ChessPiece passivePawn = activeSide.isWhite() ? ChessPiece.BLACK_PAWN : ChessPiece.WHITE_PAWN;
+		final ChessPiece activePawn = ChessPieces.pawn(activeSide);
+		final ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
 
 		state.getPieceLocations().removePieceAt(getSource(), activePawn);
 		state.getPieceLocations().addPieceAt(getTarget(), activePawn);
@@ -60,20 +56,19 @@ public final class EnpassantMove extends AbstractChessMove
 	@Override
 	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
 	{
-		// Reset locations
-		final boolean whiteActive = state.getActiveSide().isWhite();
-		final ChessPiece activePawn = whiteActive ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN;
+		final Side activeSide = state.getActiveSide();
+		final ChessPiece activePawn = ChessPieces.pawn(activeSide);
 		state.getPieceLocations().removePieceAt(getTarget(), activePawn);
 		state.getPieceLocations().addPieceAt(getSource(), activePawn);
 
-		final ChessPiece passivePawn = whiteActive ? ChessPiece.BLACK_PAWN : ChessPiece.WHITE_PAWN;
+		final ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
 		state.getPieceLocations().addPieceAt(enPassantSquare, passivePawn);
 	}
 
 	@Override
 	Set<CastleZone> getAllRightsToBeRemoved()
 	{
-		return EMPTY_RIGHTS;
+		return MoveConstants.EMPTY_RIGHTS_SET;
 	}
 
 	@Override

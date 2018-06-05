@@ -3,13 +3,9 @@
  */
 package jenjinn.engine.moves;
 
-import static java.util.Collections.unmodifiableSet;
-import static jenjinn.engine.enums.CastleZone.BLACK_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.BLACK_QUEENSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_QUEENSIDE;
+import static jenjinn.engine.moves.MoveConstants.BLACK_CASTLE_REMOVALS;
+import static jenjinn.engine.moves.MoveConstants.WHITE_CASTLE_REMOVALS;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
@@ -25,9 +21,6 @@ import jenjinn.engine.enums.Side;
  */
 public final class CastleMove extends AbstractChessMove
 {
-	private static final Set<CastleZone> WHITE_REMOVALS = unmodifiableSet(EnumSet.of(WHITE_QUEENSIDE, WHITE_KINGSIDE));
-	private static final Set<CastleZone> BLACK_REMOVALS = unmodifiableSet(EnumSet.of(BLACK_QUEENSIDE, BLACK_KINGSIDE));
-
 	private final CastleZone wrappedZone;
 	private final Set<CastleZone> rightsRemovedByThisMove;
 
@@ -35,7 +28,8 @@ public final class CastleMove extends AbstractChessMove
 	{
 		super(wrappedZone.getKingSource(), wrappedZone.getKingTarget());
 		this.wrappedZone = wrappedZone;
-		this.rightsRemovedByThisMove = wrappedZone.isWhiteZone()? WHITE_REMOVALS : BLACK_REMOVALS;
+		this.rightsRemovedByThisMove =
+				wrappedZone.isWhiteZone()? WHITE_CASTLE_REMOVALS : BLACK_CASTLE_REMOVALS;
 	}
 
 	@Override

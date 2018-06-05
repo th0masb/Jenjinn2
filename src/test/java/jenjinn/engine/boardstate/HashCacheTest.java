@@ -3,17 +3,23 @@
  */
 package jenjinn.engine.boardstate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static xawd.jflow.utilities.CollectionUtil.str;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.construction.Iterate;
 
 /**
  * @author t
  */
-class StateHashCacheTest
+class HashCacheTest
 {
 	@Test
 	void testIncrementClockValue()
@@ -45,5 +51,24 @@ class StateHashCacheTest
 			IterRange.between(1, i + 1).forEach(j -> expectedCache[cacheSize - j] = replacementHashes[j]);
 			Assertions.assertEquals(new HashCache(expectedCache, cacheSize - (i + 1)), start, str(i));
 		}
+	}
+
+	@ParameterizedTest
+	@MethodSource
+	void testContainsThreeRepetitions(final long[] rawCache, final Integer totalMoveCount, final Boolean expectedOutcome)
+	{
+		assertEquals(HashCache.CACHE_SIZE, rawCache.length);
+		final HashCache cache = new HashCache(rawCache, totalMoveCount.intValue());
+		assertEquals(expectedOutcome, cache.containsThreeRepetitions());
+	}
+
+	static Flow<Arguments> testContainsThreeRepetitions()
+	{
+		return Iterate.over(
+				Arguments.of(new long[] {0, 1, 2, 4, 1, 5, 5, 7, 9 , 100, -23, 1}, 12, Boolean.TRUE),
+				Arguments.of(new long[] {0, 1, 2, 4, 1, 5, 5, 7, 9 , 100, -23, 1}, 11, Boolean.FALSE),
+				Arguments.of(new long[] {0, 1, 2, 4, 1, 5, 5, 7, 9 , 100, -23, 2}, 20, Boolean.FALSE),
+				Arguments.of(new long[] {2, 1, 2, 4, 1, 5, 5, 5, 9 , 100, -23, 2}, 20, Boolean.TRUE)
+				);
 	}
 }

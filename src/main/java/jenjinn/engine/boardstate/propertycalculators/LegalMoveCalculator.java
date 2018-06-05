@@ -44,7 +44,7 @@ public final class LegalMoveCalculator {
 	{
 		if (state.getCastlingStatus().getStatusFor(state.getActiveSide()) == null) {
 			final Side activeSide = state.getActiveSide();
-			final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
+			final Predicate<CastleZone> sideFilter = activeSide.isWhite()? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
 			final Set<CastleZone> allRights = state.getCastlingStatus().getCastlingRights();
 			final Flow<CastleZone> availableRights = Iterate.over(allRights).filter(sideFilter);
 			final long allPieces = state.getPieceLocations().getAllLocations();

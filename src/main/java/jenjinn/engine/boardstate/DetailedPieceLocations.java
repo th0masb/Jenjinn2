@@ -126,6 +126,11 @@ public final class DetailedPieceLocations
 		return blackLocations;
 	}
 
+	public long getAllLocations()
+	{
+		return whiteLocations | blackLocations;
+	}
+
 	public long locationOverviewOf(final ChessPiece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).allLocs();

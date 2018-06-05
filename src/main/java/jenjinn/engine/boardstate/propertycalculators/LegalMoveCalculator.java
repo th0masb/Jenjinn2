@@ -3,16 +3,22 @@
  */
 package jenjinn.engine.boardstate.propertycalculators;
 
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.Side;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.StandardMove;
@@ -36,19 +42,24 @@ public final class LegalMoveCalculator {
 
 	static List<CastleMove> getCastleMoves(final BoardState state, final long passiveControl)
 	{
-		throw new RuntimeException();
-		//		if (state.getCastlingStatus().getStatusFor(state.getActiveSide()) == null) {
-		//			final Side activeSide = state.getActiveSide();
-		//			final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
-		//			final Flow<CastleZone> availableRights = Iterate.over(state.getCastlingStatus().getCastlingRights()).filter(sideFilter);
-		//
-		//			if (availableRights.hasNext()) {
-		////				long allPieces
-		//			}
-		//		}
-		//		else {
-		//			return Collections.emptyList();
-		//		}
+		if (state.getCastlingStatus().getStatusFor(state.getActiveSide()) == null) {
+			final Side activeSide = state.getActiveSide();
+			final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
+			final Set<CastleZone> allRights = state.getCastlingStatus().getCastlingRights();
+			final Flow<CastleZone> availableRights = Iterate.over(allRights).filter(sideFilter);
+			final long allPieces = state.getPieceLocations().getAllLocations();
+			final Flow<CastleZone> legalAvailableRights = availableRights.filter(zone ->
+			{
+				final long reqClearArea = zone.getRequiredFreeSquares();
+				final long kingLoc = state.getPieceLocations().locationOverviewOf(ChessPieces.king(activeSide));
+				return !bitboardsIntersect(reqClearArea, allPieces)
+						&& !bitboardsIntersect(passiveControl, kingLoc | reqClearArea);
+			});
+			return legalAvailableRights.map(MoveCache::getMove).toList();
+		}
+		else {
+			return Collections.emptyList();
+		}
 	}
 
 	static List<StandardMove> getStandardMoves(final BoardState state, final long passiveControl)

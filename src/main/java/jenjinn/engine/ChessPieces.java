@@ -7,7 +7,6 @@ import static java.util.Arrays.asList;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +52,11 @@ public final class ChessPieces
 	public static List<ChessPiece> blackPinningPieces()
 	{
 		return BLACK_PINNING_PIECES;
+	}
+
+	public static List<ChessPiece> pinnersOn(final Side side)
+	{
+		return side.isWhite()? WHITE_PINNING_PIECES : BLACK_PINNING_PIECES;
 	}
 
 	public static List<ChessPiece> ofSide(final Side side)

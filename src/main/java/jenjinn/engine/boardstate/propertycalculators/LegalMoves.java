@@ -21,7 +21,6 @@ import xawd.jflow.iterators.Flow;
 
 /**
  * @author ThomasB
- *
  */
 public final class LegalMoves {
 

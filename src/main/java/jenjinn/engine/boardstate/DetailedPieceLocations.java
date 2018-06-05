@@ -116,6 +116,11 @@ public final class DetailedPieceLocations
 		return null;
 	}
 
+	public long getSideLocations(final Side query)
+	{
+		return query.isWhite()? whiteLocations : blackLocations;
+	}
+
 	public long getWhiteLocations()
 	{
 		return whiteLocations;

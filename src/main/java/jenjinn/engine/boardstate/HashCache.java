@@ -71,6 +71,30 @@ public final class HashCache
 		return totalHalfMoveCount;
 	}
 
+	public boolean containsThreeRepetitions()
+	{
+		if (totalHalfMoveCount < CACHE_SIZE) {
+			return false;
+		}
+		else {
+			final long[] cpy = Arrays.copyOf(hashCache, CACHE_SIZE);
+			Arrays.sort(cpy);
+			int sameCount = 1;
+			long last = cpy[0];
+			for (int i = 1; i < CACHE_SIZE && sameCount < 3; i++) {
+				final long next = cpy[i];
+				if (next == last) {
+					sameCount++;
+				}
+				else {
+					sameCount = 1;
+					last = next;
+				}
+			}
+			return sameCount == 3;
+		}
+	}
+
 	@Override
 	public String toString()
 	{

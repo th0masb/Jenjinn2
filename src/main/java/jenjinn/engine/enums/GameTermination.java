@@ -9,20 +9,21 @@ import jenjinn.engine.misc.Infinity;
  * @author TB
  * @date 1 Feb 2017
  */
-public enum TerminationType {
+public enum GameTermination 
+{
 	// Make just a little bigger than the initial alpha beta calls so we don't
 	// change the bounds for terminal states..
 	/*
 	 * Surely we do want to change the bounds for terminakl states, or does it not
 	 * matter at all?
 	 */
-	WHITE_WIN(Infinity.SHORT_INFINITY), BLACK_WIN(-Infinity.SHORT_INFINITY), DRAW(0), NOT_TERMINAL(0);
+	WHITE_WIN(Infinity.INT_INFINITY), BLACK_WIN(-Infinity.INT_INFINITY), DRAW(0), NOT_TERMINAL(0);
 
-	public short value;
+	public int value;
 
-	private TerminationType(final int value)
+	private GameTermination(final int value)
 	{
-		this.value = (short) value;
+		this.value = value;
 	}
 
 	public boolean isTerminal()
@@ -33,17 +34,5 @@ public enum TerminationType {
 	public boolean isWin()
 	{
 		return this == WHITE_WIN || this == BLACK_WIN;
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	public boolean matches(final Side s)
-	{
-		switch (this) {
-		case WHITE_WIN:
-			return s.isWhite();
-		case BLACK_WIN:
-			return !s.isWhite();
-		}
-		return true;
 	}
 }

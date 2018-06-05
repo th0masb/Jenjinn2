@@ -4,6 +4,8 @@
 package jenjinn.engine.moves;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.util.Collections.unmodifiableSet;
 import static jenjinn.engine.enums.CastleZone.BLACK_KINGSIDE;
 import static jenjinn.engine.enums.CastleZone.BLACK_QUEENSIDE;
@@ -15,6 +17,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
@@ -30,6 +33,8 @@ import jenjinn.engine.enums.Side;
  */
 public final class StandardMove extends AbstractChessMove
 {
+	private static final Set<CastleZone> UNMODIFIABLE_EMPTY = unmodifiableSet(EnumSet.noneOf(CastleZone.class));
+
 	private static final Map<BoardSquare, Set<CastleZone>> RIGHTS_REMOVAL_MAP;
 	static
 	{
@@ -46,17 +51,52 @@ public final class StandardMove extends AbstractChessMove
 	}
 
 	private final Set<CastleZone> rightsRemovedByThisMove;
+	private final long inducedCord;
 
 	public StandardMove(final BoardSquare start, final BoardSquare target)
 	{
 		super(start, target);
+		rightsRemovedByThisMove = initRightsRemoved();
+		inducedCord = initInducedCord();
+	}
 
-		final Set<CastleZone> x = RIGHTS_REMOVAL_MAP.containsKey(getSource())? RIGHTS_REMOVAL_MAP.get(getSource()) : EnumSet.noneOf(CastleZone.class);
-		final Set<CastleZone> y = RIGHTS_REMOVAL_MAP.containsKey(getTarget())? RIGHTS_REMOVAL_MAP.get(getTarget()) : EnumSet.noneOf(CastleZone.class);
-		final Set<CastleZone> mutableResult = EnumSet.noneOf(CastleZone.class);
-		mutableResult.addAll(x);
-		mutableResult.addAll(y);
-		rightsRemovedByThisMove = unmodifiableSet(mutableResult);
+	private long initInducedCord()
+	{
+		if (isKnightMove()) {
+			return Long.MIN_VALUE;
+		}
+		else {
+			throw new RuntimeException();
+		}
+	}
+
+	private Set<CastleZone> initRightsRemoved()
+	{
+		final Predicate<Object> p = RIGHTS_REMOVAL_MAP::containsKey;
+		if (p.test(getSource()) || p.test(getTarget())) {
+			final Set<CastleZone> x = p.test(getSource())? RIGHTS_REMOVAL_MAP.get(getSource()) : EnumSet.noneOf(CastleZone.class);
+			final Set<CastleZone> y = p.test(getTarget())? RIGHTS_REMOVAL_MAP.get(getTarget()) : EnumSet.noneOf(CastleZone.class);
+			final Set<CastleZone> mutableResult = EnumSet.noneOf(CastleZone.class);
+			mutableResult.addAll(x);
+			mutableResult.addAll(y);
+			return unmodifiableSet(mutableResult);
+		}
+		else {
+			return UNMODIFIABLE_EMPTY;
+		}
+	}
+
+	public boolean isKnightMove()
+	{
+		final int rankChange = abs(getSource().rank() - getTarget().rank());
+		final int fileChange = abs(getSource().file() - getTarget().file());
+		return max(rankChange, fileChange) == 2 && min(rankChange, fileChange) == 1;
+	}
+
+	public long getInducedCord()
+	{
+		assert !isKnightMove();
+		return inducedCord;
 	}
 
 	@Override

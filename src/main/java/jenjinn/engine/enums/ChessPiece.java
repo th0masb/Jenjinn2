@@ -333,6 +333,12 @@ public enum ChessPiece implements Moveable
 		return ordinal() < 6;
 	}
 
+	public boolean isSlidingPiece()
+	{
+		final int index = ordinal() % 6;
+		return index == 2 || index == 3 || index == 4;
+	}
+
 	private static int getMagicMoveIndex(final long allPieces, final long occupancyMask, final long magicNumber, final int magicBitshift)
 	{
 		return (int) (((occupancyMask & allPieces) * magicNumber) >>> magicBitshift);

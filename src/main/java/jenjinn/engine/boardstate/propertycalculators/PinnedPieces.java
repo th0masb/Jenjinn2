@@ -8,8 +8,6 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 import static jenjinn.engine.boardstate.propertycalculators.MoveCache.getMove;
 
-import java.util.List;
-
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.BoardState;
@@ -18,6 +16,7 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.misc.PinnedPiece;
+import jenjinn.engine.misc.PinnedPieceCollection;
 import xawd.jflow.iterators.construction.Iterate;
 
 /**
@@ -36,7 +35,7 @@ public final class PinnedPieces
 	 * @param state - the {@linkplain BoardState} instance to calculate the active pinned pieces of.
 	 * @return a list of the pinned piece locations as well as their constrained move areas.
 	 */
-	public static List<PinnedPiece> in(final BoardState state)
+	public static PinnedPieceCollection in(final BoardState state)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
@@ -62,6 +61,6 @@ public final class PinnedPieces
 					final BoardSquare pieceLoc = BitboardIterator.from(cord & activeLocs).next();
 					return new PinnedPiece(pieceLoc, cord);
 				})
-				.toList();
+				.build(PinnedPieceCollection::new);
 	}
 }

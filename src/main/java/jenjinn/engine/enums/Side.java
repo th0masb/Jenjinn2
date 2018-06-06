@@ -2,21 +2,24 @@ package jenjinn.engine.enums;
 
 /**
  * Enumeration of the two sides in a chessgame.
- * 
+ *
  * @author TB
  * @date 1 Dec 2016
  */
-public enum Side 
+public enum Side
 {
-	WHITE(0, 1), BLACK(6, -1);
+	WHITE(6), BLACK(1);
 
-	public final int pawnPieceIndex;
-	public final int pawnDirection;
+	private final int penultimatePawnRank;
 
-	private Side(final int pawnPieceIndex, final int pawnDirection)
+	private Side(final int penultimatePawnRank)
 	{
-		this.pawnPieceIndex = pawnPieceIndex;
-		this.pawnDirection = pawnDirection;
+		this.penultimatePawnRank = penultimatePawnRank;
+	}
+
+	public int getPenultimatePawnRank()
+	{
+		return penultimatePawnRank;
 	}
 
 	public boolean isWhite()
@@ -31,21 +34,6 @@ public enum Side
 		}
 		else {
 			return BLACK;
-		}
-	}
-
-	public String getFilename()
-	{
-		return name().toLowerCase();
-	}
-
-	public boolean isMaximising()
-	{
-		if (this == WHITE) {
-			return true;
-		}
-		else {
-			return false;
 		}
 	}
 }

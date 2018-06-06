@@ -48,6 +48,23 @@ public final class LegalMoves {
 		}
 	}
 
+	private static List<ChessMove> getLegalMoves(final BoardState state, final long passiveControl)
+	{
+		/*
+		 * We must take into account possible pins, Standard sliding moves induce 'cord' bitboards which
+		 * can be used to check for pins.
+		 */
+		throw new RuntimeException();
+	}
+
+	/**
+	 * @param state - The source state
+	 * @param passiveControl - A bitboard representing all squares controlled by the passive
+	 * side in the source state.
+	 *
+	 * @return a list of every legal move available assuming the active king is under direct attack.
+	 * I.e. that its location intersects the passive side control.
+	 */
 	private static List<ChessMove> getMovesOutOfCheck(final BoardState state, final long passiveControl)
 	{
 		final Side active = state.getActiveSide();
@@ -94,6 +111,11 @@ public final class LegalMoves {
 		return allMoves.toList();
 	}
 
+	/**
+	 * In the unbelievably unlikely situation that a passive pawn which has just moved
+	 * forward two is attacking the active king (causing check) we must additionally check
+	 * for enpassant escape moves from the active pawns.
+	 */
 	private static Flow<ChessMove> getEnpassantCheckEscape(final PieceSquarePair attacker, final BoardState state, final PinnedPieceCollection pinnedPieces)
 	{
 		final BoardSquare attackerLoc = attacker.getSquare(), enpassantSquare = state.getEnPassantSquare();
@@ -127,6 +149,12 @@ public final class LegalMoves {
 		}
 	}
 
+	/**
+	 * @param activeKingLoc - Assumed location of the active side king
+	 * @param attacker - Piece and location assumed to be directly attacking the active king.
+	 * @return the squares (represented by a bitboard) which an active piece (not the king)
+	 * could be moved to to remove the direct attack.
+	 */
 	private static long getBlockingSquares(final BoardSquare activeKingLoc, final PieceSquarePair attacker)
 	{
 		if (attacker.getPiece().isSlidingPiece()) {
@@ -169,27 +197,21 @@ public final class LegalMoves {
 		return attackers;
 	}
 
-	private static List<ChessMove> getLegalMoves(final BoardState state, final long passiveControl)
-	{
-		/*
-		 * We must take into account possible pins, Standard sliding moves induce 'cord' bitboards which
-		 * can be used to check for pins.
-		 */
-		throw new RuntimeException();
-	}
-
+	/**
+	 * @param piece - the piece located at the source square
+	 * @param source - the source square for any moves generated
+	 * @param bitboard - a representation of all the available target squares
+	 *
+	 * @return an iteration of moves from source to target for each target
+	 * described by the parameter bitboard.
+	 */
 	static Flow<ChessMove> bitboard2moves(final ChessPiece piece, final BoardSquare source, final long bitboard)
 	{
-		if (piece.isPawn() && onPenultimateRank(source, piece.getSide())) {
+		if (piece.isPawn() && source.rank() == piece.getSide().getPenultimatePawnRank()) {
 			return BitboardIterator.from(bitboard).map(target -> new PromotionMove(source, target));
 		}
 		else {
 			return BitboardIterator.from(bitboard).map(target -> MoveCache.getMove(source, target));
 		}
-	}
-
-	private static boolean onPenultimateRank(final BoardSquare query, final Side side)
-	{
-		return side.isWhite()? query.rank() == 6 : query.rank() == 1;
 	}
 }

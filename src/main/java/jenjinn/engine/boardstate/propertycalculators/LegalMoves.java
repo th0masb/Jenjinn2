@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.boardstate.propertycalculators;
 
+import static java.lang.Math.abs;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static xawd.jflow.utilities.CollectionUtil.head;
 
@@ -16,12 +17,15 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.misc.PieceSquarePair;
 import jenjinn.engine.misc.PinnedPieceCollection;
 import jenjinn.engine.moves.ChessMove;
+import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.PromotionMove;
 import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.construction.EmptyIteration;
 import xawd.jflow.iterators.construction.Iterate;
 
 /**
@@ -30,11 +34,6 @@ import xawd.jflow.iterators.construction.Iterate;
 public final class LegalMoves {
 
 	private LegalMoves() {}
-
-	public static boolean hasLegalMove(final BoardState state)
-	{
-
-	}
 
 	public static List<ChessMove> forState(final BoardState state)
 	{
@@ -86,12 +85,47 @@ public final class LegalMoves {
 				return bitboard2moves(piece, pinned.getLocation(), moves);
 			});
 
-			allMoves = allMoves.append(blocksFromFreePieces).append(blocksFromPinnedPieces);
+			allMoves = allMoves
+					.append(blocksFromFreePieces)
+					.append(blocksFromPinnedPieces)
+					.append(getEnpassantCheckEscape(attacker, state, pinnedActivePieces));
 		}
 
 		return allMoves.toList();
 	}
 
+	private static Flow<ChessMove> getEnpassantCheckEscape(final PieceSquarePair attacker, final BoardState state, final PinnedPieceCollection pinnedPieces)
+	{
+		final BoardSquare attackerLoc = attacker.getSquare(), enpassantSquare = state.getEnPassantSquare();
+		// Very, very, very, very extremely rare that we will go into here...
+		if (enpassantSquare != null && attacker.getPiece().isPawn() && abs(attackerLoc.ordinal() - enpassantSquare.ordinal()) == 8)
+		{
+			final Side active = state.getActiveSide();
+			final ChessPiece activePawn = ChessPieces.pawn(active);
+			final long activePawnLocs = state.getPieceLocations().locationOverviewOf(activePawn);
+			final BoardSquare leftSquare = enpassantSquare.getNextSquareInDirection(active.isWhite()? Direction.SW : Direction.NW);
+			final BoardSquare rightSquare = enpassantSquare.getNextSquareInDirection(active.isWhite()? Direction.SE : Direction.NE);
+			return Iterate.over(leftSquare, rightSquare)
+					.filter(x -> x != null)
+					.filter(square -> {
+						if (bitboardsIntersect(activePawnLocs, square.asBitboard())) {
+							if (pinnedPieces.containsLocation(square)) {
+								return bitboardsIntersect(pinnedPieces.getConstraintAreaOfPieceAt(square), enpassantSquare.asBitboard());
+							}
+							else {
+								return true;
+							}
+						}
+						else {
+							return false;
+						}
+					})
+					.map(sourceSquare -> new EnpassantMove(sourceSquare, enpassantSquare));
+		}
+		else {
+			return EmptyIteration.ofObjects();
+		}
+	}
 
 	private static long getBlockingSquares(final BoardSquare activeKingLoc, final PieceSquarePair attacker)
 	{

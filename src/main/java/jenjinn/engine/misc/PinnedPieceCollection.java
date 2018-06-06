@@ -38,4 +38,14 @@ public final class PinnedPieceCollection implements FlowIterable<PinnedPiece>
 	{
 		return pinnedPieceLocations.contains(location);
 	}
+
+	public long getConstraintAreaOfPieceAt(final BoardSquare location)
+	{
+		for (final PinnedPiece piece : pinnedPieces) {
+			if (piece.getLocation() == location) {
+				return piece.getConstrainedArea();
+			}
+		}
+		throw new IllegalArgumentException();
+	}
 }

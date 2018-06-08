@@ -36,7 +36,7 @@ class MovementIntegrationTest
 	void testPawnMoves()
 	{
 		final List<ChessPiece> pawns = asList(ChessPiece.WHITE_PAWN, ChessPiece.BLACK_PAWN);
-		BoardSquare.iterateAll().skip(8).take(48).forEach(square -> testMovesAgreeAtSquare(square, pawns));
+		BoardSquare.iterateAll().drop(8).take(48).forEach(square -> testMovesAgreeAtSquare(square, pawns));
 	}
 
 	void testMovesAgreeAtSquare(final BoardSquare square, final List<ChessPiece> piecesToTest)

@@ -25,7 +25,7 @@ public final class ChessPieces
 
 	private static final List<ChessPiece> ALL_PIECES = Collections.unmodifiableList(asList(ChessPiece.values()));
 	private static final List<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toImmutableList();
-	private static final List<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).skip(6).toImmutableList();
+	private static final List<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).drop(6).toImmutableList();
 	private static final List<ChessPiece> WHITE_PINNING_PIECES = asList(ChessPiece.WHITE_QUEEN, ChessPiece.WHITE_ROOK, ChessPiece.WHITE_BISHOP);
 	private static final List<ChessPiece> BLACK_PINNING_PIECES = asList(ChessPiece.BLACK_QUEEN, ChessPiece.BLACK_ROOK, ChessPiece.BLACK_BISHOP);
 

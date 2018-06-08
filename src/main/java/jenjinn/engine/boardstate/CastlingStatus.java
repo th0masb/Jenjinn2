@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.boardstate;
 
-import static xawd.jflow.utilities.CollectionUtil.str;
+import static xawd.jflow.utilities.CollectionUtil.string;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -74,11 +74,11 @@ public final class CastlingStatus
 	public String toString()
 	{
 		return new StringBuilder("CastlingStatus[Castling rights: ")
-				.append(str(castlingRights))
+				.append(string(castlingRights))
 				.append(", White status: ")
-				.append(str(whiteCastlingStatus))
+				.append(string(whiteCastlingStatus))
 				.append(", Black status: ")
-				.append(str(blackCastlingStatus))
+				.append(string(blackCastlingStatus))
 				.append("]")
 				.toString();
 	}

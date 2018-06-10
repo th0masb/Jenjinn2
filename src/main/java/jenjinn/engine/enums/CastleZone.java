@@ -21,7 +21,7 @@ import static jenjinn.engine.enums.BoardSquare.H8;
 
 import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

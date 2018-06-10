@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.enums.BoardSquare;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

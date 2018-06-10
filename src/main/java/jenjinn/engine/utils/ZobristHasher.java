@@ -14,8 +14,8 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
-import xawd.jflow.iterators.construction.IterRange;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

@@ -9,7 +9,7 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

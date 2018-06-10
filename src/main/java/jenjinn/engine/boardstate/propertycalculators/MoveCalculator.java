@@ -24,8 +24,8 @@ import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.PromotionMove;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.EmptyIteration;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.EmptyIteration;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

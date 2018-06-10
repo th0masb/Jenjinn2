@@ -8,8 +8,8 @@ import java.util.List;
 import jenjinn.engine.boardstate.LocationTracker;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
-import xawd.jflow.iterators.construction.IterRange;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

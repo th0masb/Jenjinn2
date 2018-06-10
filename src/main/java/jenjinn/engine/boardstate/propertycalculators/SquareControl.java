@@ -12,7 +12,7 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

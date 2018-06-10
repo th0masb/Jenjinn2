@@ -17,7 +17,7 @@ import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.misc.PinnedPiece;
 import jenjinn.engine.misc.PinnedPieceCollection;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

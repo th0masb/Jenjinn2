@@ -14,8 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
-import xawd.jflow.iterators.construction.CycledIteration;
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.CycledIteration;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

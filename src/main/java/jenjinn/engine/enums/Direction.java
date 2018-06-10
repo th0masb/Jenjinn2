@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * Enum representing all the different directions

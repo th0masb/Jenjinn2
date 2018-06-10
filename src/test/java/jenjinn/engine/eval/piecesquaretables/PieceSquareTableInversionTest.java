@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import xawd.jflow.iterators.construction.IterRange;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author t

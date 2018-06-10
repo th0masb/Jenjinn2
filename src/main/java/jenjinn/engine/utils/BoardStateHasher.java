@@ -5,7 +5,7 @@ package jenjinn.engine.utils;
 
 import java.util.Random;
 
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

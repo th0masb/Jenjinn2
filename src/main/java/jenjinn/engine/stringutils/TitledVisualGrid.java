@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import jenjinn.engine.enums.BoardSquare;
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

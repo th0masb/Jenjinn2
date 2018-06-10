@@ -9,7 +9,7 @@ import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.iterables.FlowIterable;
 
 /**

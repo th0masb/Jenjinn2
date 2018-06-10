@@ -8,7 +8,7 @@ import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 import java.util.Arrays;
 import java.util.List;
 
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author t

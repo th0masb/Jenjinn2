@@ -19,7 +19,7 @@ import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.misc.PieceLocations;
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

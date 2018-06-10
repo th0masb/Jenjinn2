@@ -13,7 +13,7 @@ import java.util.List;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

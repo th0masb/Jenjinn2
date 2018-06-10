@@ -22,8 +22,8 @@ import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.utils.BoardStateHasher;
 import jenjinn.engine.utils.ZobristHasher;
-import xawd.jflow.iterators.construction.IterRange;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author t

@@ -69,8 +69,8 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.iterators.construction.IterRange;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

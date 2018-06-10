@@ -12,7 +12,7 @@ import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * Handles piece locations as well as tracking the positional evaluation and hash arising

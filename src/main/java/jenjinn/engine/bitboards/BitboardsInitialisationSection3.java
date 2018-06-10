@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.misc.PieceMovementDirections;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

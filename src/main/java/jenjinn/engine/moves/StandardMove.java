@@ -22,7 +22,7 @@ import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

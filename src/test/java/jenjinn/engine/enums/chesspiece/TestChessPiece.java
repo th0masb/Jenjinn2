@@ -31,7 +31,7 @@ import jenjinn.engine.Moveable;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB

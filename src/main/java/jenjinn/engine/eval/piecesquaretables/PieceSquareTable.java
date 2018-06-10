@@ -8,7 +8,7 @@ import java.util.Arrays;
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
-import xawd.jflow.iterators.construction.IterRange;
+import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB

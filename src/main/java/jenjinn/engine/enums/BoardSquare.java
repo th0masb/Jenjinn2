@@ -8,7 +8,7 @@ import java.util.List;
 
 import jenjinn.engine.misc.RankFileCoordinate;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.iterators.construction.Iterate;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * Enumeration of the 64 chess squares on a chess board.

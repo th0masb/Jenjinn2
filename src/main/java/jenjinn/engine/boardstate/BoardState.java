@@ -89,6 +89,11 @@ public final class BoardState
 		return hashCache;
 	}
 
+	public boolean hasEnpassantAvailable()
+	{
+		return enpassantSquare != null;
+	}
+
 	public long calculateHash()
 	{
 		final ZobristHasher stateHasher = getPieceLocations().getHashFeatureProvider();

@@ -11,6 +11,11 @@ import jenjinn.engine.enums.ChessPiece;
  */
 public final class Bitboards
 {
+	public static long universal()
+	{
+		return BitboardsImpl.UNIVERSAL_BITBOARD;
+	}
+
 	// Section 1 - Basic areas of the board.
 	/**
 	 * Access array of 64 bitboards representing single squares on a chessboard. They are

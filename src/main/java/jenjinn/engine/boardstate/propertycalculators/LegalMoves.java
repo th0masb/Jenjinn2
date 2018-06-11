@@ -56,15 +56,15 @@ public final class LegalMoves
 		final PinnedPieceCollection pinnedPieces = PinnedPieces.in(state);
 
 		Flow<ChessMove> moves = EmptyIteration.ofObjects();
-		long forcedArea = Bitboards.universal();
+		long allowedArea = Bitboards.universal();
 		if (bitboardsIntersect(passiveControl, kingLoc.asBitboard())) {
 			final List<PieceSquarePair> attackers = getPassiveAttackersOfActiveKing(state);
 			if (sizeOf(attackers) > 1) {
-				forcedArea = 0L;
+				allowedArea = 0L;
 			}
 			else {
 				final PieceSquarePair attacker = head(attackers);
-				forcedArea = getBlockingSquares(kingLoc, attacker);
+				allowedArea = getBlockingSquares(kingLoc, attacker);
 				final BoardSquare ep = state.getEnPassantSquare(), attsq = attacker.getSquare();
 				if (ep != null && abs(ep.ordinal() - attsq.ordinal()) == 8) {
 					assert attacker.getPiece().isPawn();
@@ -73,10 +73,10 @@ public final class LegalMoves
 			}
 		}
 
-		final long ffa = forcedArea;
+		final long faa = allowedArea;
 		final Flow<ChessMove> nonKing = Iterate.reverseOver(activePieces)
 				.drop(1)
-				.flatten(p -> getNonKingMoves(state, p, pinnedPieces, ffa));
+				.flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa));
 
 		return nonKing.append(getLegalMovesForKing(state, kingLoc, passiveControl));
 	}

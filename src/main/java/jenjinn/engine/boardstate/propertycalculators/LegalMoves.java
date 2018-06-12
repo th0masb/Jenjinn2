@@ -12,6 +12,8 @@ import static xawd.jflow.utilities.CollectionUtil.tail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardIterator;
@@ -19,6 +21,7 @@ import jenjinn.engine.bitboards.Bitboards;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
@@ -43,28 +46,41 @@ public final class LegalMoves
 	private LegalMoves()
 	{
 	}
+
+	public static Flow<ChessMove> getAttacks(final BoardState state)
+	{
+		return getLegalMoves(state, true);
+	}
+
+	public static Flow<ChessMove> getMoves(final BoardState state)
+	{
+		return getLegalMoves(state, false);
+	}
+
 	/*
-	 * Not quite castling moves yet. Could easily make it just legal attacks.
 	 */
-	public static Flow<ChessMove> getLegalMoves(final BoardState state)//, boolean forceAttacks)
+	private static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
+		final long passivePieceLocs = state.getPieceLocations().getSideLocations(passive);
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(active);
 		final ChessPiece activeKing = tail(activePieces);
 		final BoardSquare kingLoc = state.getPieceLocations().iterateLocs(activeKing).next();
 		final long passiveControl = SquareControl.calculate(state, passive);
 		final PinnedPieceCollection pinnedPieces = PinnedPieces.in(state);
 
-		Flow<ChessMove> moves = EmptyIteration.ofObjects();
-		long allowedArea = Bitboards.universal();
-		if (bitboardsIntersect(passiveControl, kingLoc.asBitboard())) {
+		final boolean inCheck = bitboardsIntersect(passiveControl, kingLoc.asBitboard());
+		final boolean castlingAllowed = !inCheck && !forceAttacks && state.getCastlingStatus().getStatusFor(active) == null;
+		Flow<ChessMove> moves = castlingAllowed? getCastlingMoves(state, passiveControl) : EmptyIteration.ofObjects();
+		long allowedMoveArea = forceAttacks? passivePieceLocs : Bitboards.universal();
+
+		if (inCheck) {
 			final List<PieceSquarePair> attackers = getPassiveAttackersOfActiveKing(state);
 			if (sizeOf(attackers) > 1) {
-				allowedArea = 0L;
-			}
-			else {
+				allowedMoveArea = 0L;
+			} else {
 				final PieceSquarePair attacker = head(attackers);
-				allowedArea = getBlockingSquares(kingLoc, attacker);
+				allowedMoveArea &= getBlockingSquares(kingLoc, attacker);
 				final BoardSquare ep = state.getEnPassantSquare(), attsq = attacker.getSquare();
 				if (ep != null && abs(ep.ordinal() - attsq.ordinal()) == 8) {
 					assert attacker.getPiece().isPawn();
@@ -73,63 +89,50 @@ public final class LegalMoves
 			}
 		}
 
-		final long faa = allowedArea;
-		final Flow<ChessMove> nonKing = Iterate.reverseOver(activePieces)
-				.drop(1)
-				.flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa));
+		// Add moves from non king pieces
+		final long faa = allowedMoveArea;
+		moves = moves.append(
+				Iterate.reverseOver(activePieces).drop(1).flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa))
+				);
 
-		return nonKing.append(getLegalMovesForKing(state, kingLoc, passiveControl));
+		// Add king moves
+		final long kingConstraint = forceAttacks? ~passiveControl & passivePieceLocs : ~passiveControl;
+		moves = moves.append(getMovesForKing(state, kingLoc, kingConstraint));
+
+		return moves;
 	}
 
-	private static Flow<ChessMove> getLegalMovesForKing(final BoardState state, BoardSquare kingLoc, final long passiveControl)
+	private static Flow<ChessMove> getCastlingMoves(final BoardState state, final long passiveControl)
+	{
+		final Side activeSide = state.getActiveSide();
+		final Predicate<CastleZone> sideFilter = activeSide.isWhite()? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
+		final Set<CastleZone> allRights = state.getCastlingStatus().getCastlingRights();
+		final Flow<CastleZone> availableRights = Iterate.over(allRights).filter(sideFilter);
+		final long allPieces = state.getPieceLocations().getAllLocations();
+		final Flow<CastleZone> legalAvailableRights = availableRights.filter(zone ->
+		{
+			final long reqClearArea = zone.getRequiredFreeSquares();
+			final long kingLoc = state.getPieceLocations().locationOverviewOf(ChessPieces.king(activeSide));
+			return !bitboardsIntersect(reqClearArea, allPieces)
+					&& !bitboardsIntersect(passiveControl, kingLoc | reqClearArea);
+		});
+		return legalAvailableRights.map(MoveCache::getMove);
+	}
+
+	private static Flow<ChessMove> getMovesForKing(final BoardState state, final BoardSquare kingLoc,
+			final long areaConstraint)
 	{
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final ChessPiece activeKing = ChessPieces.king(state.getActiveSide());
 		final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
-		final long kingMoves = activeKing.getMoves(kingLoc, white, black) & ~passiveControl;
+		final ChessPiece activeKing = ChessPieces.king(state.getActiveSide());
+		final long kingMoves = activeKing.getMoves(kingLoc, white, black) & areaConstraint;
 		return bitboard2moves(activeKing, kingLoc, kingMoves);
 	}
 
-	//	private static Flow<ChessMove> getLegalMovesForNonKingPiece(final BoardState state, final ChessPiece piece,
-	//			final PinnedPieceCollection pinnedPieces)
-	//	{
-	//		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-	//		final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
-	//		final PredicatePartition<BoardSquare> pinnedPartition = pieceLocs.iterateLocs(piece)
-	//				.partition(pinnedPieces::containsLocation);
-	//
-	//		final Flow<ChessMove> notPinnedContributions = pinnedPartition.iterateRejected()
-	//				.flatten(square -> bitboard2moves(piece, square, piece.getMoves(square, white, black)));
-	//
-	//		final Flow<ChessMove> pinnedContribution = pinnedPartition.iterateAccepted().flatten(square -> {
-	//			final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(square);
-	//			return bitboard2moves(piece, square, piece.getMoves(square, white, black) & areaCons);
-	//		});
-	//
-	//		Flow<ChessMove> allContributions = notPinnedContributions.append(pinnedContribution);
-	//
-	//		if (piece.isPawn() && state.hasEnpassantAvailable()) {
-	//			final BoardSquare ep = state.getEnPassantSquare();
-	//			final long plocs = pieceLocs.locationOverviewOf(piece);
-	//			final List<Direction> searchDirs = piece.isWhite() ? WHITE_EP_SEARCH_DIRS : BLACK_EP_SEARCH_DIRS;
-	//			final Flow<ChessMove> epContribution = Iterate.over(searchDirs).map(ep::getNextSquareInDirection)
-	//					.filter(sq -> {
-	//						if (sq != null && bitboardsIntersect(plocs, sq.asBitboard())) {
-	//							return pinnedPieces.containsLocation(sq)
-	//									? bitboardsIntersect(pinnedPieces.getConstraintAreaOfPieceAt(sq), ep.asBitboard())
-	//											: true;
-	//						} else {
-	//							return false;
-	//						}
-	//					}).map(sq -> new EnpassantMove(sq, ep));
-	//			allContributions = allContributions.append(epContribution);
-	//		}
-	//		return allContributions;
-	//	}
-
 	/*
-	 * Think this is all we need for both blocking and moving non-king pieces. If the king is not in check
-	 * then the overallAreaConstraint is the universal bitboard.
+	 * Think this is all we need for both blocking and moving non-king pieces. If
+	 * the king is not in check then the overallAreaConstraint is the universal
+	 * bitboard.
 	 */
 	private static Flow<ChessMove> getNonKingMoves(final BoardState state, final ChessPiece piece,
 			final PinnedPieceCollection pinnedPieces, final long overallAreaConstraint)
@@ -164,7 +167,7 @@ public final class LegalMoves
 						if (sq != null && bitboardsIntersect(plocs, sq.asBitboard())) {
 							final boolean pinned = pinnedPieces.containsLocation(sq);
 							final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(sq);
-							return pinned? bitboardsIntersect(areaCons, ep.asBitboard()): true;
+							return pinned ? bitboardsIntersect(areaCons, ep.asBitboard()) : true;
 						} else {
 							return false;
 						}
@@ -173,59 +176,6 @@ public final class LegalMoves
 		}
 		return allContributions;
 	}
-
-	//	/**
-	//	 * @param state
-	//	 *            The source state
-	//	 * @param passiveControl
-	//	 *            A bitboard representing all squares controlled by the passive side
-	//	 *            in the source state.
-	//	 *
-	//	 * @return A list of every legal move available assuming the active king is
-	//	 *         under direct attack.
-	//	 */
-	//	private static List<ChessMove> getMovesOutOfCheck(final BoardState state, final long passiveControl)
-	//	{
-	//		final Side active = state.getActiveSide();
-	//		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-	//		final ChessPiece activeKing = ChessPieces.king(active);
-	//		final BoardSquare activeKingLoc = pieceLocs.iterateLocs(activeKing).next();
-	//		final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
-	//
-	//		final List<PieceSquarePair> attackers = getPassiveAttackersOfActiveKing(state);
-	//
-	//		final long kingMovesBitboard = activeKing.getMoves(activeKingLoc, white, black) & ~passiveControl;
-	//		Flow<ChessMove> allMoves = bitboard2moves(activeKing, activeKingLoc, kingMovesBitboard);
-	//
-	//		// King can move or we can move a piece to a blocking square (respecting
-	//		// constraint of pins)
-	//		// if attacker was pawn who just created enpassant square we also check for
-	//		// enpassant moves.
-	//
-	//		if (attackers.size() == 1) {
-	//			final PieceSquarePair attacker = head(attackers);
-	//			final long blockingSquares = getBlockingSquares(activeKingLoc, attacker);
-	//
-	//			final PinnedPieceCollection pinnedActivePieces = PinnedPieces.in(state);
-	//			final Predicate<BoardSquare> notPinned = square -> !pinnedActivePieces.containsLocation(square);
-	//
-	//			final Flow<ChessMove> blocksFromFreePieces = Iterate.over(ChessPieces.ofSide(active))
-	//					.flatten(piece -> pieceLocs.iterateLocs(piece).filter(notPinned).flatten(
-	//							sq -> bitboard2moves(piece, sq, piece.getMoves(sq, white, black) & blockingSquares)));
-	//
-	//			final Flow<ChessMove> blocksFromPinnedPieces = pinnedActivePieces.iterator().flatten(pinned -> {
-	//				final ChessPiece piece = pieceLocs.getPieceAt(pinned.getLocation(), active);
-	//				final long constraint = blockingSquares & pinned.getConstrainedArea();
-	//				final long moves = piece.getMoves(pinned.getLocation(), white, black) & constraint;
-	//				return bitboard2moves(piece, pinned.getLocation(), moves);
-	//			});
-	//
-	//			allMoves = allMoves.append(blocksFromFreePieces).append(blocksFromPinnedPieces)
-	//					.append(getEnpassantCheckEscape(attacker, state, pinnedActivePieces));
-	//		}
-	//
-	//		return allMoves.toList();
-	//	}
 
 	/**
 	 * In the unbelievably unlikely situation that a passive pawn which has just
@@ -236,31 +186,28 @@ public final class LegalMoves
 			final PinnedPieceCollection pinnedPieces)
 	{
 		final BoardSquare attackerLoc = attacker.getSquare(), enpassantSquare = state.getEnPassantSquare();
-		// Very, very, very, very extremely rare that we will go into here...
-		if (enpassantSquare != null && attacker.getPiece().isPawn()
-				&& Math.abs(attackerLoc.ordinal() - enpassantSquare.ordinal()) == 8) {
-			final Side active = state.getActiveSide();
-			final ChessPiece activePawn = ChessPieces.pawn(active);
-			final long activePawnLocs = state.getPieceLocations().locationOverviewOf(activePawn);
-			final BoardSquare leftSquare = enpassantSquare
-					.getNextSquareInDirection(active.isWhite() ? Direction.SW : Direction.NW);
-			final BoardSquare rightSquare = enpassantSquare
-					.getNextSquareInDirection(active.isWhite() ? Direction.SE : Direction.NE);
-			return Iterate.over(leftSquare, rightSquare).filter(x -> x != null).filter(square -> {
-				if (bitboardsIntersect(activePawnLocs, square.asBitboard())) {
-					if (pinnedPieces.containsLocation(square)) {
-						return bitboardsIntersect(pinnedPieces.getConstraintAreaOfPieceAt(square),
-								enpassantSquare.asBitboard());
+		assert enpassantSquare != null;
+		assert attacker.getPiece().isPawn();
+		assert Math.abs(attackerLoc.ordinal() - enpassantSquare.ordinal()) == 8;
+
+		final Side active = state.getActiveSide();
+		final ChessPiece activePawn = ChessPieces.pawn(active);
+		final long activePawnLocs = state.getPieceLocations().locationOverviewOf(activePawn);
+		final List<Direction> searchDirs = active.isWhite() ? WHITE_EP_SEARCH_DIRS : BLACK_EP_SEARCH_DIRS;
+
+		return Iterate.over(searchDirs).map(enpassantSquare::getNextSquareInDirection).filter(x -> x != null)
+				.filter(square -> {
+					if (bitboardsIntersect(activePawnLocs, square.asBitboard())) {
+						if (pinnedPieces.containsLocation(square)) {
+							return bitboardsIntersect(pinnedPieces.getConstraintAreaOfPieceAt(square),
+									enpassantSquare.asBitboard());
+						} else {
+							return true;
+						}
 					} else {
-						return true;
+						return false;
 					}
-				} else {
-					return false;
-				}
-			}).map(sourceSquare -> new EnpassantMove(sourceSquare, enpassantSquare));
-		} else {
-			return EmptyIteration.ofObjects();
-		}
+				}).map(sourceSquare -> new EnpassantMove(sourceSquare, enpassantSquare));
 	}
 
 	/**
@@ -287,7 +234,8 @@ public final class LegalMoves
 	 * state. I.e. those which are causing check. There can be at most two such
 	 * pieces.
 	 *
-	 * TODO could optimize the pawn check and we don't need to consider passive king.
+	 * TODO could optimize the pawn check and we don't need to consider passive
+	 * king.
 	 */
 	private static List<PieceSquarePair> getPassiveAttackersOfActiveKing(final BoardState state)
 	{
@@ -334,4 +282,116 @@ public final class LegalMoves
 			return BitboardIterator.from(bitboard).map(target -> MoveCache.getMove(source, target));
 		}
 	}
+
+	// private static Flow<ChessMove> getLegalMovesForNonKingPiece(final BoardState
+	// state, final ChessPiece piece,
+	// final PinnedPieceCollection pinnedPieces)
+	// {
+	// final DetailedPieceLocations pieceLocs = state.getPieceLocations();
+	// final long white = pieceLocs.getWhiteLocations(), black =
+	// pieceLocs.getBlackLocations();
+	// final PredicatePartition<BoardSquare> pinnedPartition =
+	// pieceLocs.iterateLocs(piece)
+	// .partition(pinnedPieces::containsLocation);
+	//
+	// final Flow<ChessMove> notPinnedContributions =
+	// pinnedPartition.iterateRejected()
+	// .flatten(square -> bitboard2moves(piece, square, piece.getMoves(square,
+	// white, black)));
+	//
+	// final Flow<ChessMove> pinnedContribution =
+	// pinnedPartition.iterateAccepted().flatten(square -> {
+	// final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(square);
+	// return bitboard2moves(piece, square, piece.getMoves(square, white, black) &
+	// areaCons);
+	// });
+	//
+	// Flow<ChessMove> allContributions =
+	// notPinnedContributions.append(pinnedContribution);
+	//
+	// if (piece.isPawn() && state.hasEnpassantAvailable()) {
+	// final BoardSquare ep = state.getEnPassantSquare();
+	// final long plocs = pieceLocs.locationOverviewOf(piece);
+	// final List<Direction> searchDirs = piece.isWhite() ? WHITE_EP_SEARCH_DIRS :
+	// BLACK_EP_SEARCH_DIRS;
+	// final Flow<ChessMove> epContribution =
+	// Iterate.over(searchDirs).map(ep::getNextSquareInDirection)
+	// .filter(sq -> {
+	// if (sq != null && bitboardsIntersect(plocs, sq.asBitboard())) {
+	// return pinnedPieces.containsLocation(sq)
+	// ? bitboardsIntersect(pinnedPieces.getConstraintAreaOfPieceAt(sq),
+	// ep.asBitboard())
+	// : true;
+	// } else {
+	// return false;
+	// }
+	// }).map(sq -> new EnpassantMove(sq, ep));
+	// allContributions = allContributions.append(epContribution);
+	// }
+	// return allContributions;
+	// }
+
+	// /**
+	// * @param state
+	// * The source state
+	// * @param passiveControl
+	// * A bitboard representing all squares controlled by the passive side
+	// * in the source state.
+	// *
+	// * @return A list of every legal move available assuming the active king is
+	// * under direct attack.
+	// */
+	// private static List<ChessMove> getMovesOutOfCheck(final BoardState state,
+	// final long passiveControl)
+	// {
+	// final Side active = state.getActiveSide();
+	// final DetailedPieceLocations pieceLocs = state.getPieceLocations();
+	// final ChessPiece activeKing = ChessPieces.king(active);
+	// final BoardSquare activeKingLoc = pieceLocs.iterateLocs(activeKing).next();
+	// final long white = pieceLocs.getWhiteLocations(), black =
+	// pieceLocs.getBlackLocations();
+	//
+	// final List<PieceSquarePair> attackers =
+	// getPassiveAttackersOfActiveKing(state);
+	//
+	// final long kingMovesBitboard = activeKing.getMoves(activeKingLoc, white,
+	// black) & ~passiveControl;
+	// Flow<ChessMove> allMoves = bitboard2moves(activeKing, activeKingLoc,
+	// kingMovesBitboard);
+	//
+	// // King can move or we can move a piece to a blocking square (respecting
+	// // constraint of pins)
+	// // if attacker was pawn who just created enpassant square we also check for
+	// // enpassant moves.
+	//
+	// if (attackers.size() == 1) {
+	// final PieceSquarePair attacker = head(attackers);
+	// final long blockingSquares = getBlockingSquares(activeKingLoc, attacker);
+	//
+	// final PinnedPieceCollection pinnedActivePieces = PinnedPieces.in(state);
+	// final Predicate<BoardSquare> notPinned = square ->
+	// !pinnedActivePieces.containsLocation(square);
+	//
+	// final Flow<ChessMove> blocksFromFreePieces =
+	// Iterate.over(ChessPieces.ofSide(active))
+	// .flatten(piece -> pieceLocs.iterateLocs(piece).filter(notPinned).flatten(
+	// sq -> bitboard2moves(piece, sq, piece.getMoves(sq, white, black) &
+	// blockingSquares)));
+	//
+	// final Flow<ChessMove> blocksFromPinnedPieces =
+	// pinnedActivePieces.iterator().flatten(pinned -> {
+	// final ChessPiece piece = pieceLocs.getPieceAt(pinned.getLocation(), active);
+	// final long constraint = blockingSquares & pinned.getConstrainedArea();
+	// final long moves = piece.getMoves(pinned.getLocation(), white, black) &
+	// constraint;
+	// return bitboard2moves(piece, pinned.getLocation(), moves);
+	// });
+	//
+	// allMoves =
+	// allMoves.append(blocksFromFreePieces).append(blocksFromPinnedPieces)
+	// .append(getEnpassantCheckEscape(attacker, state, pinnedActivePieces));
+	// }
+	//
+	// return allMoves.toList();
+	// }
 }

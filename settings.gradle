@@ -1,1 +1,1 @@
-include 'JFlow'
+includeFlat 'JFlow'

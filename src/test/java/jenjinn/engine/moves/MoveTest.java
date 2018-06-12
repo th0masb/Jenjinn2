@@ -3,10 +3,10 @@
  */
 package jenjinn.engine.moves;
 
+import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.string;
 
 import java.util.Iterator;
-import java.util.function.IntFunction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,8 +38,14 @@ class MoveTest extends AbstractBoardStateTest
 
 	static Iterator<Arguments> test()
 	{
-		final IntFunction<String> indexFormatter = i -> "testCase" + CycledIteration.of("9")
-		.take(i / 10).reduce("", (a, b) -> a + b) + string(i % 10);
-		return IterRange.to(36).mapToObject(indexFormatter).map(TestFileParser::parse);
+		return IterRange.to(36).mapToObject(i -> "case" + pad(i)).map(TestFileParser::parse);
+	}
+
+	static String pad(final int caseNumber) {
+		final String caseString = string(caseNumber);
+		return CycledIteration.of("0")
+				.take(3 - sizeOf(caseString))
+				.append(caseString)
+				.reduce("", (a, b) -> a + b);
 	}
 }

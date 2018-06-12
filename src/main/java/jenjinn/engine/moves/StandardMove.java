@@ -22,6 +22,7 @@ import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
+import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**
@@ -46,13 +47,19 @@ public final class StandardMove extends AbstractChessMove
 			return Long.MIN_VALUE;
 		}
 		else {
-			final Direction direction = Direction.ofLineBetween(getSource(), getTarget()).orElseThrow(AssertionError::new);
-			final List<BoardSquare> squares = getSource().getAllSquaresInDirections(direction, 10);
-			return Iterate.over(squares)
-					.takeWhile(sq -> sq != getTarget())
-					.append(getTarget())
-					.mapToLong(BoardSquare::asBitboard)
-					.reduce(0L, (a, b) -> a ^ b);
+			try {
+				final Direction direction = Direction.ofLineBetween(getSource(), getTarget()).orElseThrow(AssertionError::new);
+				final List<BoardSquare> squares = getSource().getAllSquaresInDirections(direction, 10);
+				return Iterate.over(squares)
+						.takeWhile(sq -> sq != getTarget())
+						.append(getTarget())
+						.mapToLong(BoardSquare::asBitboard)
+						.reduce(0L, (a, b) -> a ^ b);
+			}
+			catch (final Exception ex) {
+//				System.out.println(squares);
+				throw new AssertionError(getSource().name() + ", " + getTarget().name());
+			}
 		}
 	}
 
@@ -151,5 +158,24 @@ public final class StandardMove extends AbstractChessMove
 	DevelopmentPiece getPieceDeveloped()
 	{
 		return DevelopmentPiece.fromStartSquare(getSource());
+	}
+
+	public static void main(final String[] args)
+	{
+		final BoardSquare source = BoardSquare.E1, target = BoardSquare.F1;
+		final Direction direction = Direction.ofLineBetween(source, target).orElseThrow(AssertionError::new);
+		final List<BoardSquare> squares = source.getAllSquaresInDirections(direction, 10);
+//		System.out.println(squares);
+//		System.out.println(Iterate.over(squares)
+//				.takeWhile(sq -> sq != target)
+//				.append(target)
+//				.toList());
+
+		final Flow<BoardSquare> sqs = Iterate.over(squares).takeWhile(sq -> sq != target).append(target);
+		System.out.println(sqs.hasNext());
+		System.out.println(sqs.next());
+//
+//				.mapToLong(BoardSquare::asBitboard)
+//				.reduce(0L, (a, b) -> a ^ b);
 	}
 }

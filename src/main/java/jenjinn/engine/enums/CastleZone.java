@@ -19,6 +19,7 @@ import static jenjinn.engine.enums.BoardSquare.G8;
 import static jenjinn.engine.enums.BoardSquare.H1;
 import static jenjinn.engine.enums.BoardSquare.H8;
 
+import jenjinn.engine.parseutils.CommonRegex;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
@@ -98,6 +99,17 @@ public enum CastleZone
 	{
 		final String[] split = name().toLowerCase().split("_");
 		return new String(new char[] {split[0].charAt(0), split[1].charAt(0)});
+	}
+
+	public static CastleZone fromSimpleIdentifier(final String identifier)
+	{
+		final String id = identifier.trim().toLowerCase();
+		if (id.matches(CommonRegex.CASTLE_ZONE)) {
+			return iterateAll().filter(z -> z.getSimpleIdentifier().equals(id)).next();
+		}
+		else {
+			throw new IllegalArgumentException(identifier);
+		}
 	}
 
 	public static Flow<CastleZone> iterateAll()

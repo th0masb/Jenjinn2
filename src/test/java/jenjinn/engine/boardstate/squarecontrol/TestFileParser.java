@@ -47,14 +47,14 @@ final class TestFileParser
 		return Arguments.of(parseBoard(take(9, lines)), parseSquaresOfControl(drop(9, lines)));
 	}
 
-	private static Map<ChessPiece, Long> parseSquaresOfControl(final List<String> drop)
+	private static Map<ChessPiece, Long> parseSquaresOfControl(final List<String> squaresOfControl)
 	{
-		if (sizeOf(drop) != 12) {
+		if (sizeOf(squaresOfControl) != 12) {
 			throw new IllegalArgumentException(
-					"Only passed squares of control for " + sizeOf(drop) + " pieces");
+					"Only passed squares of control for " + sizeOf(squaresOfControl) + " pieces");
 		}
 		return ChessPieces.iterate()
-				.zipWith(drop.iterator())
+				.zipWith(squaresOfControl.iterator())
 				.toMap(Pair::first, p -> parseSinglePieceSquaresOfControl(p.second()));
 	}
 

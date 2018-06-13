@@ -58,8 +58,6 @@ public final class LegalMoves
 		return getLegalMoves(state, false);
 	}
 
-	/*
-	 */
 	private static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();

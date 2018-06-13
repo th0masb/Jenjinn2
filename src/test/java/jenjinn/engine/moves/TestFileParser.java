@@ -4,7 +4,7 @@
 package jenjinn.engine.moves;
 
 import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.moves.BoardParseUtils.parseBoard;
+import static jenjinn.engine.parseutils.BoardParseUtils.parseBoard;
 import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static xawd.jflow.utilities.CollectionUtil.head;
@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.HashCache;
+import jenjinn.engine.parseutils.BoardParseUtils;
 
 /**
  * @author ThomasB

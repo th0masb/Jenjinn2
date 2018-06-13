@@ -4,13 +4,12 @@
 package jenjinn.engine.moves;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static java.util.Collections.unmodifiableSet;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -42,24 +41,18 @@ public final class StandardMove extends AbstractChessMove
 
 	private long initInducedCord()
 	{
-		if (isKnightMove()) {
-			return Long.MIN_VALUE;
+		final Optional<Direction> dir = Direction.ofLineBetween(getSource(), getTarget());
+		if (dir.isPresent()) {
+			final List<BoardSquare> squares = getSource().getAllSquaresInDirections(dir.get(), 10);
+			return Iterate.over(squares)
+					.takeWhile(sq -> sq != getTarget())
+					.insert(getSource())
+					.append(getTarget())
+					.mapToLong(BoardSquare::asBitboard)
+					.reduce(0L, (a, b) -> a ^ b);
 		}
 		else {
-//			try {
-				final Direction direction = Direction.ofLineBetween(getSource(), getTarget())
-						.orElseThrow(() -> new AssertionError(getSource().name() + ", " + getTarget().name()));
-				final List<BoardSquare> squares = getSource().getAllSquaresInDirections(direction, 10);
-				return Iterate.over(squares)
-						.takeWhile(sq -> sq != getTarget())
-						.append(getTarget())
-						.mapToLong(BoardSquare::asBitboard)
-						.reduce(0L, (a, b) -> a ^ b);
-//			}
-//			catch (final Exception ex) {
-////				System.out.println(squares);
-//				throw new AssertionError(getSource().name() + ", " + getTarget().name());
-//			}
+			return Long.MIN_VALUE;
 		}
 	}
 
@@ -80,17 +73,16 @@ public final class StandardMove extends AbstractChessMove
 			return MoveConstants.EMPTY_RIGHTS_SET;
 		}
 	}
-
-	public boolean isKnightMove()
-	{
-		final int rankChange = abs(getSource().rank() - getTarget().rank());
-		final int fileChange = abs(getSource().file() - getTarget().file());
-		return max(rankChange, fileChange) == 2 && min(rankChange, fileChange) == 1;
-	}
+//
+//	public boolean isKnightMove()
+//	{
+//		final int rankChange = abs(getSource().rank() - getTarget().rank());
+//		final int fileChange = abs(getSource().file() - getTarget().file());
+//		return max(rankChange, fileChange) == 2 && min(rankChange, fileChange) == 1;
+//	}
 
 	public long getInducedCord()
 	{
-		assert !isKnightMove();
 		return inducedCord;
 	}
 

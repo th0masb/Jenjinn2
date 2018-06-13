@@ -9,7 +9,7 @@ import jenjinn.engine.misc.Infinity;
  * @author TB
  * @date 1 Feb 2017
  */
-public enum GameTermination 
+public enum GameTermination
 {
 	// Make just a little bigger than the initial alpha beta calls so we don't
 	// change the bounds for terminal states..
@@ -34,5 +34,10 @@ public enum GameTermination
 	public boolean isWin()
 	{
 		return this == WHITE_WIN || this == BLACK_WIN;
+	}
+
+	public static GameTermination getWinFor(final Side side)
+	{
+		return side.isWhite()? WHITE_WIN : BLACK_WIN;
 	}
 }

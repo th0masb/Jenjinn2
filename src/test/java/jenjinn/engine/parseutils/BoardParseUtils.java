@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.moves;
+package jenjinn.engine.parseutils;
 
 import static jenjinn.engine.eval.piecesquaretables.TestingPieceSquareTables.getEndgameTables;
 import static jenjinn.engine.eval.piecesquaretables.TestingPieceSquareTables.getMidgameTables;

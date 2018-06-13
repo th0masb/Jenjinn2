@@ -35,6 +35,11 @@ public interface ChessMove
 	 */
 	void makeMove(BoardState state, DataForReversingMove unmakeDataStore);
 
+	default void makeMove(BoardState state)
+	{
+		makeMove(state, new DataForReversingMove());
+	}
+
 	/**
 	 * Using the supplied {@linkplain DataForReversingMove} to mutate the state of the
 	 * parameter {@linkplain BoardState} instance to reverse this move.

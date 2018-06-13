@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
@@ -47,15 +48,16 @@ public final class PgnMoveBuilder
 	public static final String CASTLE_MOVE = "(" + KINGSIDE_CASTLE +"|" + QUEENSIDE_CASTLE + ")";
 	public static final String PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=Q" + ")";
 	public static final String STANDARD_MOVE = "(" + PIECE + "?([a-h]|[1-8]|([a-h][1-8]))?x?" + SQUARE + ")";
+	public static final String MOVE = "(" + STANDARD_MOVE + "|" + PROMOTION_MOVE + "|" + CASTLE_MOVE + ")";
 
 	public static final String EXCLUDED_PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=(N|B|R)" + CHECK + "?)";
 
-	public static final String MOVE_LOOKBEHIND = "(?<=(\\.| {1,3}))";
-	public static final String MOVE_LOOKAHEAD = "(?=(" + CHECK + "| {1,3}))";
-	public static final String MOVE_EXTRACTOR = "(" + MOVE_LOOKBEHIND + "(" + STANDARD_MOVE + "|" + PROMOTION_MOVE + "|" + CASTLE_MOVE + ")" + MOVE_LOOKAHEAD + ")";
+	public static final String PRECEEDING_MOVE = "([0-9]{1,3}\\.| {1,3})", PROCEEDING_MOVE = "(" + CHECK + "| {1,3})";
+	public static final String MOVE_LOOKBEHIND = "(?<=" + PRECEEDING_MOVE + ")", MOVE_LOOKAHEAD = "(?=" + PROCEEDING_MOVE + ")";
+	public static final String MOVE_EXTRACTOR = "(" + MOVE_LOOKBEHIND + MOVE + MOVE_LOOKAHEAD + ")";
 
 	public static final String GAME_START = "(^1\\." + STANDARD_MOVE + ")";
-	public static final String GAME_TERMINATION = "(((1//-0)|(0\\-1)|(1/2\\-1/2)|(\\*))$)";
+	public static final String GAME_TERMINATION = "(((1\\-0)|(0\\-1)|(1/2\\-1/2)|(\\*))$)";
 
 	private PgnMoveBuilder()
 	{
@@ -63,57 +65,111 @@ public final class PgnMoveBuilder
 
 	public static ChessMove convertPgnCommand(final BoardState currentState, final String moveCommand) throws BadPgnException
 	{
-		final Supplier<BadPgnException> exSupplier = () -> new BadPgnException(moveCommand);
-		final String mc = moveCommand.toUpperCase();
 		final Set<ChessMove> legalMoves = LegalMoves.getMoves(currentState).toSet();
 
-		if (mc.matches(CASTLE_MOVE)) {
-			final CastleZone kingSide = currentState.getActiveSide().isWhite()? CastleZone.WHITE_KINGSIDE : CastleZone.BLACK_KINGSIDE;
-			final CastleZone queenSide = currentState.getActiveSide().isWhite()? CastleZone.WHITE_QUEENSIDE : CastleZone.BLACK_QUEENSIDE;
-			final ChessMove mv = mc.matches(KINGSIDE_CASTLE)? new CastleMove(kingSide) : new CastleMove(queenSide);
-			if (!legalMoves.contains(mv)) {
-				throw exSupplier.get();
-			}
-			return mv;
+		if (moveCommand.matches(CASTLE_MOVE)) {
+			return decodeCastleMove(currentState, moveCommand, legalMoves);
 		}
-		else if (mc.matches(PROMOTION_MOVE)) {
-			final String encodedTarget = findFirstMatch(mc, SQUARE).orElseThrow(exSupplier);
-			final BoardSquare target = BoardSquare.valueOf(encodedTarget.toUpperCase());
-			final List<PromotionMove> candidates = Iterate.over(legalMoves)
-					.filterAndCastTo(PromotionMove.class)
-					.filter(mv -> mv.getTarget() == target)
+		else if (moveCommand.matches(PROMOTION_MOVE)) {
+			return decodePromotionMove(currentState, moveCommand, legalMoves);
+		}
+		else if (moveCommand.matches(STANDARD_MOVE)) {
+			return decodeStandardMove(currentState, moveCommand, legalMoves);
+		}
+		else {
+			throw new BadPgnException(moveCommand);
+		}
+	}
+
+	private static ChessMove decodeStandardMove(BoardState state, String moveCommand, Set<ChessMove> legalMoves) throws BadPgnException
+	{
+		final String mc = moveCommand;
+		final Supplier<BadPgnException> exSupplier = () -> new BadPgnException(moveCommand);
+
+		final List<BoardSquare> encodedSquares = Iterate.over(getAllMatches(mc, SQUARE))
+				.map(String::toUpperCase)
+				.map(BoardSquare::valueOf)
+				.toList();
+
+		if (encodedSquares.size() == 1) {
+			final BoardSquare target = tail(encodedSquares);
+			final List<String> files = getAllMatches(mc, FILE), ranks = getAllMatches(mc, RANK);
+			final char pieceIdentifier = findFirstMatch(mc, PIECE).orElse("P").charAt(0);
+			final int pieceOrdinalMod6 = CHARACTER_PIECE_MAP.getOrDefault(pieceIdentifier, 0);
+			final DetailedPieceLocations plocs = state.getPieceLocations();
+			final List<ChessMove> candidates = Iterate.over(legalMoves)
+					.filter(mv -> mv.getTarget() == target && (plocs.getPieceAt(mv.getSource()).ordinal() % 6) == pieceOrdinalMod6)
 					.toList();
 
 			if (candidates.size() == 1) {
 				return head(candidates);
 			}
-			else if (candidates.size() == 2) {
-				final char file = mc.charAt(0);
+			else if (files.size() == 2) {
+				final char sourceFile = head(files).charAt(0);
 				return Iterate.over(candidates)
-						.filter(mv -> mv.getSource().name().charAt(0) == file)
+						.filter(mv -> mv.getSource().name().charAt(0) == sourceFile)
+						.safeNext().orElseThrow(exSupplier);
+			}
+			else if (ranks.size() == 2) {
+				final char sourceRank = head(ranks).charAt(0);
+				return Iterate.over(candidates)
+						.filter(mv -> mv.getSource().name().charAt(1) == sourceRank)
 						.safeNext().orElseThrow(exSupplier);
 			}
 			else {
 				throw exSupplier.get();
 			}
 		}
-		else if (mc.matches(STANDARD_MOVE)) {
-			final List<BoardSquare> encodedSquares = Iterate.over(getAllMatches(mc, SQUARE))
-					.map(String::toUpperCase)
-					.map(BoardSquare::valueOf)
-					.toList();
-
-			if (encodedSquares.isEmpty()) {
-				throw exSupplier.get();
-			}
-			else if (encodedSquares.size() == 1) {
-				final BoardSquare target = tail(encodedSquares);
-//				int pieceOrdinalMod6 = StringUtils.findFirstMatch(mc, PIECE).orElse("0);
-			}
+		else if (encodedSquares.size() == 2) {
+			final BoardSquare source = head(encodedSquares), target = tail(encodedSquares);
+			return Iterate.over(legalMoves)
+					.filter(mv -> mv.getSource() == source && mv.getTarget() == target)
+					.safeNext().orElseThrow(exSupplier);
 		}
+		else {
+			throw exSupplier.get();
+		}
+	}
 
+	private static ChessMove decodePromotionMove(BoardState state, String moveCommand, Set<ChessMove> legalMoves) throws BadPgnException
+	{
+		final String mc = moveCommand;
+		final Supplier<BadPgnException> exSupplier = () -> new BadPgnException(moveCommand);
 
-		throw new RuntimeException();
+		final String encodedTarget = findFirstMatch(mc, SQUARE).orElseThrow(exSupplier);
+		final BoardSquare target = BoardSquare.valueOf(encodedTarget.toUpperCase());
+		final List<PromotionMove> candidates = Iterate.over(legalMoves)
+				.filterAndCastTo(PromotionMove.class)
+				.filter(mv -> mv.getTarget() == target)
+				.toList();
+
+		if (candidates.size() == 1) {
+			return head(candidates);
+		}
+		else if (candidates.size() == 2) {
+			final char file = mc.charAt(0);
+			return Iterate.over(candidates)
+					.filter(mv -> mv.getSource().name().charAt(0) == file)
+					.safeNext().orElseThrow(exSupplier);
+		}
+		else {
+			throw exSupplier.get();
+		}
+	}
+
+	private static ChessMove decodeCastleMove(BoardState state, String moveCommand, Set<ChessMove> legalMoves) throws BadPgnException
+	{
+		final String mc = moveCommand;
+		final CastleZone kingSide = state.getActiveSide().isWhite()? CastleZone.WHITE_KINGSIDE : CastleZone.BLACK_KINGSIDE;
+		final CastleZone queenSide = state.getActiveSide().isWhite()? CastleZone.WHITE_QUEENSIDE : CastleZone.BLACK_QUEENSIDE;
+		final ChessMove mv = mc.matches(KINGSIDE_CASTLE)? new CastleMove(kingSide) : new CastleMove(queenSide);
+
+		if (legalMoves.contains(mv)) {
+			return mv;
+		}
+		else {
+			throw new BadPgnException(moveCommand);
+		}
 	}
 
 	public static void main(final String[] args)
@@ -121,5 +177,7 @@ public final class PgnMoveBuilder
 		System.out.println(StringUtils.getAllMatches("23.Qd3 Rae8 24.Rf2 Rxe3 25.Qxe3 Bd4 26.Qe6+ Qxe6 27.dxe6 Bxf2+ 28.Kxf2 Bd5+", MOVE_EXTRACTOR));
 
 		System.out.println(StringUtils.getAllMatches("Qd3", PIECE));
+
+		System.out.println(StringUtils.getAllMatches("Rad3", FILE));
 	}
 }

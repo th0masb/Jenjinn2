@@ -19,8 +19,6 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 public final class CordParser
 {
-	private static final String SQUARE_REGEX = "[a-hA-H][1-8]";
-
 	private CordParser()
 	{
 	}
@@ -38,11 +36,11 @@ public final class CordParser
 	public static List<BoardSquare> parse(final String encodedCord)
 	{
 		final String ec = encodedCord.trim();
-		if (!ec.matches(SQUARE_REGEX + " *\\-\\> *" + SQUARE_REGEX)) {
+		if (!ec.matches(CommonRegex.CORD)) {
 			throw new IllegalArgumentException(encodedCord);
 		}
 
-		final List<BoardSquare> squares = Iterate.over(getAllMatches(ec, SQUARE_REGEX))
+		final List<BoardSquare> squares = Iterate.over(getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
 				.map(String::toUpperCase)
 				.map(BoardSquare::valueOf)
 				.toList();

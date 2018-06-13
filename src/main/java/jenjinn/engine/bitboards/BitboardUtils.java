@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.bitboards;
 
-import java.util.List;
-
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.Flow;
 
@@ -29,7 +27,7 @@ public final class BitboardUtils
 		return result;
 	}
 
-	public static long bitwiseOr(final List<BoardSquare> args)
+	public static long bitwiseOr(final Iterable<BoardSquare> args)
 	{
 		long result = 0L;
 		for (final BoardSquare arg : args) {

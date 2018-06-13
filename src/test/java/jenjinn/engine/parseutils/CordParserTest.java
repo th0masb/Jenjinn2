@@ -29,13 +29,14 @@ class CordParserTest
 	static Flow<Arguments> test()
 	{
 		return Iterate.over(
-				Arguments.of("g1 ->  D1", new int[] {1, 2, 3, 4}),
+				Arguments.of("g1->D1", new int[] {1, 2, 3, 4}),
 				Arguments.of("G1->F3", new int[] {1, 18})
 				);
 	}
 
 	void testErrors()
 	{
+		assertThrows(IllegalArgumentException.class, () -> CordParser.parse("g1 -> g2"));
 		assertThrows(IllegalArgumentException.class, () -> CordParser.parse("g1 ->"));
 		assertThrows(IllegalArgumentException.class, () -> CordParser.parse("g1 -> a2"));
 	}

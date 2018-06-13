@@ -22,7 +22,7 @@ import xawd.jflow.iterators.factories.Iterate;
 /**
  * @author ThomasB
  */
-public final class TestFileParser
+final class TestFileParser
 {
 	private TestFileParser()
 	{

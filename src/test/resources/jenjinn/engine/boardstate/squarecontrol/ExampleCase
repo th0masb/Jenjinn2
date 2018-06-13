@@ -1,0 +1,21 @@
+Demonstrating the file format of the cases.
+
+// A nine line standard description of a boardstate.
+white_pieces: (f2 g2) (b3) (c4) (a1 h1) (c2) (e1)
+black_pieces: (a7 c5 e7 f7) (b6) (d6) (a8 h8) (d7) (e8)
+half_move_clock: 20
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: white
+enpassant_square: none
+
+// 12 lines, each corresponding to piece type with that ordinal, 
+// giving the squares of control for that piece on the board.
+
+none
+a2 b3
+a8 c1->c5
+...
+none

@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate.propertycalculators;
+package jenjinn.engine.moves;
 
 import static java.util.Arrays.asList;
 
@@ -11,8 +11,6 @@ import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.ChessPiece;
-import jenjinn.engine.moves.CastleMove;
-import jenjinn.engine.moves.StandardMove;
 
 /**
  * @author ThomasB

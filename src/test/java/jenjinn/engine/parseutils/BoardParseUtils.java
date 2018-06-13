@@ -41,9 +41,16 @@ import xawd.jflow.utilities.StringUtils;
  */
 public final class BoardParseUtils
 {
+	private static final int DEFAULT_MOVE_COUNT = 20;
+
 	private BoardParseUtils() {}
 
-	public static BoardState parseBoard(final List<String> attributes, int totalMoveCount)
+	public static BoardState parseBoard(final List<String> attributes)
+	{
+		return parseBoard(attributes, DEFAULT_MOVE_COUNT);
+	}
+
+	public static BoardState parseBoard(final List<String> attributes, final int totalMoveCount)
 	{
 		if (attributes.size() != 9) {
 			throw new IllegalArgumentException();
@@ -62,7 +69,7 @@ public final class BoardParseUtils
 		return new BoardState(hashCache, pieceLocations, halfMoveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
 	}
 
-	private static HashCache constructDummyHashCache(final long initializedBoardHash, int totalMoveCount)
+	private static HashCache constructDummyHashCache(final long initializedBoardHash, final int totalMoveCount)
 	{
 		final int cacheSize = HashCache.CACHE_SIZE;
 		final long[] cache = IterRange.to(cacheSize).mapToLong(i -> i + 1).toArray();

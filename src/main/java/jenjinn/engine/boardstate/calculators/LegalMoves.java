@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate.propertycalculators;
+package jenjinn.engine.boardstate.calculators;
 
 import static java.lang.Math.abs;
 import static java.util.Arrays.asList;
@@ -29,6 +29,7 @@ import jenjinn.engine.misc.PieceSquarePair;
 import jenjinn.engine.misc.PinnedPieceCollection;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
+import jenjinn.engine.moves.MoveCache;
 import jenjinn.engine.moves.PromotionMove;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.EmptyIteration;

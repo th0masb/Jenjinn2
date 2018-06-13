@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate.propertycalculators;
+package jenjinn.engine.boardstate.calculators;
 
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.Bitboards.fileBitboard;
@@ -16,7 +16,6 @@ import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
- *
  */
 public final class SquareControl {
 

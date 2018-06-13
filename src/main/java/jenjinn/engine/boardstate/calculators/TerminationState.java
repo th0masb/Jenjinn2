@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.boardstate.propertycalculators;
+package jenjinn.engine.boardstate.calculators;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardUtils;

@@ -1,12 +1,12 @@
 /**
  *
  */
-package jenjinn.engine.boardstate.propertycalculators;
+package jenjinn.engine.boardstate.calculators;
 
 import static java.lang.Long.bitCount;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
-import static jenjinn.engine.boardstate.propertycalculators.MoveCache.getMove;
+import static jenjinn.engine.moves.MoveCache.getMove;
 
 import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardIterator;

@@ -57,9 +57,4 @@ public final class CordParser
 				.append(end)
 				.toList();
 	}
-
-	public static void main(final String[] args)
-	{
-		System.out.println(Iterate.over("1").append("2").toList());
-	}
 }

@@ -52,13 +52,6 @@ public final class PgnMoveBuilder
 
 	public static final String EXCLUDED_PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=(N|B|R)" + CHECK + "?)";
 
-	public static final String PRECEEDING_MOVE = "([0-9]{1,3}\\.| {1,3})", PROCEEDING_MOVE = "(" + CHECK + "| {1,3})";
-	public static final String MOVE_LOOKBEHIND = "(?<=" + PRECEEDING_MOVE + ")", MOVE_LOOKAHEAD = "(?=" + PROCEEDING_MOVE + ")";
-	public static final String MOVE_EXTRACTOR = "(" + MOVE_LOOKBEHIND + MOVE + MOVE_LOOKAHEAD + ")";
-
-	public static final String GAME_START = "(^1\\." + STANDARD_MOVE + ")";
-	public static final String GAME_TERMINATION = "(((1\\-0)|(0\\-1)|(1/2\\-1/2)|(\\*))$)";
-
 	private PgnMoveBuilder()
 	{
 	}
@@ -174,10 +167,9 @@ public final class PgnMoveBuilder
 
 	public static void main(final String[] args)
 	{
-		System.out.println(StringUtils.getAllMatches("23.Qd3 Rae8 24.Rf2 Rxe3 25.Qxe3 Bd4 26.Qe6+ Qxe6 27.dxe6 Bxf2+ 28.Kxf2 Bd5+", MOVE_EXTRACTOR));
-
+		System.out.println(StringUtils.getAllMatches("23.Qd3 Rae8 24.Rf2 Rxe3 25.Qxe3 Bd4 26.Qe6+ Qxe6 27.dxe6 Bxf2+ 28.Kxf2 Bd5+", MOVE));
 		System.out.println(StringUtils.getAllMatches("Qd3", PIECE));
-
 		System.out.println(StringUtils.getAllMatches("Rad3", FILE));
+		System.out.println();
 	}
 }

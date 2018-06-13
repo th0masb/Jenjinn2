@@ -1,0 +1,13 @@
+// A nine line standard description of a boardstate.
+white_pieces: (e3 e4 h8) (g6) (c5 f2) (c4 g2) (d5) (d4)
+black_pieces: () () (g1 b6) (g4) (d8) ()
+half_move_clock: 20
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: black
+enpassant_square: none
+
+// Some whitespace separated boardsquare sequence indicating pinned locs, or none
+c5 d5 e4

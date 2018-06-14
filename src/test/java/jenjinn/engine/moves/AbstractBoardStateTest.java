@@ -3,7 +3,6 @@
  */
 package jenjinn.engine.moves;
 
-import static jenjinn.engine.stringutils.StringifyBoard.formatGrids;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -17,12 +16,12 @@ import jenjinn.engine.stringutils.VisualGridGenerator;
  */
 public abstract class AbstractBoardStateTest
 {
-	public BoardState constructBoardState(List<String> lines)
+	public BoardState constructBoardState(final List<String> lines)
 	{
 		throw new RuntimeException();
 	}
 
-	public void assertBoardStatesAreEqual(BoardState constraint, BoardState toTest)
+	public void assertBoardStatesAreEqual(final BoardState constraint, final BoardState toTest)
 	{
 		assertEquals(constraint.getActiveSide(), toTest.getActiveSide());
 		assertEquals(constraint.getEnPassantSquare(), toTest.getEnPassantSquare());
@@ -33,17 +32,17 @@ public abstract class AbstractBoardStateTest
 		assertEquals(constraint.getHashCache(), toTest.getHashCache());
 	}
 
-	private String formatPieceLocationsErrorOutput(BoardState constraint, BoardState toTest)
+	private String formatPieceLocationsErrorOutput(final BoardState constraint, final BoardState toTest)
 	{
 		return new StringBuilder(System.lineSeparator())
 				.append("Expected:")
 				.append(System.lineSeparator())
-				.append(formatGrids(VisualGridGenerator.from(constraint.getPieceLocations())))
+				.append(VisualGridGenerator.from(constraint.getPieceLocations()))
 				.append(System.lineSeparator())
 				.append(System.lineSeparator())
 				.append("Actual:")
 				.append(System.lineSeparator())
-				.append(formatGrids(VisualGridGenerator.from(toTest.getPieceLocations())))
+				.append(VisualGridGenerator.from(toTest.getPieceLocations()))
 				.toString();
 	}
 }

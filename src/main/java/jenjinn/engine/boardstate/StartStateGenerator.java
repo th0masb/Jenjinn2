@@ -9,7 +9,6 @@ import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.stringutils.StringifyBoard;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 import jenjinn.engine.utils.DefaultHasher;
 
@@ -72,6 +71,6 @@ public final class StartStateGenerator
 		// System.out.println(StringifyBoard.formatGrid(VisualGridGenerator.from("Test",
 		// new HashMap<>())));
 
-		System.out.println(StringifyBoard.formatGrids(VisualGridGenerator.from(getStartLocations())));
+		System.out.println(VisualGridGenerator.from(getStartLocations()));
 	}
 }

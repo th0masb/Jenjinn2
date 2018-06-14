@@ -12,6 +12,7 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.PinnedPieces;
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
@@ -27,6 +28,6 @@ class PinnedPiecesTest
 
 	static Flow<Arguments> test()
 	{
-		throw new RuntimeException();
+		return Iterate.over(TestFileParser.parse("case001"), TestFileParser.parse("case002"));
 	}
 }

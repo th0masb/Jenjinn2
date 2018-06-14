@@ -58,7 +58,7 @@ public final class LegalMoves
 		return getLegalMoves(state, false);
 	}
 
-	private static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
+	static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
 		final long passivePieceLocs = state.getPieceLocations().getSideLocations(passive);
@@ -133,7 +133,7 @@ public final class LegalMoves
 	 * the king is not in check then the overallAreaConstraint is the universal
 	 * bitboard.
 	 */
-	private static Flow<ChessMove> getNonKingMoves(final BoardState state, final ChessPiece piece,
+	static Flow<ChessMove> getNonKingMoves(final BoardState state, final ChessPiece piece,
 			final PinnedPieceCollection pinnedPieces, final long overallAreaConstraint)
 	{
 		if (Long.bitCount(overallAreaConstraint) == 0) {
@@ -181,7 +181,7 @@ public final class LegalMoves
 	 * moved forward two is attacking the active king (causing check) we must
 	 * additionally check for enpassant escape moves from the active pawns.
 	 */
-	private static Flow<ChessMove> getEnpassantCheckEscape(final PieceSquarePair attacker, final BoardState state,
+	static Flow<ChessMove> getEnpassantCheckEscape(final PieceSquarePair attacker, final BoardState state,
 			final PinnedPieceCollection pinnedPieces)
 	{
 		final BoardSquare attackerLoc = attacker.getSquare(), enpassantSquare = state.getEnPassantSquare();

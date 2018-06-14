@@ -26,12 +26,14 @@ public final class VisualGridGenerator
 	private VisualGridGenerator() {
 	}
 
-	public static TitledVisualGrid from(final String title, final Map<BoardSquare, ChessPiece> locations)
+	public static String from(final String title, final Map<BoardSquare, ChessPiece> locations)
 	{
-		return new TitledVisualGrid(title, Iterate.over(locations.keySet()).toMap(x -> x, x -> CharPair.from(locations.get(x))));
+		return StringifyBoard.formatGrid(
+				new TitledVisualGrid(title, Iterate.over(locations.keySet()).toMap(x -> x, x -> CharPair.from(locations.get(x))))
+				);
 	}
 
-	public static List<TitledVisualGrid> from(final DetailedPieceLocations locations)
+	public static String from(final DetailedPieceLocations locations)
 	{
 		final Map<BoardSquare, CharPair> pieceMapping = new HashMap<>();
 		ChessPieces.iterate().forEach(piece -> {
@@ -39,11 +41,13 @@ public final class VisualGridGenerator
 			.forEach(square -> pieceMapping.put(square, CharPair.from(piece)));
 		});
 
-		return asList(
+		final List<TitledVisualGrid> grids = asList(
 				new TitledVisualGrid("Pieces", pieceMapping),
 				from("White pieces", locations.getWhiteLocations()),
 				from("Black pieces", locations.getBlackLocations())
 				);
+
+		return StringifyBoard.formatGrids(grids);
 	}
 
 	public static TitledVisualGrid from(final String title, final long bitboard)

@@ -6,7 +6,7 @@ castling_rights: wk wq bk bq
 white_castle_status: none
 black_castle_status: none
 developed_pieces: e2 e7
-active_side: white
+active_side: black
 enpassant_square: none
 
 // Some whitespace separated boardsquare sequence indicating pinned locs, or none

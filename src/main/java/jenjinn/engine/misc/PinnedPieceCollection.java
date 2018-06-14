@@ -3,8 +3,10 @@
  */
 package jenjinn.engine.misc;
 
-import java.util.EnumSet;
-import java.util.List;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.function.Function.identity;
+
+import java.util.Map;
 import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -18,34 +20,31 @@ import xawd.jflow.iterators.iterables.FlowIterable;
  */
 public final class PinnedPieceCollection implements FlowIterable<PinnedPiece>
 {
-	private final List<PinnedPiece> pinnedPieces;
-	private final Set<BoardSquare> pinnedPieceLocations;
+	private final Map<BoardSquare, PinnedPiece> cache;
 
 	public PinnedPieceCollection(final Flow<PinnedPiece> pinnedPieces)
 	{
-		this.pinnedPieces = pinnedPieces.toList();
-		this.pinnedPieceLocations = iterator().map(PinnedPiece::getLocation)
-				.toCollection(() -> EnumSet.noneOf(BoardSquare.class));
+		cache = unmodifiableMap(pinnedPieces.toMap(PinnedPiece::getLocation, identity()));
 	}
 
 	@Override
 	public Flow<PinnedPiece> iterator()
 	{
-		return Iterate.over(pinnedPieces);
+		return Iterate.over(cache.values());
+	}
+
+	public Set<BoardSquare> getLocations()
+	{
+		return cache.keySet();
 	}
 
 	public boolean containsLocation(final BoardSquare location)
 	{
-		return pinnedPieceLocations.contains(location);
+		return cache.containsKey(location);
 	}
 
 	public long getConstraintAreaOfPieceAt(final BoardSquare location)
 	{
-		for (final PinnedPiece piece : pinnedPieces) {
-			if (piece.getLocation() == location) {
-				return piece.getConstrainedArea();
-			}
-		}
-		throw new IllegalArgumentException();
+		return cache.get(location).getConstrainedArea();
 	}
 }

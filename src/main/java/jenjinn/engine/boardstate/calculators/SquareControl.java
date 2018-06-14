@@ -25,7 +25,7 @@ public final class SquareControl {
 	{
 		return Iterate.over(ChessPieces.ofSide(side))
 				.mapToLong(piece -> calculate(state, piece))
-				.reduce(0L, (a, b) -> a ^ b);
+				.reduce(0L, (a, b) -> a | b);
 	}
 
 	public static long calculate(final BoardState state, final ChessPiece piece)
@@ -38,7 +38,7 @@ public final class SquareControl {
 			final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
 			return pieceLocs.iterateLocs(piece)
 					.mapToLong(loc -> piece.getSquaresOfControl(loc, white, black))
-					.reduce(0L, (a, b) -> a ^ b);
+					.reduce(0L, (a, b) -> a | b);
 		}
 	}
 

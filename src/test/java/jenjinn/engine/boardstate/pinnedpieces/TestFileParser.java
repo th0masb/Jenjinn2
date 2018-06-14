@@ -12,6 +12,7 @@ import static xawd.jflow.utilities.StringUtils.getAllMatches;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -38,17 +39,17 @@ final class TestFileParser
 		return Arguments.of(parseBoard(take(9, lines)), parseSquareSequence(tail(lines)));
 	}
 
-	private static List<BoardSquare> parseSquareSequence(final String encodedSequence)
+	private static Set<BoardSquare> parseSquareSequence(final String encodedSequence)
 	{
 		final String ec = encodedSequence.trim() + " ", sq = CommonRegex.SINGLE_SQUARE;
 		if (ec.matches("none ")) {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 		else if (ec.matches("(" + sq + " +)+")) {
 			return Iterate.over(getAllMatches(ec, sq))
 					.map(String::toUpperCase)
 					.map(BoardSquare::valueOf)
-					.toList();
+					.toSet();
 		}
 		else {
 			throw new IllegalArgumentException(encodedSequence);

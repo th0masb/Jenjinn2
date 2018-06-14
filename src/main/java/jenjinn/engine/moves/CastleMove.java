@@ -114,4 +114,10 @@ public final class CastleMove extends AbstractChessMove
 				.append("]")
 				.toString();
 	}
+
+	@Override
+	public String toCompactString()
+	{
+		return wrappedZone.getSimpleIdentifier();
+	}
 }

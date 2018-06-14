@@ -73,13 +73,6 @@ public final class StandardMove extends AbstractChessMove
 			return MoveConstants.EMPTY_RIGHTS_SET;
 		}
 	}
-//
-//	public boolean isKnightMove()
-//	{
-//		final int rankChange = abs(getSource().rank() - getTarget().rank());
-//		final int fileChange = abs(getSource().file() - getTarget().file());
-//		return max(rankChange, fileChange) == 2 && min(rankChange, fileChange) == 1;
-//	}
 
 	public long getInducedCord()
 	{
@@ -152,26 +145,12 @@ public final class StandardMove extends AbstractChessMove
 		return DevelopmentPiece.fromStartSquare(getSource());
 	}
 
-//	public static void main(final String[] args)
-//	{
-//		final BoardSquare source = BoardSquare.E1, target = BoardSquare.F1;
-//		final Direction direction = Direction.ofLineBetween(source, target).orElseThrow(AssertionError::new);
-//		final List<BoardSquare> squares = source.getAllSquaresInDirections(direction, 10);
-//		System.out.println(squares);
-//		System.out.println(Iterate.over(squares)
-//				.takeWhile(sq -> sq != target)
-//				.append(target)
-//				.toList());
-//
-////		final Flow<BoardSquare> sqs = Iterate.over(squares).takeWhile(sq -> sq != target).append(target);
-////		System.out.println(sqs.hasNext());
-////		System.out.println(sqs.next());
-////
-////				.mapToLong(BoardSquare::asBitboard)
-////				.reduce(0L, (a, b) -> a ^ b);
-//
-////		final Flow<String> x = Iterate.over("1", "2").takeWhile(s -> s != "1").append("1");
-////		System.out.println(x.hasNext());
-////		System.out.println(x.next());
-//	}
+	@Override
+	public String toCompactString()
+	{
+		return new StringBuilder("S")
+				.append(getSource().name())
+				.append(getTarget().name())
+				.toString();
+	}
 }

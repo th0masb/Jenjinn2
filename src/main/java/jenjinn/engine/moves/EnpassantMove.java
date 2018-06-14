@@ -76,4 +76,13 @@ public final class EnpassantMove extends AbstractChessMove
 	{
 		return null;
 	}
+
+	@Override
+	public String toCompactString()
+	{
+		return new StringBuilder("E")
+				.append(getSource().name())
+				.append(getTarget().name())
+				.toString();
+	}
 }

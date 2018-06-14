@@ -70,4 +70,13 @@ public final class PromotionMove extends AbstractChessMove
 	{
 		return null;
 	}
+
+	@Override
+	public String toCompactString()
+	{
+		return new StringBuilder("P")
+				.append(getSource().name())
+				.append(getTarget().name())
+				.toString();
+	}
 }

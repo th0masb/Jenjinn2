@@ -19,13 +19,15 @@ import xawd.jflow.utilities.StringUtils;
  */
 public final class PgnGameConverter
 {
-	private static final String GAME_STRING = "(^1\\." + STANDARD_MOVE + ")" + ".*" + "(((1\\-0)|(0\\-1)|(1/2\\-1/2)|(\\*))$)";
+	public static final String GAME_START = "(^1\\." + STANDARD_MOVE + ")";
+	public static final String GAME_TERMINATION = "(((1\\-0)|(0\\-1)|(1/2\\-1/2)|(\\*))$)";
+	private static final String GAME_STRING = GAME_START + ".*" + GAME_TERMINATION;
 
 	private PgnGameConverter()
 	{
 	}
 
-	public static List<ChessMove> parse(String pgnInput) throws BadPgnException
+	public static List<ChessMove> parse(final String pgnInput) throws BadPgnException
 	{
 		final String pgn = pgnInput.trim();
 		if (pgn.matches(GAME_STRING)) {
@@ -35,7 +37,12 @@ public final class PgnGameConverter
 			for (final String encodedMove : encodedMoves) {
 				final ChessMove decodedMove = PgnMoveBuilder.convertPgnCommand(state, encodedMove);
 				decodedMoves.add(decodedMove);
-				decodedMove.makeMove(state);
+//				try {
+					decodedMove.makeMove(state);
+//				}
+//				catch (final Throwable t) {
+//					throw new BadPgnException("Failed at move: " + decodedMove + " for game: " + pgnInput, t);
+//				}
 			}
 			return decodedMoves;
 		}
@@ -44,7 +51,7 @@ public final class PgnGameConverter
 		}
 	}
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		final String game = "1.d4 d5 2.c4 c6 3.Nf3 Nf6 4.Nc3 dxc4 5.a4 Bf5 6.e3 e6 7.Bxc4 Bb4 8.O-O O-O 9.Ne2 Nbd7 1/2-1/2";
 		System.out.println(game.matches(GAME_STRING));

@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
-import jenjinn.engine.eval.piecesquaretables.DefaultTables;
+import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.stringutils.StringifyBoard;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 import jenjinn.engine.utils.DefaultHasher;
@@ -47,8 +47,8 @@ public final class StartStateGenerator
 				};
 
 		return new DetailedPieceLocations(startLocs,
-				DefaultTables.getMidgame(),
-				DefaultTables.getEndgame(),
+				PieceSquareTables.midgame(),
+				PieceSquareTables.endgame(),
 				DefaultHasher.get());
 	}
 

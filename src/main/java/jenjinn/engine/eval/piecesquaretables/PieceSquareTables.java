@@ -5,6 +5,7 @@ package jenjinn.engine.eval.piecesquaretables;
 
 import java.util.List;
 
+import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.LocationTracker;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
@@ -19,12 +20,14 @@ public final class PieceSquareTables
 {
 	private final List<PieceSquareTable> tables;
 
-	public PieceSquareTables(final List<PieceSquareTable> tables)
+	public PieceSquareTables(final List<PieceSquareTable> whiteTables)
 	{
-		if (tables.size() != 12 || IterRange.to(12).anyMatch(i -> tables.get(i).getAssociatedPiece().ordinal() != i)) {
+		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i)) {
 			throw new IllegalArgumentException();
 		}
-		this.tables = Iterate.over(tables).toImmutableList();
+		this.tables = Iterate.over(whiteTables)
+				.append(Iterate.over(whiteTables).map(PieceSquareTable::invertValues))
+				.toImmutableList();
 	}
 
 	public int getLocationValue(final ChessPiece piece, final BoardSquare location)
@@ -70,5 +73,21 @@ public final class PieceSquareTables
 		} else if (!tables.equals(other.tables))
 			return false;
 		return true;
+	}
+
+	public static PieceSquareTables endgame()
+	{
+		return new PieceSquareTables(
+				Iterate.over(ChessPieces.white())
+				.map(p -> TableParser.parseFile(p, p.name().substring(6).toLowerCase() + "-endgame"))
+				.toList());
+	}
+
+	public static PieceSquareTables midgame()
+	{
+		return new PieceSquareTables(
+				Iterate.over(ChessPieces.white())
+				.map(p -> TableParser.parseFile(p, p.name().substring(6).toLowerCase() + "-midgame"))
+				.toList());
 	}
 }

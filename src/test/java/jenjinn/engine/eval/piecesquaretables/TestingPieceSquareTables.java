@@ -25,11 +25,7 @@ public final class TestingPieceSquareTables
 				.map(piece -> new PieceSquareTable(piece, IterRange.to(64).map(i -> i + 100*piece.ordinal()).toArray()))
 				.toList();
 
-		final List<PieceSquareTable> allTables = Iterate.over(whiteTables)
-				.append(Iterate.over(whiteTables).map(PieceSquareTable::invertValues))
-				.toList();
-
-		return new PieceSquareTables(allTables);
+		return new PieceSquareTables(whiteTables);
 	}
 
 	private static PieceSquareTables initEndgameTables()
@@ -38,11 +34,7 @@ public final class TestingPieceSquareTables
 				.map(piece -> new PieceSquareTable(piece, IterRange.to(64).map(i -> i + 1000*piece.ordinal()).toArray()))
 				.toList();
 
-		final List<PieceSquareTable> allTables = Iterate.over(whiteTables)
-				.append(Iterate.over(whiteTables).map(PieceSquareTable::invertValues))
-				.toList();
-
-		return new PieceSquareTables(allTables);
+		return new PieceSquareTables(whiteTables);
 	}
 
 	/**

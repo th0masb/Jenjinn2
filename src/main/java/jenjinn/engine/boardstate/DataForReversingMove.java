@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.boardstate;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
@@ -25,7 +26,7 @@ public class DataForReversingMove {
 	 */
 	private boolean consumed = true;
 
-	private Set<CastleZone> discardedCastlingRights;
+	private Set<CastleZone> discardedCastlingRights = EnumSet.noneOf(CastleZone.class);
 	private ChessPiece pieceTaken;
 	private DevelopmentPiece pieceDeveloped;
 	private BoardSquare discardedEnpassantSquare;

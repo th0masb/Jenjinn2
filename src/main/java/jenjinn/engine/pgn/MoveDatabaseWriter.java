@@ -3,39 +3,170 @@
  */
 package jenjinn.engine.pgn;
 
+import static java.lang.Long.toHexString;
+import static java.lang.Math.max;
+import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.StringUtils.matchesAnywhere;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.StartStateGenerator;
+import jenjinn.engine.moves.ChessMove;
 
 /**
  * @author ThomasB
  *
  */
-public final class MoveDatabaseWriter
+public final class MoveDatabaseWriter implements Closeable
 {
-	private static final String PGN_EXT = ".pgn", OUT_EXT = ".odb";
+	public static final String HASH_MOVE_SEPARATOR = "|", POSITION_SEPARATOR = ":";
+	private static final String PGN_EXT = ".pgn";
+	private static final int POSITIONS_PER_LINE = 10, GAME_DEPTH_CAP = 10;
 
 	private final BufferedReader src;
 	private final BufferedWriter out;
 
 	private final Set<Long> usedPositions = new HashSet<>();
-	/**
-	 * @throws IOException
-	 *
-	 */
+
 	public MoveDatabaseWriter(final Path sourceFilePath, final Path outFilePath) throws IOException
 	{
-		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath) || sourceFilePath.toString().endsWith(PGN_EXT)) {
+		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath) || !sourceFilePath.toString().endsWith(PGN_EXT)) {
 			throw new IllegalArgumentException();
 		}
 		src = Files.newBufferedReader(sourceFilePath);
 		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 	}
 
+	public void writeUniquePositions() throws IOException
+	{
+		final List<PositionalInstruction> writeBuffer = new ArrayList<>(POSITIONS_PER_LINE);
+		Optional<String> game = readGame();
+		while (game.isPresent()) {
+			writeUniquePositions(game.get(), writeBuffer);
+			game = readGame();
+		}
+		flushBuffer(writeBuffer);
+	}
 
+	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer) throws IOException
+	{
+		try {
+			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
+			final BoardState state = StartStateGenerator.getStartBoard();
+			for (int i = 0; i < max(GAME_DEPTH_CAP, moves.size()); i++) {
+				final ChessMove ithMove = moves.get(i);
+				final long stateHash = state.calculateHash();
+				if (!usedPositions.contains(stateHash)) {
+					final PositionalInstruction newInstruction = new PositionalInstruction(stateHash, ithMove.toCompactString());
+					addPositionToBuffer(newInstruction, writeBuffer);
+				}
+				ithMove.makeMove(state);
+			}
+		} catch (final BadPgnException e) {
+			System.err.println("Error in game: " + gameString);
+			return;
+		}
+	}
+
+	private void addPositionToBuffer(final PositionalInstruction instructionToAdd, final List<PositionalInstruction> buffer) throws IOException
+	{
+		if (buffer.size() == POSITIONS_PER_LINE) {
+			flushBuffer(buffer);
+		}
+		buffer.add(instructionToAdd);
+	}
+
+	private void flushBuffer(final List<PositionalInstruction> buffer) throws IOException
+	{
+		if (!buffer.isEmpty()) {
+			final int bufsze = buffer.size();
+			for (int i = 0; i < bufsze - 1; i++) {
+				out.write(buffer.get(i).toString());
+				out.write(POSITION_SEPARATOR);
+			}
+			out.write(tail(buffer).toString());
+			out.newLine();
+			buffer.clear();
+		}
+	}
+
+	private Optional<String> readGame() throws IOException
+	{
+		String nextLine = src.readLine();
+		if (nextLine == null) {
+			return Optional.empty();
+		}
+		else {
+			final String gameStart = PgnGameConverter.GAME_START, gameEnd = PgnGameConverter.GAME_TERMINATION;
+			while (!matchesAnywhere(nextLine, gameStart)) {
+				nextLine = src.readLine();
+				if (nextLine == null) {
+					return Optional.empty();
+				}
+			}
+			final StringBuilder game = new StringBuilder(nextLine).append(" ");
+			while (!matchesAnywhere(nextLine, gameEnd)) {
+				nextLine = src.readLine();
+				if (nextLine == null) {
+					return Optional.empty();
+				}
+				else {
+					game.append(nextLine).append(" ");
+				}
+			}
+			return Optional.of(game.toString().trim());
+		}
+	}
+
+	public static void main(final String[] args) throws IOException
+	{
+		final Path source = Paths.get("C:", "bin", "messabout", "KIDClassical.pgn");
+		final Path out = Paths.get("C:", "bin", "messabout", "out.odb");
+
+		final Consumer<Object> print = System.out::println;
+
+		print.accept(Files.exists(source));
+		print.accept(Files.exists(out));
+
+		try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(source, out)) {
+			writer.writeUniquePositions();
+		}
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		src.close();
+		out.close();
+	}
+
+	private class PositionalInstruction {
+		private final long positionHash;
+		private final String compactMoveString;
+
+		public PositionalInstruction(final long positionHash, final String compactMoveString)
+		{
+			this.positionHash = positionHash;
+			this.compactMoveString = compactMoveString;
+		}
+
+		@Override
+		public String toString() {
+			return toHexString(positionHash) + HASH_MOVE_SEPARATOR + compactMoveString;
+		}
+	}
 }

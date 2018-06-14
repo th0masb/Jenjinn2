@@ -43,4 +43,9 @@ public final class TableParser
 
 		return new PieceSquareTable(piece, parseResult);
 	}
+
+	public static void main(final String[] args)
+	{
+		System.out.println(FileUtils.loadResourceFromPackageOf(TableParser.class, "bishop-midgame").collect(toList()));
+	}
 }

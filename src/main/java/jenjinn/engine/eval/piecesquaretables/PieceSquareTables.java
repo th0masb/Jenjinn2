@@ -90,4 +90,9 @@ public final class PieceSquareTables
 				.map(p -> TableParser.parseFile(p, p.name().substring(6).toLowerCase() + "-midgame"))
 				.toList());
 	}
+
+	public static void main(final String[] args)
+	{
+		System.out.println(ChessPiece.WHITE_BISHOP.name().substring(6).toLowerCase());
+	}
 }

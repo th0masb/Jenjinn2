@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.stringutils;
 
-import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,11 +47,5 @@ public final class StringifyBoard {
 		//	    +--+
 		//	    |WQ|
 		//		+--+
-	}
-
-	public static void main(final String[] args) {
-
-		final TitledVisualGrid grid = VisualGridGenerator.from(rankBitboard(0) | rankBitboard(5));
-		System.out.println(formatGrids(Arrays.asList(grid, grid, grid), "     "));
 	}
 }

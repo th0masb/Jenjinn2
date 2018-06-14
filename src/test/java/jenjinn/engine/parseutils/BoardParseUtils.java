@@ -93,7 +93,7 @@ public final class BoardParseUtils
 
 	private static Set<DevelopmentPiece> constructDevelopedPieces(final String developedPieces)
 	{
-		assertTrue(developedPieces.trim().matches("^developed_pieces:( *[a-h][1-8])?( +[a-h][1-8]){0,5}$"));
+		assertTrue(developedPieces.trim().matches("^developed_pieces:(( *none)|(( *[a-h][1-8])( +[a-h][1-8]){0,11}))$"), developedPieces);
 		final List<String> squaresMatched = StringUtils.getAllMatches(developedPieces, "[a-h][1-8]");
 		final Set<BoardSquare> uniqueSquares = Iterate.over(squaresMatched).map(String::toUpperCase).map(BoardSquare::valueOf).toSet();
 		if (uniqueSquares.size() != squaresMatched.size()) {

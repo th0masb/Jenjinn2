@@ -16,19 +16,24 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
  */
-class SquarecontrolTest
+class SquareControlTest
 {
 	@ParameterizedTest
 	@MethodSource
 	void test(final BoardState state, final Map<ChessPiece, Long> expectedControl)
 	{
-		ChessPieces.iterate()
-		.forEach(piece -> assertEquals(expectedControl.get(piece).longValue(), SquareControl.calculate(state, piece)));
+		for (final ChessPiece p : ChessPieces.all()) {
+			final long expected = expectedControl.get(p), actual = SquareControl.calculate(state, p);
+			assertEquals(expected, actual, p.name() + System.lineSeparator() + VisualGridGenerator.from(expected, actual));
+		}
+
 
 		final long expectedWhitecontrol = ChessPieces.iterate().take(6)
 				.mapToLong(expectedControl::get)
@@ -45,6 +50,6 @@ class SquarecontrolTest
 
 	static Flow<Arguments> test()
 	{
-		throw new RuntimeException();
+		return Iterate.over(TestFileParser.parse("case001"));
 	}
 }

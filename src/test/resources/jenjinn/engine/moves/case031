@@ -7,7 +7,7 @@ half_move_clock: 5
 castling_rights: wk wq bk bq
 white_castle_status: none
 black_castle_status: none
-developed_pieces:
+developed_pieces: none
 active_side: black
 enpassant_square: none
 

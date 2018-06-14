@@ -43,21 +43,21 @@ public final class VisualGridGenerator
 
 		final List<TitledVisualGrid> grids = asList(
 				new TitledVisualGrid("Pieces", pieceMapping),
-				from("White pieces", locations.getWhiteLocations()),
-				from("Black pieces", locations.getBlackLocations())
+				TitledVisualGrid.from("White pieces", locations.getWhiteLocations()),
+				TitledVisualGrid.from("Black pieces", locations.getBlackLocations())
 				);
 
 		return StringifyBoard.formatGrids(grids);
 	}
 
-	public static TitledVisualGrid from(final String title, final long bitboard)
+	public static String from(final String title, final long bitboard)
 	{
-		return new TitledVisualGrid(title, BitboardIterator.from(bitboard).toMap(x -> x, x -> new CharPair('X', 'X')));
+		return StringifyBoard.formatGrid(TitledVisualGrid.from(title, bitboard));
 	}
 
-	public static TitledVisualGrid from(final long bitboard)
+	public static String from(final long... bitboards)
 	{
-		return from("", bitboard);
+		return StringifyBoard.formatGrids(Iterate.over(bitboards).mapToObject(TitledVisualGrid::from).toList());
 	}
 
 	public static TitledVisualGrid from(final String title, final PieceLocations locations)

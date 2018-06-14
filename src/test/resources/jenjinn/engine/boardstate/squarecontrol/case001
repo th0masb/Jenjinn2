@@ -1,0 +1,27 @@
+// A nine line standard description of a boardstate.
+white_pieces: (b3 e4 f2 g2) (c3) (b2 f3) (d1 e1) (e2) (g1)
+black_pieces: (b7 e5 f7 g7 h7) (c6) (b6 g6) (b8 f8) (c7) (g8)
+half_move_clock: 20
+castling_rights:
+white_castle_status: wk
+black_castle_status: bk
+developed_pieces: b1 c1 d2 e2 f1 g1 b8 c8 d7 e7 f8 g8
+active_side: white
+enpassant_square: none
+
+// 12 lines, each corresponding to piece type with that ordinal, 
+// giving the squares of control for that piece on the board.
+
+a4 c4 d5 f5 e3 f3 g3 h3
+a2 a4 b5 d5 e4 e2 d1 b1
+a3 a1 c1 c3 e2 e4 g2 g4 h5
+d1->a1 e1->g1 e2 d1->d8
+e1 f1 f2 f3 e3 e4 d3->a6 d2->b2 d1
+f1 f2 g2 h2 h1
+
+a6 c6 d4 f4 e6 f6 g6 h6
+d4 e5 e7 d8 b8 a7 a5 b4
+a7 a5 c7 c5->f2 h5 h7 f7 f5 e4
+a8->g8 b7 f7
+b8 b7 b6 c6 d6->e5 d7->f7 d8 c8
+f8 f7 g7 h7 h8

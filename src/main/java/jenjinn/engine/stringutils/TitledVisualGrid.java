@@ -8,6 +8,7 @@ import static xawd.jflow.utilities.CollectionUtil.reverse;
 import java.util.List;
 import java.util.Map;
 
+import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.factories.IterRange;
 
@@ -35,6 +36,16 @@ public final class TitledVisualGrid
 	public TitledVisualGrid(final Map<BoardSquare, CharPair> visualGrid)
 	{
 		this("", visualGrid);
+	}
+
+	public static TitledVisualGrid from(final String title, final long bitboard)
+	{
+		return new TitledVisualGrid(title, BitboardIterator.from(bitboard).toMap(x -> x, x -> new CharPair('X', 'X')));
+	}
+
+	public static TitledVisualGrid from(final long bitboard)
+	{
+		return from("", bitboard);
 	}
 
 	public String getTitle()

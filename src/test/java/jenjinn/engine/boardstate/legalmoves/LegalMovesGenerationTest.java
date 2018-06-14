@@ -44,6 +44,6 @@ class LegalMovesGenerationTest
 
 	static Flow<Arguments> test()
 	{
-		throw new RuntimeException();
+		return Iterate.over("case001").map(TestFileParser::parse);
 	}
 }

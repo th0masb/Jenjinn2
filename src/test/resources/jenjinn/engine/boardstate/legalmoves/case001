@@ -1,0 +1,18 @@
+// Test castling move generation without any castling + white enpassant
+
+// A nine line standard description of a boardstate.
+white_pieces: (b3 e4 f2 g2) (c3) (b2 f3) (d1 e1) (e2) (g1)
+black_pieces: (b7 e5 f7 g7 h7) (c6) (b6 g6) (b8 f8) (c7) (g8)
+half_move_clock: 20
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: b1 c1 d2 e2 f1 g1 b8 c8 d7 e7 f8 g8
+active_side: white
+enpassant_square: e5
+
+// Some whitespace separated shorthand chessmoves (potentially spread over multiple lines) or none
+//s[a1->a4] c[bq wk] e[c2 c3] s[a1->{d3 c2 e6}]
+s[a1 s2] s[a1->d1] s[a3->c1] s[a3->f8] s[b3 b4] s[c3->{a2 a4 b5 d5 e4 e2 d1 b1}]
+s[c2->{b2 a2 c1 d1 d2 e2 d3 e4}] s[e1->{d1 d2 e2 f1}]  s[f3->{e2 d1 e4 g4 h5}]
+s[f4 f5] e[f4 e5] s[g2->g4] s[h1->h7] s[h1->f1] c[wq]

@@ -20,6 +20,7 @@ import jenjinn.engine.moves.PromotionMove;
 import jenjinn.engine.moves.StandardMove;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
+import xawd.jflow.utilities.StringUtils;
 
 /**
  * @author ThomasB
@@ -60,6 +61,13 @@ public final class ShorthandMoveParser
 					.map(target -> new StandardMove(moves.first(), target))
 					.filterAndCastTo(ChessMove.class)
 					.toList();
+		}
+		else if (ec.matches("S\\[(" + CommonRegex.DOUBLE_SQUARE + ")\\]")) {
+			final List<BoardSquare> squares = Iterate.over(StringUtils.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
+					.map(s -> BoardSquare.valueOf(s.toUpperCase()))
+					.toList();
+
+			return asList(new StandardMove(head(squares), tail(squares)));
 		}
 		else {
 			throw new IllegalArgumentException(ec);

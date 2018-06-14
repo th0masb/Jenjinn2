@@ -25,7 +25,7 @@ import xawd.jflow.iterators.factories.Iterate;
 /**
  * @author ThomasB
  */
-public final class TestFileParser
+final class TestFileParser
 {
 	private TestFileParser()
 	{
@@ -38,6 +38,7 @@ public final class TestFileParser
 				.filter(s -> !s.isEmpty() && !s.startsWith("//"))
 				.collect(toList());
 
+		// attacks?
 		return Arguments.of(BoardParseUtils.parseBoard(take(9, lines)), parseMoves(drop(9, lines)));
 	}
 

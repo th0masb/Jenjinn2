@@ -16,6 +16,11 @@ public final class HalfMoveCounter
 		this.halfMoveClock = initialValue;
 	}
 
+	public HalfMoveCounter()
+	{
+		this(0);
+	}
+
 	public int getValue()
 	{
 		return halfMoveClock;

@@ -28,12 +28,26 @@ public final class ZobristHasher
 	private final long[] enpassantFileFeatures;
 	private final long blackToMoveFeature;
 
-	public ZobristHasher(final Random numberGenerator)
+	private ZobristHasher(final Random numberGenerator)
 	{
 		boardSquareFeatures = BoardSquare.iterateAll().map(x -> randomArray(12, numberGenerator)).toImmutableList();
 		castleRightsFeatures = randomArray(4, numberGenerator);
 		enpassantFileFeatures = randomArray(8, numberGenerator);
 		blackToMoveFeature = numberGenerator.nextLong();
+	}
+
+	public static ZobristHasher getFromSeed(final long seed)
+	{
+		if (!seedIsValid(seed)) {
+			throw new IllegalArgumentException();
+		}
+		return new ZobristHasher(new Random(seed));
+	}
+
+	private static boolean seedIsValid(final long seed)
+	{
+		final Random r = new Random(seed);
+		return IterRange.to(800).mapToObject(i -> r.nextLong()).toSet().size() == 800;
 	}
 
 	private long[] randomArray(final int length, final Random numberGenerator)

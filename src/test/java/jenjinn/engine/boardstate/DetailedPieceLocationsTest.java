@@ -20,7 +20,7 @@ import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.utils.BoardStateHasher;
+import jenjinn.engine.utils.DefaultHasher;
 import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
@@ -35,7 +35,7 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final PieceSquareTables midTables = getMidgameTables(), endTables = getEndgameTables();
-		final ZobristHasher hashFeatureProvider = BoardStateHasher.getDefault();
+		final ZobristHasher hashFeatureProvider = DefaultHasher.get();
 		final DetailedPieceLocations locations = new DetailedPieceLocations(new long[12], midTables, endTables, hashFeatureProvider);
 
 		int runningMidgameEval = locations.getMidgameEval(), runningEndgameEval = locations.getEndgameEval();
@@ -77,7 +77,7 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final PieceSquareTables midTables = getMidgameTables(), endTables = getEndgameTables();
-		final ZobristHasher hashFeatureProvider = BoardStateHasher.getDefault();
+		final ZobristHasher hashFeatureProvider = DefaultHasher.get();
 		final long[] initialLocations = Iterate.over(locationsToAddPieceAt).mapToLong(BoardSquare::asBitboard).toArray();
 		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, midTables, endTables, hashFeatureProvider);
 
@@ -120,7 +120,7 @@ class DetailedPieceLocationsTest
 	{
 		final List<BoardSquare> locationsToAddPieceAt = getLocationSquares();
 		final long[] initialLocations = Iterate.over(locationsToAddPieceAt).mapToLong(BoardSquare::asBitboard).toArray();
-		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, getMidgameTables(), getEndgameTables(), BoardStateHasher.getDefault());
+		final DetailedPieceLocations locations = new DetailedPieceLocations(initialLocations, getMidgameTables(), getEndgameTables(), DefaultHasher.get());
 
 		for (final ChessPiece piece : ChessPieces.all()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());

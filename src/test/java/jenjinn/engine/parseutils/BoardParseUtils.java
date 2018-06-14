@@ -28,7 +28,7 @@ import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.utils.BoardStateHasher;
+import jenjinn.engine.utils.DefaultHasher;
 import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
@@ -150,7 +150,7 @@ public final class BoardParseUtils
 				.map(xs -> objMap(String::toUpperCase, xs))
 				.map(xs -> objMap(BoardSquare::valueOf, xs))
 				.mapToLong(BitboardUtils::bitwiseOr)
-				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables, BoardStateHasher.getDefault()));
+				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables, DefaultHasher.get()));
 	}
 
 	//	public static void main(final String[] args) {

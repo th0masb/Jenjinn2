@@ -3,6 +3,8 @@
  */
 package jenjinn.engine.boardstate;
 
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
+
 import java.util.List;
 
 import jenjinn.engine.ChessPieces;
@@ -97,6 +99,16 @@ public final class DetailedPieceLocations
 	{
 		for (int i = 0; i < 12; i++) {
 			if (pieceLocations.get(i).contains(square)) {
+				return ChessPieces.fromIndex(i);
+			}
+		}
+		return null;
+	}
+
+	public ChessPiece getPieceAt(final long bitboard)
+	{
+		for (int i = 0; i < 12; i++) {
+			if (bitboardsIntersect(pieceLocations.get(i).allLocs(), bitboard)) {
 				return ChessPieces.fromIndex(i);
 			}
 		}

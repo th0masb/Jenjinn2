@@ -14,3 +14,7 @@ enpassant_square: none
 // Some whitespace separated shorthand chessmoves (potentially spread over multiple lines) or none
 s[a1->a4] c[bq wk] e[c2 c3] s[a1->{d3 c2 e6}]
 none
+--- // triple - indicating attacks below
+/ Some whitespace separated shorthand chessmoves (potentially spread over multiple lines) or none
+s[a1->a4] c[bq wk] e[c2 c3] s[a1->{d3 c2 e6}]
+none

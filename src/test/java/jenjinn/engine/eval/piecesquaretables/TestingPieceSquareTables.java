@@ -22,7 +22,7 @@ public final class TestingPieceSquareTables
 	private static PieceSquareTables initMidgameTables()
 	{
 		final List<PieceSquareTable> whiteTables = Iterate.over(ChessPieces.white())
-				.map(piece -> new PieceSquareTable(piece, IterRange.to(64).map(i -> i + 100*piece.ordinal()).toArray()))
+				.map(piece -> new PieceSquareTable(piece, 0, IterRange.to(64).map(i -> i + 100*piece.ordinal()).toArray()))
 				.toList();
 
 		return new PieceSquareTables(whiteTables);
@@ -31,7 +31,7 @@ public final class TestingPieceSquareTables
 	private static PieceSquareTables initEndgameTables()
 	{
 		final List<PieceSquareTable> whiteTables = Iterate.over(ChessPieces.white())
-				.map(piece -> new PieceSquareTable(piece, IterRange.to(64).map(i -> i + 1000*piece.ordinal()).toArray()))
+				.map(piece -> new PieceSquareTable(piece, 0, IterRange.to(64).map(i -> i + 1000*piece.ordinal()).toArray()))
 				.toList();
 
 		return new PieceSquareTables(whiteTables);

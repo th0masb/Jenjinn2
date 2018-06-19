@@ -9,6 +9,7 @@ import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
@@ -18,13 +19,13 @@ public final class PieceSquareTable
 	private final ChessPiece associatedPiece;
 	private final int[] locationValues;
 
-	public PieceSquareTable(final ChessPiece associatedPiece, final int[] locationValues)
+	public PieceSquareTable(final ChessPiece associatedPiece, int pieceValue, final int[] locationValues)
 	{
 		if (associatedPiece == null || locationValues.length != 64) {
 			throw new IllegalArgumentException();
 		}
 		this.associatedPiece = associatedPiece;
-		this.locationValues = locationValues;
+		this.locationValues = Iterate.over(locationValues).map(n -> n + pieceValue).toArray();
 	}
 
 	public ChessPiece getAssociatedPiece()
@@ -41,6 +42,7 @@ public final class PieceSquareTable
 	{
 		return new PieceSquareTable(
 				ChessPieces.fromIndex((associatedPiece.ordinal() + 6) % 12),
+				0,
 				IterRange.to(64).map(i -> -locationValues[63  - 8*(i/8) - (7 - (i % 8))]).toArray()
 				);
 	}

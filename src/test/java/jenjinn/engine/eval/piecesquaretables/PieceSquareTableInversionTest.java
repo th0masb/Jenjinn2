@@ -21,7 +21,7 @@ class PieceSquareTableInversionTest
 	@Test
 	void test()
 	{
-		final PieceSquareTable startTable = new PieceSquareTable(WHITE_KNIGHT, IterRange.between(0, -64, -1).toArray());
+		final PieceSquareTable startTable = new PieceSquareTable(WHITE_KNIGHT, 500, IterRange.between(0, -64, -1).toArray());
 
 		final int[] expectedInvertedLocs = IterRange.between(7, -1, -1)
 				.map(i -> 8*i)
@@ -29,7 +29,7 @@ class PieceSquareTableInversionTest
 				.flattenToInts(Iterate::over)
 				.toArray();
 
-		final PieceSquareTable expectedInversion = new PieceSquareTable(BLACK_KNIGHT, expectedInvertedLocs);
+		final PieceSquareTable expectedInversion = new PieceSquareTable(BLACK_KNIGHT, -500, expectedInvertedLocs);
 
 		assertEquals(expectedInversion, startTable.invertValues());
 		assertEquals(startTable, startTable.invertValues().invertValues());

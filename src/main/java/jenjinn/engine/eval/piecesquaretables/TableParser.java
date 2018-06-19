@@ -4,15 +4,17 @@
 package jenjinn.engine.eval.piecesquaretables;
 
 import static java.util.stream.Collectors.toList;
+import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.take;
+import static xawd.jflow.utilities.MapUtil.intMap;
+import static xawd.jflow.utilities.StringUtils.findFirstMatch;
+import static xawd.jflow.utilities.StringUtils.getAllMatches;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.iterators.factories.Iterate;
-import xawd.jflow.utilities.MapUtil;
-import xawd.jflow.utilities.StringUtils;
 
 /**
  * @author ThomasB
@@ -20,6 +22,8 @@ import xawd.jflow.utilities.StringUtils;
  */
 public final class TableParser
 {
+	private static final String NUMBER_PATTERN = "-?[0-9]+", POSITIVE_INTEGER = "[0-9]+";
+
 	private TableParser() {}
 
 	public static PieceSquareTable parseFile(final ChessPiece piece, final String filename)
@@ -32,16 +36,27 @@ public final class TableParser
 		if (!piece.isWhite()) {
 			throw new IllegalArgumentException();
 		}
-		final List<String> lines = FileUtils.loadResourceFromPackageOf(packageProvider, filename).collect(toList());
-		final Pattern numberPattern = Pattern.compile("-?[0-9]+");
+		final List<String> lines = FileUtils.loadResourceFromPackageOf(packageProvider, filename)
+				.map(String::trim)
+				.filter(line -> !line.isEmpty())
+				.collect(toList());
 
-		final int[] parseResult = Iterate.reverseOver(lines)
-				.map(line -> StringUtils.getAllMatches(line, numberPattern))
-				.map(matches -> MapUtil.intMap(Integer::parseInt, matches))
-				.flattenToInts(Iterate::reverseOver)
-				.toArray();
+		if (lines.size() == 9) {
+			final int[] locationValues = Iterate.reverseOver(take(8, lines))
+					.map(line -> getAllMatches(line, NUMBER_PATTERN))
+					.map(matches -> intMap(Integer::parseInt, matches))
+					.flattenToInts(Iterate::reverseOver)
+					.toArray();
 
-		return new PieceSquareTable(piece, parseResult);
+			 final int pieceValue = findFirstMatch(tail(lines), POSITIVE_INTEGER)
+					 .map(Integer::parseInt)
+					 .orElseThrow(IllegalStateException::new);
+
+			 return new PieceSquareTable(piece, pieceValue, locationValues);
+		}
+		else {
+			throw new IllegalStateException(lines.toString());
+		}
 	}
 
 	public static void main(final String[] args)

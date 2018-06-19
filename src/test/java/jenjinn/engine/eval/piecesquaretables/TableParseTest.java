@@ -19,7 +19,7 @@ class TableParseTest
 	void test()
 	{
 		final ChessPiece p = ChessPiece.WHITE_BISHOP;
-		final PieceSquareTable expected = new PieceSquareTable(p, IterRange.to(64).map(i -> i*(1 - 2*(i % 2))).toArray());
+		final PieceSquareTable expected = new PieceSquareTable(p, 154, IterRange.to(64).map(i -> i*(1 - 2*(i % 2))).toArray());
 		assertEquals(expected, TableParser.parseFile(p, "testTable"));
 	}
 }

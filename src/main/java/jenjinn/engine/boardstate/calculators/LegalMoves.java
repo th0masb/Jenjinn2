@@ -155,7 +155,7 @@ public final class LegalMoves
 			return bitboard2moves(piece, square, piece.getMoves(square, white, black) & areaCons);
 		});
 
-		Flow<ChessMove> allContributions = notPinnedContributions.append(pinnedContribution);
+		final Flow<ChessMove> allContributions = notPinnedContributions.append(pinnedContribution);
 
 		if (piece.isPawn() && state.hasEnpassantAvailable()) {
 			final BoardSquare ep = state.getEnPassantSquare();
@@ -164,16 +164,22 @@ public final class LegalMoves
 			final Flow<ChessMove> epContribution = Iterate.over(searchDirs).map(ep::getNextSquareInDirection)
 					.filter(sq -> {
 						if (sq != null && bitboardsIntersect(plocs, sq.asBitboard())) {
-							final boolean pinned = pinnedPieces.containsLocation(sq);
-							final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(sq);
-							return pinned ? bitboardsIntersect(areaCons, ep.asBitboard()) : true;
+							if (pinnedPieces.containsLocation(sq)) {
+								final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(sq);
+								return bitboardsIntersect(areaCons, ep.asBitboard());
+							}
+							else {
+								return true;
+							}
 						} else {
 							return false;
 						}
 					}).map(sq -> new EnpassantMove(sq, ep));
-			allContributions = allContributions.append(epContribution);
+			return allContributions.append(epContribution);
 		}
-		return allContributions;
+		else {
+			return allContributions;
+		}
 	}
 
 	/**

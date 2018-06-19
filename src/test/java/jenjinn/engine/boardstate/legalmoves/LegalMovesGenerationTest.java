@@ -3,9 +3,11 @@
  */
 package jenjinn.engine.boardstate.legalmoves;
 
-import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,9 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
-import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
-import jenjinn.engine.moves.EnpassantMove;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -29,17 +29,33 @@ class LegalMovesGenerationTest
 	@MethodSource
 	void test(final BoardState state, final Set<ChessMove> expectedMoves, final Set<ChessMove> expectedAttacks)
 	{
-		assertEquals(expectedMoves, LegalMoves.getMoves(state).toSet());
-		assertEquals(filterAttacks(state, expectedMoves), LegalMoves.getAttacks(state).toSet());
+		final Set<ChessMove> actualMoves = LegalMoves.getMoves(state).toSet();
+		assertEquals(expectedMoves, actualMoves, formatDifferences(expectedMoves, actualMoves));
+
+		final Set<ChessMove> actualAttacks = LegalMoves.getAttacks(state).toSet();
+		assertEquals(expectedAttacks, actualAttacks, formatDifferences(expectedAttacks, actualAttacks));
 	}
 
-	private Set<ChessMove> filterAttacks(final BoardState state, final Set<ChessMove> moves)
+	private String formatDifferences(Set<ChessMove> expectedMoves, Set<ChessMove> actualMoves)
 	{
-		final long passiveLocs = state.getPieceLocations().getSideLocations(state.getActiveSide().otherSide());
-		return Iterate.over(moves)
-				.filter(mv -> !(mv instanceof CastleMove))
-				.filter(mv -> (mv instanceof EnpassantMove) || bitboardsIntersect(mv.getTarget().asBitboard(), passiveLocs))
-				.toSet();
+		final Set<ChessMove> expectedcpy = new HashSet<>(expectedMoves);
+		expectedcpy.removeAll(actualMoves);
+		final List<String> missingMoves = Iterate.over(expectedcpy).map(ChessMove::toString).toList();
+		missingMoves.sort(Comparator.naturalOrder());
+
+		final StringBuilder sb = new StringBuilder("Moves which should have been calculated:\n")
+				.append(missingMoves)
+				.append(System.lineSeparator());
+
+		final Set<ChessMove> actualcpy = new HashSet<>(actualMoves);
+		actualcpy.removeAll(expectedMoves);
+		final List<String> addedMoves = Iterate.over(actualcpy).map(ChessMove::toString).toList();
+		addedMoves.sort(Comparator.naturalOrder());
+
+		return sb.append("Moves which should not have been calculated:\n")
+				.append(addedMoves)
+				.append(System.lineSeparator())
+				.toString();
 	}
 
 	static Flow<Arguments> test()

@@ -151,6 +151,11 @@ public final class DetailedPieceLocations
 		return pieceLocations.get(piece.ordinal()).allLocs();
 	}
 
+	public int pieceCountOf(ChessPiece piece)
+	{
+		return pieceLocations.get(piece.ordinal()).pieceCount();
+	}
+
 	public Flow<BoardSquare> iterateLocs(final ChessPiece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).iterator();

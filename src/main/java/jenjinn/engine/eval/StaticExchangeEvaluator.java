@@ -20,13 +20,18 @@ import xawd.jflow.iterators.Flow;
  */
 public final class StaticExchangeEvaluator
 {
+	/**
+	 * Not currently bothering with interpolation here.
+	 */
+	private static final int[] STANDARDISED_PIECE_VALUES = new int[] {100, 295, 310, 500, 900};
+
 	public StaticExchangeEvaluator()
 	{
 	}
 
 	private long target, source, attadef, potenxray;
 
-	public int eval(final BoardSquare targ, final BoardSquare from, final BoardState state, final int[] pieceValues)
+	public int eval(final BoardSquare targ, final BoardSquare from, final BoardState state)
 	{
 		// Make sure all instance variables set correctly first
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
@@ -38,14 +43,14 @@ public final class StaticExchangeEvaluator
 
 		int d = 0;
 		final int[] gain = new int[32];
-		gain[d] = pieceValues[pieceLocs.getPieceAt(targ).ordinal() % 6];
+		gain[d] = STANDARDISED_PIECE_VALUES[pieceLocs.getPieceAt(targ).ordinal() % 6];
 		ChessPiece attPiece = pieceLocs.getPieceAt(source);
 
 		Side activeSide = state.getActiveSide();
 		do {
 			d++;
 			activeSide = activeSide.otherSide();
-			gain[d] = pieceValues[attPiece.ordinal() % 6] - gain[d - 1];
+			gain[d] = STANDARDISED_PIECE_VALUES[attPiece.ordinal() % 6] - gain[d - 1];
 			if (Math.max(-gain[d - 1], gain[d]) < 0) {
 				break;
 			}
@@ -65,9 +70,9 @@ public final class StaticExchangeEvaluator
 		return gain[0];
 	}
 
-	public boolean isGoodExchange(final BoardSquare targ, final BoardSquare from, final BoardState state, final int[] pieceValues)
+	public boolean isGoodExchange(final BoardSquare targ, final BoardSquare from, final BoardState state)
 	{
-		return eval(targ, from, state, pieceValues) >= 0;
+		return eval(targ, from, state) >= 0;
 	}
 
 	private void updateXrays(final DetailedPieceLocations pieceLocs)

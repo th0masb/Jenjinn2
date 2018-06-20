@@ -12,6 +12,7 @@ import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.eval.PawnTable.Entry;
 import jenjinn.engine.utils.ZobristHasher;
 
 /**
@@ -30,9 +31,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 	static final int ISOLATED_PENALTY = 600;
 	static final int BACKWARD_PENALTY = 500;
 
+	private final PawnTable cachedEvaluations;
 
-	public PawnStructureEvaluator()
+	public PawnStructureEvaluator(int tableSize)
 	{
+		cachedEvaluations = new PawnTable(tableSize);
 	}
 
 	@Override
@@ -43,9 +46,32 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		final long bpawns = pieceLocs.locationOverviewOf(ChessPiece.BLACK_PAWN);
 		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns, pieceLocs.getHashFeatureProvider());
 
+		final PawnTable.Entry cached = cachedEvaluations.get(pawnHash);
+		if (cached == null) {
+			final Entry newEntry = new PawnTable.Entry(pawnHash, calculateOverallScore(wpawns, bpawns));
+			cachedEvaluations.set(newEntry);
+			return newEntry.eval;
+		}
+		else if (cached.hash == pawnHash) {
+			return cached.eval;
+		}
+		else {
+			cached.hash = pawnHash;
+			cached.eval = calculateOverallScore(wpawns, bpawns);
+			return cached.eval;
+		}
+	}
 
-		// TODO Auto-generated method stub
-		return 0;
+	static int calculateOverallScore(long wpawns, long bpawns)
+	{
+		int score = evaluateBackwardPawns(wpawns, bpawns);
+		score += evaluateDoubledPawns(wpawns, bpawns);
+		score += evaluateIsolatedPawns(wpawns, bpawns);
+		score += evaluatePassedPawns(wpawns, bpawns);
+		score += evaluatePawnChains(wpawns, bpawns);
+		score += evaluatePhalanxFormations(wpawns);
+		score -= evaluatePhalanxFormations(bpawns);
+		return score;
 	}
 
 	private long calculatePawnPositionHash(long wpawns, long bpawns, ZobristHasher hashFeatureProvider)
@@ -138,6 +164,43 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		else {
 			return fileBitboard(fileIndex + 1) | fileBitboard(fileIndex - 1);
 		}
+	}
+
+	static int evaluateBackwardPawns(long wpawns, long bpawns)
+	{
+		int score = 0;
+
+		for (int i = 0; i < 8; i++) {
+			final long file = fileBitboard(i);
+			final long adjacentFiles = getAdjacentFiles(i);
+
+			final long wfile = wpawns & file, wadj = wpawns & adjacentFiles;
+			if (bitCount(wfile) > 0) {
+				for (int j = 1; j < 7; j++) {
+					final long rank = rankBitboard(j);
+					if (bitboardsIntersect(rank, wadj)) {
+						break;
+					}
+					else if (bitboardsIntersect(rank, wfile)) {
+						score -= BACKWARD_PENALTY;
+					}
+				}
+			}
+			final long bfile = bpawns & file, badj = bpawns & adjacentFiles;
+			if (bitCount(bfile) > 0) {
+				for (int j = 6; j > 0; j--) {
+					final long rank = rankBitboard(j);
+					if (bitboardsIntersect(rank, badj)) {
+						break;
+					}
+					else if (bitboardsIntersect(rank, bfile)) {
+						score += BACKWARD_PENALTY;
+					}
+				}
+			}
+		}
+
+		return score;
 	}
 
 	static int evaluatePassedPawns(long wpawns, long bpawns)

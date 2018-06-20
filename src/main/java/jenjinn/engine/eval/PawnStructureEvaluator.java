@@ -21,15 +21,15 @@ import jenjinn.engine.utils.ZobristHasher;
  */
 public final class PawnStructureEvaluator implements EvaluationComponent
 {
-	static final int SEMIOPEN_FILE_BONUS = 300;
+	public static final int SEMIOPEN_FILE_BONUS = 300;
 
-	static final int CHAIN_BONUS = 100;
-	static final int PASSED_BONUS = 800;
-	static final int[] PHALANX_BONUSES = {0, 0, 700, 500, 50, 0, 0, 0, 0};
+	public static final int CHAIN_BONUS = 100;
+	public static final int PASSED_BONUS = 800;
+	public static final int[] PHALANX_BONUSES = {0, 0, 700, 500, 50, 0, 0, 0, 0};
 
-	static final int DOUBLED_PENALTY = 700;
-	static final int ISOLATED_PENALTY = 600;
-	static final int BACKWARD_PENALTY = 500;
+	public static final int DOUBLED_PENALTY = 700;
+	public static final int ISOLATED_PENALTY = 600;
+	public static final int BACKWARD_PENALTY = 500;
 
 	private final PawnTable cachedEvaluations;
 
@@ -62,7 +62,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		}
 	}
 
-	static int calculateOverallScore(long wpawns, long bpawns)
+	public static int calculateOverallScore(long wpawns, long bpawns)
 	{
 		int score = evaluateBackwardPawns(wpawns, bpawns);
 		score += evaluateDoubledPawns(wpawns, bpawns);
@@ -89,7 +89,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		return whash ^ bhash;
 	}
 
-	static int evaluatePawnChains(long wpawns, long bpawns)
+	public static int evaluatePawnChains(long wpawns, long bpawns)
 	{
 		final long hfile = fileBitboard(0), afile = fileBitboard(7);
 
@@ -102,7 +102,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 				- bitCount(bpawnRight & bpawns));
 	}
 
-	static int evaluatePhalanxFormations(long pawns)
+	public static int evaluatePhalanxFormations(long pawns)
 	{
 		int score = 0;
 		for (int i = 0; i < 8; i++) {
@@ -125,7 +125,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		return score;
 	}
 
-	static int evaluateDoubledPawns(long wpawns, long bpawns)
+	public static int evaluateDoubledPawns(long wpawns, long bpawns)
 	{
 		int score = 0;
 
@@ -166,7 +166,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		}
 	}
 
-	static int evaluateBackwardPawns(long wpawns, long bpawns)
+	public static int evaluateBackwardPawns(long wpawns, long bpawns)
 	{
 		int score = 0;
 
@@ -203,7 +203,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		return score;
 	}
 
-	static int evaluatePassedPawns(long wpawns, long bpawns)
+	public static int evaluatePassedPawns(long wpawns, long bpawns)
 	{
 		int score = 0;
 
@@ -248,7 +248,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		return score;
 	}
 
-	static int evaluateIsolatedPawns(long wpawns, long bpawns)
+	public static int evaluateIsolatedPawns(long wpawns, long bpawns)
 	{
 		/*
 		 * wIsolatedRight, for example, marks the files which have no white pawns on the

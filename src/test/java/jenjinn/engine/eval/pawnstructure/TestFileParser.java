@@ -40,11 +40,18 @@ public final class TestFileParser
 			final Long whiteLocs = decodeLocations(encodedWhiteLocs);
 			final Long blackLocs = decodeLocations(encodedBlackLocs);
 
+			final IntPair doubledPawnCounts = decodeIntegerPair(lines.get(2));
+			final IntPair passedPawnCounts = decodeIntegerPair(lines.get(3));
+			final IntPair chainLinkCounts = decodeIntegerPair(lines.get(4));
+			final FlowList<Integer> isolatedPawnCounts = decodeIntegerSequence(lines.get(5));
+
 			final ExpectedValues expected = new ExpectedValues(
-					decodeIntegerPair(lines.get(2)),
-					decodeIntegerPair(lines.get(3)),
-					decodeIntegerPair(lines.get(4)),
-					decodeIntegerPair(lines.get(5)),
+					doubledPawnCounts.getFirst() - doubledPawnCounts.getSecond(),
+					passedPawnCounts.getFirst() - passedPawnCounts.getSecond(),
+					chainLinkCounts.getFirst() - chainLinkCounts.getSecond(),
+					IntPair.of(
+							isolatedPawnCounts.get(0) - isolatedPawnCounts.get(2),
+							isolatedPawnCounts.get(1) - isolatedPawnCounts.get(3)),
 					decodeIntegerSequence(lines.get(6)),
 					decodeIntegerSequence(lines.get(7)));
 

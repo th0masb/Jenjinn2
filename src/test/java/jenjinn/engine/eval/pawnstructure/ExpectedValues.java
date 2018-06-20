@@ -12,47 +12,47 @@ import xawd.jflow.iterators.misc.IntPair;
  */
 public final class ExpectedValues
 {
-	private final IntPair doubledPawnCounts;
-	private final IntPair isolatedPawnCounts;
-	private final IntPair passedPawnCounts;
-	private final IntPair chainLinkCounts;
+	private final int doubledPawnCountDifference;
+	private final int passedPawnCountDifference;
+	private final int chainLinkCountDifference;
+	private final IntPair isolatedPawnCountDifferences;
 	private final FlowList<Integer> whitePhalanxSizes;
 	private final FlowList<Integer> blackPhalanxSizes;
 
 	public ExpectedValues(
-			IntPair doubledPawnCounts,
-			IntPair isolatedPawnCounts,
-			IntPair passedPawnCounts,
-			IntPair chainLinkCounts,
+			int doubledPawnCountDifference,
+			int passedPawnCountDifference,
+			int chainLinkCountDifference,
+			IntPair isolatedPawnCountDifferences,
 			FlowList<Integer> whitePhalanxSizes,
 			FlowList<Integer> blackPhalanxSizes)
 	{
-		this.doubledPawnCounts = doubledPawnCounts;
-		this.isolatedPawnCounts = isolatedPawnCounts;
-		this.passedPawnCounts = passedPawnCounts;
-		this.chainLinkCounts = chainLinkCounts;
+		this.doubledPawnCountDifference = doubledPawnCountDifference;
+		this.passedPawnCountDifference = passedPawnCountDifference;
+		this.chainLinkCountDifference = chainLinkCountDifference;
+		this.isolatedPawnCountDifferences = isolatedPawnCountDifferences;
 		this.whitePhalanxSizes = whitePhalanxSizes;
 		this.blackPhalanxSizes = blackPhalanxSizes;
 	}
 
-	public IntPair getDoubledPawnCounts()
+	public int getDoubledPawnCountDifference()
 	{
-		return doubledPawnCounts;
+		return doubledPawnCountDifference;
 	}
 
-	public IntPair getIsolatedPawnCounts()
+	public int getPassedPawnCountDifference()
 	{
-		return isolatedPawnCounts;
+		return passedPawnCountDifference;
 	}
 
-	public IntPair getPassedPawnCounts()
+	public int getChainLinkCountDifference()
 	{
-		return passedPawnCounts;
+		return chainLinkCountDifference;
 	}
 
-	public IntPair getChainLinkCounts()
+	public IntPair getIsolatedPawnCountDifferences()
 	{
-		return chainLinkCounts;
+		return isolatedPawnCountDifferences;
 	}
 
 	public FlowList<Integer> getWhitePhalanxSizes()

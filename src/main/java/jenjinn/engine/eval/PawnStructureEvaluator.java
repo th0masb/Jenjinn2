@@ -1,0 +1,231 @@
+/**
+ *
+ */
+package jenjinn.engine.eval;
+
+import static java.lang.Long.bitCount;
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.engine.bitboards.Bitboards.fileBitboard;
+import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
+
+import jenjinn.engine.bitboards.BitboardIterator;
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.DetailedPieceLocations;
+import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.utils.ZobristHasher;
+
+/**
+ * @author ThomasB
+ *
+ */
+public final class PawnStructureEvaluator implements EvaluationComponent
+{
+	static final int SEMIOPEN_FILE_BONUS = 300;
+
+	static final int CHAIN_BONUS = 100;
+	static final int PASSED_BONUS = 800;
+	static final int[] PHALANX_BONUSES = {0, 0, 700, 500, 50, 0, 0, 0, 0};
+
+	static final int DOUBLED_PENALTY = 700;
+	static final int ISOLATED_PENALTY = 600;
+	static final int BACKWARD_PENALTY = 500;
+
+
+	public PawnStructureEvaluator()
+	{
+	}
+
+	@Override
+	public int evaluate(BoardState state)
+	{
+		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		final long wpawns = pieceLocs.locationOverviewOf(ChessPiece.WHITE_PAWN);
+		final long bpawns = pieceLocs.locationOverviewOf(ChessPiece.BLACK_PAWN);
+		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns, pieceLocs.getHashFeatureProvider());
+
+
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private long calculatePawnPositionHash(long wpawns, long bpawns, ZobristHasher hashFeatureProvider)
+	{
+		final ChessPiece wp = ChessPiece.WHITE_PAWN, bp = ChessPiece.BLACK_PAWN;
+
+		final long whash = BitboardIterator.from(wpawns)
+				.mapToLong(sq -> hashFeatureProvider.getSquarePieceFeature(sq, wp))
+				.reduce(0L, (a, b) -> a ^ b);
+
+		final long bhash = BitboardIterator.from(bpawns)
+				.mapToLong(sq -> hashFeatureProvider.getSquarePieceFeature(sq, bp))
+				.reduce(0L, (a, b) -> a ^ b);
+
+		return whash ^ bhash;
+	}
+
+	static int evaluatePawnChains(long wpawns, long bpawns)
+	{
+		final long hfile = fileBitboard(0), afile = fileBitboard(7);
+
+		final long wpawnLeft = (wpawns & ~afile) << 9, wpawnRight = (wpawns & ~hfile) << 7;
+		final long bpawnLeft = (bpawns & ~afile) >>> 7, bpawnRight = (bpawns & ~hfile) >>> 9;
+
+		return CHAIN_BONUS *(bitCount(wpawnLeft & wpawns)
+				+ bitCount(wpawnRight & wpawns)
+				- bitCount(bpawnLeft & bpawns)
+				- bitCount(bpawnRight & bpawns));
+	}
+
+	static int evaluatePhalanxFormations(long pawns)
+	{
+		int score = 0;
+		for (int i = 0; i < 8; i++) {
+			final long pawnsOnIthRank = rankBitboard(i) & pawns;
+			if (bitCount(pawnsOnIthRank) > 1) {
+				int phalanxCount = 0;
+				for (int j = 0; j < 8; j++) {
+					final long file = fileBitboard(j);
+					if (bitboardsIntersect(file, pawnsOnIthRank)) {
+						phalanxCount++;
+					}
+					else {
+						score += PHALANX_BONUSES[phalanxCount];
+						phalanxCount = 0;
+					}
+				}
+				score += PHALANX_BONUSES[phalanxCount];
+			}
+		}
+		return score;
+	}
+
+	static int evaluateDoubledPawns(long wpawns, long bpawns)
+	{
+		int score = 0;
+
+		for (int i = 0; i < 8; i++) {
+			final long file = fileBitboard(i);
+			final long wfile = wpawns & file, bfile = bpawns & file;
+			int wFoundIndex = -1, bFoundIndex = -1;
+			for (int j = 0; j < 8; j++) {
+				final long rank = rankBitboard(j);
+				if (bitboardsIntersect(rank, wfile)) {
+					if (wFoundIndex > -1 && j - wFoundIndex < 3) {
+						score -= DOUBLED_PENALTY;
+					}
+					wFoundIndex = j;
+				}
+				else if (bitboardsIntersect(rank, bfile)) {
+					if (bFoundIndex > -1 && j - bFoundIndex < 3) {
+						score += DOUBLED_PENALTY;
+					}
+					bFoundIndex = j;
+				}
+			}
+		}
+
+		return score;
+	}
+
+	static long getAdjacentFiles(int fileIndex)
+	{
+		if (fileIndex == 0) {
+			return fileBitboard(1);
+		}
+		else if (fileIndex == 7) {
+			return fileBitboard(6);
+		}
+		else {
+			return fileBitboard(fileIndex + 1) | fileBitboard(fileIndex - 1);
+		}
+	}
+
+	static int evaluatePassedPawns(long wpawns, long bpawns)
+	{
+		int score = 0;
+
+		for (int i = 0; i < 8; i++) {
+			final long file = fileBitboard(i);
+			final long adjacentFiles = getAdjacentFiles(i) | file;
+
+			final long wfile = wpawns & file;
+			if (bitCount(wfile) > 0) {
+				long remainingRanksToPromotion = rankBitboard(7);
+				for (int j = 6; j > 0; j--) {
+					final long rank = rankBitboard(j);
+					if (!bitboardsIntersect(rank, wfile)) {
+						remainingRanksToPromotion |= rank;
+					}
+					else {
+						break;
+					}
+				}
+				if (!bitboardsIntersect(adjacentFiles & remainingRanksToPromotion, bpawns)) {
+					score += PASSED_BONUS;
+				}
+			}
+			final long bfile = bpawns & file;
+			if (bitCount(bfile) > 0) {
+				long remainingRanksToPromotion = rankBitboard(0);
+				for (int j = 1; j < 7; j++) {
+					final long rank = rankBitboard(j);
+					if (!bitboardsIntersect(rank, bfile)) {
+						remainingRanksToPromotion |= rank;
+					}
+					else {
+						break;
+					}
+				}
+				if (!bitboardsIntersect(adjacentFiles & remainingRanksToPromotion, wpawns)) {
+					score -= PASSED_BONUS;
+				}
+			}
+		}
+
+		return score;
+	}
+
+	static int evaluateIsolatedPawns(long wpawns, long bpawns)
+	{
+		/*
+		 * wIsolatedRight, for example, marks the files which have no white pawns on the
+		 * file to the immediate right
+		 */
+		int wIsolatedRight = 0b00000001, bIsolatedRight = 0b00000001;
+		int wIsolatedLeft = 0b10000000, bIsolatedLeft = 0b10000000;
+
+		for (int i = 0; i < 7; i++) {
+			final long fileFromRight = fileBitboard(i), fileFromLeft = fileBitboard(7 - i);
+			if (!bitboardsIntersect(fileFromRight, wpawns)) {
+				wIsolatedRight |= 1 << (i + 1);
+			}
+			if (!bitboardsIntersect(fileFromLeft, wpawns)) {
+				wIsolatedLeft |= 1 << (6 - i);
+			}
+			if (!bitboardsIntersect(fileFromRight, bpawns)) {
+				bIsolatedRight |= 1 << (i + 1);
+			}
+			if (!bitboardsIntersect(fileFromLeft, bpawns)) {
+				bIsolatedLeft |= 1 << (6 - i);
+			}
+		}
+
+		final int wIsolated = wIsolatedRight & wIsolatedLeft;
+		final int bIsolated = bIsolatedRight & bIsolatedLeft;
+
+		int score = 0;
+		for (int i = 0; i < 8; i++) {
+			final long file = fileBitboard(i);
+			if (bitboardsIntersect(wIsolated, 1L << i)) {
+				final boolean semiOpen = bitboardsIntersect(file, bpawns);
+				score -= bitCount(wpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
+			}
+			if (bitboardsIntersect(bIsolated, 1L << i)) {
+				final boolean semiOpen = bitboardsIntersect(file, wpawns);
+				score += bitCount(bpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
+			}
+		}
+
+		return score;
+	}
+}

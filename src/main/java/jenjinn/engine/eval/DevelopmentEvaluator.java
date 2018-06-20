@@ -31,13 +31,13 @@ public final class DevelopmentEvaluator implements EvaluationComponent
 		return eval;
 	}
 
-	private int getValueOf(DevelopmentPiece dpiece)
+	static int getValueOf(DevelopmentPiece dpiece)
 	{
 		final int ord = dpiece.ordinal();
 		return (1 - 2*(ord / 6)) * DEVELOPMENT_VALUES[ord % 6];
 	}
 
-	private int getValueOf(CastleZone dpiece)
+	static int getValueOf(CastleZone dpiece)
 	{
 		if (dpiece == null) {
 			return 0;

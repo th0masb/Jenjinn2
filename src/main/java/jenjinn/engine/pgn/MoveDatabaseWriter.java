@@ -31,7 +31,6 @@ import jenjinn.engine.moves.ChessMove;
  */
 public final class MoveDatabaseWriter implements Closeable
 {
-//	public static final String HASH_MOVE_SEPARATOR = ":", POSITION_SEPARATOR = "|";
 	private static final String PGN_EXT = ".pgn";
 	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 20;
 

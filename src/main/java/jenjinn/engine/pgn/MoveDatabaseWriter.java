@@ -4,8 +4,7 @@
 package jenjinn.engine.pgn;
 
 import static java.lang.Long.toHexString;
-import static java.lang.Math.max;
-import static xawd.jflow.utilities.CollectionUtil.tail;
+import static java.lang.Math.min;
 import static xawd.jflow.utilities.StringUtils.matchesAnywhere;
 
 import java.io.BufferedReader;
@@ -21,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
@@ -33,14 +31,15 @@ import jenjinn.engine.moves.ChessMove;
  */
 public final class MoveDatabaseWriter implements Closeable
 {
-	public static final String HASH_MOVE_SEPARATOR = "|", POSITION_SEPARATOR = ":";
+//	public static final String HASH_MOVE_SEPARATOR = ":", POSITION_SEPARATOR = "|";
 	private static final String PGN_EXT = ".pgn";
-	private static final int POSITIONS_PER_LINE = 10, GAME_DEPTH_CAP = 10;
+	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 20;
 
 	private final BufferedReader src;
 	private final BufferedWriter out;
-
 	private final Set<Long> usedPositions = new HashSet<>();
+
+	private int totalGamesSearched = 0, totalErrorsInGames = 0;
 
 	public MoveDatabaseWriter(final Path sourceFilePath, final Path outFilePath) throws IOException
 	{
@@ -56,10 +55,22 @@ public final class MoveDatabaseWriter implements Closeable
 		final List<PositionalInstruction> writeBuffer = new ArrayList<>(POSITIONS_PER_LINE);
 		Optional<String> game = readGame();
 		while (game.isPresent()) {
+			totalGamesSearched++;
 			writeUniquePositions(game.get(), writeBuffer);
 			game = readGame();
 		}
 		flushBuffer(writeBuffer);
+
+		final String outputLog = new StringBuilder("We searched " )
+				.append(totalGamesSearched)
+				.append(" games and extracted ")
+				.append(usedPositions.size())
+				.append(" moves. There were ")
+				.append(totalErrorsInGames)
+				.append(" pgns which caused an error.")
+				.toString();
+
+		System.out.println(outputLog);
 	}
 
 	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer) throws IOException
@@ -67,10 +78,11 @@ public final class MoveDatabaseWriter implements Closeable
 		try {
 			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
 			final BoardState state = StartStateGenerator.getStartBoard();
-			for (int i = 0; i < max(GAME_DEPTH_CAP, moves.size()); i++) {
+			for (int i = 0; i < min(GAME_DEPTH_CAP, moves.size()); i++) {
 				final ChessMove ithMove = moves.get(i);
 				final long stateHash = state.calculateHash();
 				if (!usedPositions.contains(stateHash)) {
+					usedPositions.add(stateHash);
 					final PositionalInstruction newInstruction = new PositionalInstruction(stateHash, ithMove.toCompactString());
 					addPositionToBuffer(newInstruction, writeBuffer);
 				}
@@ -78,6 +90,7 @@ public final class MoveDatabaseWriter implements Closeable
 			}
 		} catch (final BadPgnException e) {
 			System.err.println("Error in game: " + gameString);
+			totalErrorsInGames++;
 			return;
 		}
 	}
@@ -94,11 +107,9 @@ public final class MoveDatabaseWriter implements Closeable
 	{
 		if (!buffer.isEmpty()) {
 			final int bufsze = buffer.size();
-			for (int i = 0; i < bufsze - 1; i++) {
+			for (int i = 0; i < bufsze; i++) {
 				out.write(buffer.get(i).toString());
-				out.write(POSITION_SEPARATOR);
 			}
-			out.write(tail(buffer).toString());
 			out.newLine();
 			buffer.clear();
 		}
@@ -135,12 +146,12 @@ public final class MoveDatabaseWriter implements Closeable
 	public static void main(final String[] args) throws IOException
 	{
 		final Path source = Paths.get("C:", "bin", "messabout", "KIDClassical.pgn");
-		final Path out = Paths.get("C:", "bin", "messabout", "out.odb");
+		final Path out = Paths.get("C:", "bin", "messabout", "classicalkid.odb");
 
-		final Consumer<Object> print = System.out::println;
-
-		print.accept(Files.exists(source));
-		print.accept(Files.exists(out));
+//		final Consumer<Object> print = System.out::println;
+//
+//		print.accept(Files.exists(source));
+//		print.accept(Files.exists(out));
 
 		try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(source, out)) {
 			writer.writeUniquePositions();
@@ -166,7 +177,7 @@ public final class MoveDatabaseWriter implements Closeable
 
 		@Override
 		public String toString() {
-			return toHexString(positionHash) + HASH_MOVE_SEPARATOR + compactMoveString;
+			return toHexString(positionHash) + compactMoveString.toUpperCase();
 		}
 	}
 }

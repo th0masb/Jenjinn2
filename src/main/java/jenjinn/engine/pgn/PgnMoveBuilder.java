@@ -98,16 +98,16 @@ public final class PgnMoveBuilder
 				return head(candidates);
 			}
 			else if (files.size() == 2) {
-				final char sourceFile = head(files).charAt(0);
+				final char sourceFile = head(files).toUpperCase().charAt(0);
 				return Iterate.over(candidates)
 						.filter(mv -> mv.getSource().name().charAt(0) == sourceFile)
-						.safeNext().orElseThrow(exSupplier);
+						.safeNext().orElseThrow(() -> new BadPgnException(mc + ", " + sourceFile + ", " + candidates));
 			}
 			else if (ranks.size() == 2) {
 				final char sourceRank = head(ranks).charAt(0);
 				return Iterate.over(candidates)
 						.filter(mv -> mv.getSource().name().charAt(1) == sourceRank)
-						.safeNext().orElseThrow(exSupplier);
+						.safeNext().orElseThrow(() -> new BadPgnException(mc + ", " + sourceRank + ", " + candidates));
 			}
 			else {
 				throw exSupplier.get();

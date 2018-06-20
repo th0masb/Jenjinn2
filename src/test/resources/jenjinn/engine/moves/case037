@@ -1,0 +1,22 @@
+// Testing black enpassant
+EnpassantMove[source=e5|target=d4]
+
+white_pieces: (d5 f2 g2) () (f3) () () (e1)
+black_pieces: (e5 f7 g7 h7) () (g6) () () (e8)
+half_move_clock: 30
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: none
+active_side: black
+enpassant_square: d4
+
+white_pieces: (f2 g2) () (f3) () () (e1)
+black_pieces: (d4 f7 g7 h7) () (g6) () () (e8)
+half_move_clock: 0
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: none
+active_side: white
+enpassant_square: none

@@ -38,7 +38,7 @@ class MoveTest extends AbstractBoardStateTest
 
 	static Iterator<Arguments> test()
 	{
-		return IterRange.to(36).mapToObject(i -> "case" + pad(i)).map(TestFileParser::parse);
+		return IterRange.to(40).mapToObject(i -> "case" + pad(i)).map(TestFileParser::parse);
 	}
 
 	static String pad(final int caseNumber) {

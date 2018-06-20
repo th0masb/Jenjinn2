@@ -60,6 +60,6 @@ class LegalMovesGenerationTest
 
 	static Flow<Arguments> test()
 	{
-		return Iterate.over("case001").map(TestFileParser::parse);
+		return Iterate.over("case001", "case003", "case004").map(TestFileParser::parse);
 	}
 }

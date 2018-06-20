@@ -102,6 +102,13 @@ public final class ShorthandMoveParser
 					.filterAndCastTo(ChessMove.class)
 					.toList();
 		}
+		else if (ec.matches("P\\[(" + CommonRegex.DOUBLE_SQUARE + ")\\]")) {
+			final List<BoardSquare> squares = Iterate.over(StringUtils.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
+					.map(s -> BoardSquare.valueOf(s.toUpperCase()))
+					.toList();
+
+			return asList(new PromotionMove(head(squares), tail(squares)));
+		}
 		else {
 			throw new IllegalArgumentException(ec);
 		}

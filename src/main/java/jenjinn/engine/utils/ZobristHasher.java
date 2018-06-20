@@ -125,7 +125,7 @@ public final class ZobristHasher
 		if (boardSquareFeatures == null) {
 			if (other.boardSquareFeatures != null)
 				return false;
-		} else if (IterRange.to(12).anyMatch(i -> !Arrays.equals(boardSquareFeatures.get(i), other.boardSquareFeatures.get(i))))
+		} else if (IterRange.to(12).anyMatch(i -> !Arrays.equals(boardSquareFeatures.get(i), other.boardSquareFeatures.get(i))).get())
 			return false;
 		if (!Arrays.equals(castleRightsFeatures, other.castleRightsFeatures))
 			return false;

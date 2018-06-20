@@ -1,0 +1,16 @@
+// Locations of white pawns
+e4 e5 c2 f4
+// Locations of black pawns
+e7 d5 
+// Number of doubled pawns for white and black, separated by space
+2 0
+// Number of isolated pawns ...
+0 0
+// Number of passed pawns ... 
+1 3
+// Number of pawn chain links ...
+5 4
+// Sizes of white phalanx formations
+2 1 1 3
+// Sizes of black phalanx formations
+2

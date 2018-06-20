@@ -22,7 +22,7 @@ public final class PieceSquareTables
 
 	public PieceSquareTables(final List<PieceSquareTable> whiteTables)
 	{
-		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i)) {
+		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i).get()) {
 			throw new IllegalArgumentException();
 		}
 		this.tables = Iterate.over(whiteTables)

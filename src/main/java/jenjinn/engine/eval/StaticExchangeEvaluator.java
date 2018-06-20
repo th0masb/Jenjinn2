@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.eval;
 
+import static java.lang.Math.max;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 
@@ -29,9 +30,9 @@ public final class StaticExchangeEvaluator
 	{
 	}
 
-	private long target, source, attadef, potenxray;
+	private long target, source, attadef, xrays;
 
-	public int eval(final BoardSquare targ, final BoardSquare from, final BoardState state)
+	public boolean isGoodExchange(final BoardSquare targ, final BoardSquare from, final BoardState state)
 	{
 		// Make sure all instance variables set correctly first
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
@@ -51,13 +52,13 @@ public final class StaticExchangeEvaluator
 			d++;
 			activeSide = activeSide.otherSide();
 			gain[d] = STANDARDISED_PIECE_VALUES[attPiece.ordinal() % 6] - gain[d - 1];
-			if (Math.max(-gain[d - 1], gain[d]) < 0) {
+			if (max(-gain[d - 1], gain[d]) < 0) {
 				break;
 			}
 
 			attadef ^= source;
 			// If a knight moves to attack or defend it can't open an x-ray.
-			if ((source & knightLocs) == 0) {
+			if (!bitboardsIntersect(source, knightLocs)) {
 				updateXrays(pieceLocs);
 			}
 			source = getLeastValuablePiece(state.getPieceLocations(), activeSide);
@@ -67,25 +68,20 @@ public final class StaticExchangeEvaluator
 		while (--d > 0) {
 			gain[d - 1] = -Math.max(-gain[d - 1], gain[d]);
 		}
-		return gain[0];
-	}
-
-	public boolean isGoodExchange(final BoardSquare targ, final BoardSquare from, final BoardState state)
-	{
-		return eval(targ, from, state) >= 0;
+		return gain[0]>= 0;
 	}
 
 	private void updateXrays(final DetailedPieceLocations pieceLocs)
 	{
-		if (potenxray != 0) {
-			final Flow<BoardSquare> xrayLocs = BitboardIterator.from(potenxray);
+		if (xrays != 0) {
+			final Flow<BoardSquare> xrayLocs = BitboardIterator.from(xrays);
 			final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
 			while (xrayLocs.hasNext()) {
 				final BoardSquare loc = xrayLocs.next();
 				final ChessPiece p = pieceLocs.getPieceAt(loc);
 				if (bitboardsIntersect(p.getSquaresOfControl(loc, white, black), target)) {
 					final long locBitboard = loc.asBitboard();
-					potenxray ^= locBitboard;
+					xrays ^= locBitboard;
 					attadef ^= locBitboard;
 				}
 			}
@@ -95,7 +91,7 @@ public final class StaticExchangeEvaluator
 	private void generateAttackDefenseInfo(final DetailedPieceLocations locationProvider)
 	{
 		attadef = 0L;
-		potenxray = 0L;
+		xrays = 0L;
 		final long white = locationProvider.getWhiteLocations();
 		final long black = locationProvider.getBlackLocations();
 
@@ -108,7 +104,7 @@ public final class StaticExchangeEvaluator
 					attadef |= loc.asBitboard();
 				}
 				else if (p.isSlidingPiece() && bitboardsIntersect(emptyBoardAttackset(p, loc), target)) {
-					potenxray |= loc.asBitboard();
+					xrays |= loc.asBitboard();
 				}
 			}
 		}

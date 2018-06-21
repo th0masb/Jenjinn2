@@ -64,7 +64,7 @@ class LegalMovesGenerationTest
 
 	static Iterator<Arguments> test()
 	{
-		return IterRange.between(1, 5).mapToObject(i -> "case" + pad(i)).map(TestFileParser::parse);
+		return IterRange.between(1, 7).mapToObject(i -> "case" + pad(i)).map(TestFileParser::parse);
 	}
 
 	static String pad(final int caseNumber) {

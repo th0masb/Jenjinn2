@@ -4,8 +4,6 @@
 package jenjinn.engine.movesearch;
 
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
-import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.CollectionUtil.tail;
 
 import java.util.Optional;
 
@@ -17,8 +15,10 @@ import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.GameTermination;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.eval.PieceValues;
 import jenjinn.engine.eval.StateEvaluator;
 import jenjinn.engine.eval.StaticExchangeEvaluator;
 import jenjinn.engine.moves.ChessMove;
@@ -29,26 +29,30 @@ import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB
- *
  */
 public final class QuiescentSearcher
 {
-	private static final int DEPTH_CAP = 15;
-	private static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
-			.mapToObject(i -> new DataForReversingMove())
-			.toImmutableList();
+	static final int DEPTH_CAP = 15;
 
-	private static final int[] PIECE_VALUES = null;
-	private static final int BIG_DELTA = head(PIECE_VALUES) + (head(PIECE_VALUES) - tail(PIECE_VALUES));
-	private static final int DP_SAFETY_MARGIN = 20000;
+	static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
+			.mapToObject(i -> new DataForReversingMove()).toImmutableList();
 
-	private final StaticExchangeEvaluator see = new StaticExchangeEvaluator();
+	static final int DP_SAFETY_MARGIN = 200;
 
-	public QuiescentSearcher()
+	static final int BIG_DELTA = calculateBigDelta();
+
+	private static int calculateBigDelta()
+	{
+		final int leastValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_PAWN);
+		final int mostValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_QUEEN);
+		return 2 * mostValuable - leastValuable;
+	}
+
+	private QuiescentSearcher()
 	{
 	}
 
-	public int search(BoardState root, int alpha, int beta, int depth)
+	public static int search(BoardState root, int alpha, int beta, int depth)
 	{
 		Flow<ChessMove> movesToProbe = LegalMoves.getMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
@@ -61,28 +65,27 @@ public final class QuiescentSearcher
 		final DetailedPieceLocations pieceLocs = root.getPieceLocations();
 		final long passiveControl = SquareControl.calculate(root, passive);
 
-		final boolean inCheck = bitboardsIntersect(pieceLocs.locationOverviewOf(ChessPieces.king(active)), passiveControl);
+		final boolean inCheck = bitboardsIntersect(pieceLocs.locationOverviewOf(ChessPieces.king(active)),
+				passiveControl);
 
 		if (inCheck) {
 			if (depth == 0) {
 				/*
-				 *  I think this is sound, basically we reason that if we are in check
-				 *  then we assume that it's not better than anything we've already found.
+				 * I think this is sound, basically we reason that if we are in check then we
+				 * assume that it's not better than anything we've already found.
 				 */
 				return alpha;
 			}
 			movesToProbe = movesToProbe.insert(firstMove.get());
-		}
-		else {
+		} else {
 			final int standPat = StateEvaluator.INSTANCE.evaluate(root);
 
 			if (standPat >= beta) {
 				return beta;
-			}
-			else if (depth == 0) {
+			} else if (depth == 0) {
 				/*
-				 * We return the maximum under the assumption that there exists at least
-				 * one move that can improve our position which is sound.
+				 * We return the maximum under the assumption that there exists at least one
+				 * move that can improve our position which is sound.
 				 */
 				return Math.max(alpha, standPat);
 			}
@@ -116,16 +119,17 @@ public final class QuiescentSearcher
 		return alpha;
 	}
 
-	private boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
+	private static boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
 	{
-		if (move instanceof EnpassantMove && standPat >= alpha - (tail(PIECE_VALUES) + DP_SAFETY_MARGIN)) {
+		if (move instanceof EnpassantMove
+				&& standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + DP_SAFETY_MARGIN)) {
 			return true;
-		}
-		else {
+		} else {
 			final Side active = root.getActiveSide(), passive = active.otherSide();
 			final BoardSquare source = move.getSource(), target = move.getTarget();
-			final int targVal = PIECE_VALUES[root.getPieceLocations().getPieceAt(target, passive).ordinal() % 6];
-			return standPat >= alpha - (targVal + DP_SAFETY_MARGIN) && see.isGoodExchange(target, source, root);
+			final int targVal = PieceValues.MIDGAME.valueOf(root.getPieceLocations().getPieceAt(target, passive));
+			return standPat >= alpha - (targVal + DP_SAFETY_MARGIN)
+					&& StaticExchangeEvaluator.INSTANCE.isGoodExchange(target, source, root);
 		}
 	}
 }

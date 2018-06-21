@@ -18,17 +18,11 @@ import xawd.jflow.iterators.Flow;
 
 /**
  * @author ThomasB
+ *
  */
-public final class StaticExchangeEvaluator
+public enum StaticExchangeEvaluator
 {
-	/**
-	 * Not currently bothering with interpolation here.
-	 */
-	private static final int[] STANDARDISED_PIECE_VALUES = new int[] {100, 295, 310, 500, 900};
-
-	public StaticExchangeEvaluator()
-	{
-	}
+	INSTANCE;
 
 	private long target, source, attadef, xrays;
 
@@ -44,14 +38,14 @@ public final class StaticExchangeEvaluator
 
 		int d = 0;
 		final int[] gain = new int[32];
-		gain[d] = STANDARDISED_PIECE_VALUES[pieceLocs.getPieceAt(targ).ordinal() % 6];
+		gain[d] = PieceValues.MIDGAME.valueOf(pieceLocs.getPieceAt(targ));
 		ChessPiece attPiece = pieceLocs.getPieceAt(source);
 
 		Side activeSide = state.getActiveSide();
 		do {
 			d++;
 			activeSide = activeSide.otherSide();
-			gain[d] = STANDARDISED_PIECE_VALUES[attPiece.ordinal() % 6] - gain[d - 1];
+			gain[d] = PieceValues.MIDGAME.valueOf(attPiece) - gain[d - 1];
 			if (max(-gain[d - 1], gain[d]) < 0) {
 				break;
 			}

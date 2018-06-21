@@ -15,7 +15,8 @@ import xawd.jflow.iterators.factories.Iterate;
 public enum PieceValues
 {
 	MIDGAME(new int[] {100, 295, 310, 500, 900, 0}),
-	ENDGAME(new int[] {100, 295, 310, 500, 900, 0});
+	ENDGAME(new int[] {100, 295, 310, 500, 900, 0}),
+	TESTING(new int[] {100, 295, 310, 500, 900, 0});
 
 	private final int[] values;
 
@@ -28,5 +29,15 @@ public enum PieceValues
 	public int valueOf(ChessPiece piece)
 	{
 		return values[piece.ordinal() % 6];
+	}
+
+	public int valueOfPawn()
+	{
+		return values[0];
+	}
+
+	public int valueOfQueen()
+	{
+		return values[4];
 	}
 }

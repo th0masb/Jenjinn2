@@ -18,12 +18,12 @@ import java.util.Set;
 
 import org.junit.jupiter.params.provider.Arguments;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.bitboards.BitboardUtils;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.parseutils.CommonRegex;
 import jenjinn.engine.parseutils.CordParser;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
 

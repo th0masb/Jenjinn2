@@ -12,8 +12,8 @@ import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardHasher;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.eval.PawnTable.Entry;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB

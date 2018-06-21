@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jenjinn.engine.Moveable;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
+import jenjinn.engine.pieces.Moveable;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 

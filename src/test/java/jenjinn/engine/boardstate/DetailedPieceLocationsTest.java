@@ -15,12 +15,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardHasher;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 

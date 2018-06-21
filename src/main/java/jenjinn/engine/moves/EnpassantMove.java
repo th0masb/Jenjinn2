@@ -5,15 +5,15 @@ package jenjinn.engine.moves;
 
 import java.util.Set;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Direction;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 
 /**
  * @author ThomasB

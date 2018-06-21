@@ -9,8 +9,8 @@ import static xawd.jflow.utilities.StringUtils.getAllMatches;
 
 import java.util.List;
 
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.eval.PieceValues;
+import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.iterators.factories.Iterate;
 

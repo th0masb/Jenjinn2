@@ -5,9 +5,9 @@ package jenjinn.engine.eval.piecesquaretables;
 
 import java.util.Arrays;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 

@@ -1,7 +1,7 @@
 package jenjinn.engine.bitboards;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * Exposes API methods for accessing cached bitboards.

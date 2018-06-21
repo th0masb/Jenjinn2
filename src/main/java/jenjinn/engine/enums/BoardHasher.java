@@ -6,9 +6,10 @@ package jenjinn.engine.enums;
 import java.util.List;
 import java.util.Random;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.CastlingStatus;
 import jenjinn.engine.boardstate.LocationTracker;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 

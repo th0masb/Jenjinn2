@@ -11,11 +11,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.SquareControl;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;

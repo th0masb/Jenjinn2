@@ -10,10 +10,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.misc.PieceLocations;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import jenjinn.engine.utils.FileUtils;
 
 /**

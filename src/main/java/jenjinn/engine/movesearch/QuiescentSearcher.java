@@ -7,7 +7,6 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.Optional;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DataForReversingMove;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
@@ -15,7 +14,6 @@ import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.GameTermination;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.PieceValues;
@@ -23,6 +21,8 @@ import jenjinn.engine.eval.StateEvaluator;
 import jenjinn.engine.eval.StaticExchangeEvaluator;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.IterRange;

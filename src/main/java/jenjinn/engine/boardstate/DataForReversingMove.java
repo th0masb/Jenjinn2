@@ -8,8 +8,8 @@ import java.util.Set;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.DevelopmentPiece;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB

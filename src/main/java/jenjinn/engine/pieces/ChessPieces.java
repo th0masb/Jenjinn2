@@ -1,12 +1,11 @@
 /**
  *
  */
-package jenjinn.engine;
+package jenjinn.engine.pieces;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.collections.impl.ImmutableFlowList;

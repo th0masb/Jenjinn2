@@ -10,7 +10,7 @@ import java.util.List;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB

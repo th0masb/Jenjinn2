@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.eval.PieceValues;
+import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**

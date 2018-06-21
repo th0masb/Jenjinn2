@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.stringutils;
 
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB

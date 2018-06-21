@@ -7,7 +7,7 @@ import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.collections.FlowList;
 
 /**

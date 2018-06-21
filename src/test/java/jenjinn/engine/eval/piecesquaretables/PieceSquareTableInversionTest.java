@@ -3,8 +3,8 @@
  */
 package jenjinn.engine.eval.piecesquaretables;
 
-import static jenjinn.engine.enums.ChessPiece.BLACK_KNIGHT;
-import static jenjinn.engine.enums.ChessPiece.WHITE_KNIGHT;
+import static jenjinn.engine.pieces.ChessPiece.BLACK_KNIGHT;
+import static jenjinn.engine.pieces.ChessPiece.WHITE_KNIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;

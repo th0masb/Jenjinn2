@@ -4,7 +4,7 @@
 package jenjinn.engine.misc;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB

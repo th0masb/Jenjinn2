@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine;
+package jenjinn.engine.pieces;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.misc.PieceLocations;

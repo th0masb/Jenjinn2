@@ -1,11 +1,12 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.pieces;
 
 
-import jenjinn.engine.Moveable;
 import jenjinn.engine.bitboards.Bitboards;
+import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.enums.Side;
 
 
 /**

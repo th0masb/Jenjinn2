@@ -3,10 +3,10 @@
  */
 package jenjinn.engine.eval;
 
-import jenjinn.engine.ChessPieces;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 
 /**
  * This evaluating component measures the material balance on the board as well

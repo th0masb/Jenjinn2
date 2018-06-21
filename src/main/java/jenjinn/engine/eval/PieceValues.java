@@ -5,7 +5,7 @@ package jenjinn.engine.eval;
 
 import java.util.Arrays;
 
-import jenjinn.engine.enums.ChessPiece;
+import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

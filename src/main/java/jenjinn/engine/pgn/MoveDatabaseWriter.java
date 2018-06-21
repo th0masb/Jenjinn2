@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
@@ -45,7 +47,7 @@ public final class MoveDatabaseWriter implements Closeable
 		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath) || !sourceFilePath.toString().endsWith(PGN_EXT)) {
 			throw new IllegalArgumentException();
 		}
-		src = Files.newBufferedReader(sourceFilePath);
+		src = Files.newBufferedReader(sourceFilePath, Charset.forName("ISO-8859-1"));
 		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 	}
 
@@ -142,21 +144,6 @@ public final class MoveDatabaseWriter implements Closeable
 		}
 	}
 
-	public static void main(final String[] args) throws IOException
-	{
-		final Path source = Paths.get("C:", "bin", "messabout", "KIDClassical.pgn");
-		final Path out = Paths.get("C:", "bin", "messabout", "classicalkid.odb");
-
-//		final Consumer<Object> print = System.out::println;
-//
-//		print.accept(Files.exists(source));
-//		print.accept(Files.exists(out));
-
-		try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(source, out)) {
-			writer.writeUniquePositions();
-		}
-	}
-
 	@Override
 	public void close() throws IOException
 	{
@@ -177,6 +164,22 @@ public final class MoveDatabaseWriter implements Closeable
 		@Override
 		public String toString() {
 			return toHexString(positionHash) + compactMoveString.toUpperCase();
+		}
+	}
+
+	public static void main(final String[] args) throws IOException
+	{
+		final Path source = Paths.get("/home", "t", "chesspgns", "FrenchAdvance.pgn");
+		final Path out = Paths.get("/home", "t", "git", "Jenjinn2", "databasefiles", "frenchadvance.odb");
+
+		///home/t/chesspgns /home/t/git/Jenjinn2/databasefiles
+		final Consumer<Object> print = System.out::println;
+
+		print.accept(Files.exists(source));
+		print.accept(Files.exists(out));
+
+		try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(source, out)) {
+			writer.writeUniquePositions();
 		}
 	}
 }

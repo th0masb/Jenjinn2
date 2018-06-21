@@ -161,7 +161,7 @@ public final class PgnMoveBuilder
 			return mv;
 		}
 		else {
-			throw new BadPgnException(moveCommand);
+			throw new BadPgnException(moveCommand); //
 		}
 	}
 

@@ -11,9 +11,9 @@ import static jenjinn.engine.bitboards.Bitboards.rankBitboard;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
+import jenjinn.engine.enums.BoardHasher;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.eval.PawnTable.Entry;
-import jenjinn.engine.utils.ZobristHasher;
 
 /**
  * @author ThomasB
@@ -44,7 +44,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
 		final long wpawns = pieceLocs.locationOverviewOf(ChessPiece.WHITE_PAWN);
 		final long bpawns = pieceLocs.locationOverviewOf(ChessPiece.BLACK_PAWN);
-		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns, pieceLocs.getHashFeatureProvider());
+		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns);
 
 		final PawnTable.Entry cached = cachedEvaluations.get(pawnHash);
 		if (cached == null) {
@@ -74,16 +74,16 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		return score;
 	}
 
-	private long calculatePawnPositionHash(long wpawns, long bpawns, ZobristHasher hashFeatureProvider)
+	private long calculatePawnPositionHash(long wpawns, long bpawns)
 	{
 		final ChessPiece wp = ChessPiece.WHITE_PAWN, bp = ChessPiece.BLACK_PAWN;
 
 		final long whash = BitboardIterator.from(wpawns)
-				.mapToLong(sq -> hashFeatureProvider.getSquarePieceFeature(sq, wp))
+				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, wp))
 				.reduce(0L, (a, b) -> a ^ b);
 
 		final long bhash = BitboardIterator.from(bpawns)
-				.mapToLong(sq -> hashFeatureProvider.getSquarePieceFeature(sq, bp))
+				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, bp))
 				.reduce(0L, (a, b) -> a ^ b);
 
 		return whash ^ bhash;

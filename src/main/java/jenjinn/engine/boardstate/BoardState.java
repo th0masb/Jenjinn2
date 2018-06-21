@@ -6,10 +6,10 @@ package jenjinn.engine.boardstate;
 import java.util.EnumSet;
 import java.util.Set;
 
+import jenjinn.engine.enums.BoardHasher;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
-import jenjinn.engine.utils.ZobristHasher;
 
 /**
  * @author ThomasB
@@ -96,9 +96,8 @@ public final class BoardState
 
 	public long calculateHash()
 	{
-		final ZobristHasher stateHasher = getPieceLocations().getHashFeatureProvider();
 		return getPieceLocations().getSquarePieceFeatureHash()
-				^ stateHasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
+				^ BoardHasher.INSTANCE.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
 	}
 
 	public BoardState copy()

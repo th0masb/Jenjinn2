@@ -23,13 +23,12 @@ import jenjinn.engine.boardstate.CastlingStatus;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.HalfMoveCounter;
 import jenjinn.engine.boardstate.HashCache;
+import jenjinn.engine.enums.BoardHasher;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.utils.DefaultHasher;
-import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.utilities.StringUtils;
@@ -62,8 +61,8 @@ public final class BoardParseUtils
 		final Set<DevelopmentPiece> developedPieces = constructDevelopedPieces(atts.get(6));
 		final Side activeSide = constructActiveSide(atts.get(7));
 		final BoardSquare enpassantSquare = constructEnpassantSquare(atts.get(8));
-		final ZobristHasher hasher = pieceLocations.getHashFeatureProvider();
-		final long hashOfConstructedState = pieceLocations.getSquarePieceFeatureHash() ^ hasher.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
+		final long hashOfConstructedState = pieceLocations.getSquarePieceFeatureHash()
+				^ BoardHasher.INSTANCE.hashNonPieceFeatures(activeSide, enpassantSquare, castlingStatus);
 		final HashCache hashCache = constructDummyHashCache(hashOfConstructedState, totalMoveCount);
 
 		return new BoardState(hashCache, pieceLocations, halfMoveCount, castlingStatus, developedPieces, activeSide, enpassantSquare);
@@ -150,7 +149,7 @@ public final class BoardParseUtils
 				.map(xs -> objMap(String::toUpperCase, xs))
 				.map(xs -> objMap(BoardSquare::valueOf, xs))
 				.mapToLong(BitboardUtils::bitwiseOr)
-				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables, DefaultHasher.get()));
+				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables));
 	}
 
 	//	public static void main(final String[] args) {

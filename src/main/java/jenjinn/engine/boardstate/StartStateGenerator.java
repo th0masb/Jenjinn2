@@ -10,7 +10,6 @@ import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.stringutils.VisualGridGenerator;
-import jenjinn.engine.utils.DefaultHasher;
 
 /**
  * @author ThomasB
@@ -47,8 +46,7 @@ public final class StartStateGenerator
 
 		return new DetailedPieceLocations(startLocs,
 				PieceSquareTables.midgame(),
-				PieceSquareTables.endgame(),
-				DefaultHasher.get());
+				PieceSquareTables.endgame());
 	}
 
 	public static BoardState getStartBoard()

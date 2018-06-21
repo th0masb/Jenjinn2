@@ -8,11 +8,11 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import java.util.List;
 
 import jenjinn.engine.ChessPieces;
+import jenjinn.engine.enums.BoardHasher;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.ChessPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.utils.ZobristHasher;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -24,7 +24,6 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 public final class DetailedPieceLocations
 {
-	private final ZobristHasher hashFeatureProvider;
 	private long squarePieceFeatureHash;
 
 	private final List<LocationTracker> pieceLocations;
@@ -36,8 +35,7 @@ public final class DetailedPieceLocations
 	public DetailedPieceLocations(
 			final List<LocationTracker> pieceLocations,
 			final PieceSquareTables midgameTables,
-			final PieceSquareTables endgameTables,
-			final ZobristHasher hashFeatureProvider)
+			final PieceSquareTables endgameTables)
 	{
 		if (pieceLocations.size() != 12) {
 			throw new IllegalArgumentException();
@@ -49,25 +47,22 @@ public final class DetailedPieceLocations
 		this.endgameTables = endgameTables;
 		this.midgameEval = midgameTables.evaluateLocations(pieceLocations);
 		this.endgameEval = endgameTables.evaluateLocations(pieceLocations);
-		this.hashFeatureProvider = hashFeatureProvider;
-		this.squarePieceFeatureHash = hashFeatureProvider.hashPieceLocations(pieceLocations);
+		this.squarePieceFeatureHash = BoardHasher.INSTANCE.hashPieceLocations(pieceLocations);
 	}
 
 	public DetailedPieceLocations(
 			final long[] pieceLocations,
 			final PieceSquareTables midgameTables,
-			final PieceSquareTables endgameTables,
-			final ZobristHasher hashFeatureProvider)
+			final PieceSquareTables endgameTables)
 	{
 		this (Iterate.over(pieceLocations).mapToObject(LocationTracker::new).toList(),
 				midgameTables,
-				endgameTables,
-				hashFeatureProvider);
+				endgameTables);
 	}
 
 	public void addPieceAt(final BoardSquare location, final ChessPiece pieceToAdd)
 	{
-		squarePieceFeatureHash ^= hashFeatureProvider.getSquarePieceFeature(location, pieceToAdd);
+		squarePieceFeatureHash ^= BoardHasher.INSTANCE.getSquarePieceFeature(location, pieceToAdd);
 		midgameEval += midgameTables.getLocationValue(pieceToAdd, location);
 		endgameEval += endgameTables.getLocationValue(pieceToAdd, location);
 		pieceLocations.get(pieceToAdd.ordinal()).addLoc(location);
@@ -82,7 +77,7 @@ public final class DetailedPieceLocations
 
 	public void removePieceAt(final BoardSquare location, final ChessPiece pieceToRemove)
 	{
-		squarePieceFeatureHash ^= hashFeatureProvider.getSquarePieceFeature(location, pieceToRemove);
+		squarePieceFeatureHash ^= BoardHasher.INSTANCE.getSquarePieceFeature(location, pieceToRemove);
 		midgameEval -= midgameTables.getLocationValue(pieceToRemove, location);
 		endgameEval -= endgameTables.getLocationValue(pieceToRemove, location);
 		pieceLocations.get(pieceToRemove.ordinal()).removeLoc(location);
@@ -171,11 +166,6 @@ public final class DetailedPieceLocations
 		return endgameEval;
 	}
 
-	public ZobristHasher getHashFeatureProvider()
-	{
-		return hashFeatureProvider;
-	}
-
 	public long getSquarePieceFeatureHash()
 	{
 		return squarePieceFeatureHash;
@@ -184,7 +174,7 @@ public final class DetailedPieceLocations
 	public DetailedPieceLocations copy()
 	{
 		final List<LocationTracker> locTrackerCopy = Iterate.over(pieceLocations).map(LocationTracker::copy).toList();
-		return new DetailedPieceLocations(locTrackerCopy, midgameTables, endgameTables, hashFeatureProvider);
+		return new DetailedPieceLocations(locTrackerCopy, midgameTables, endgameTables);
 	}
 
 
@@ -196,7 +186,6 @@ public final class DetailedPieceLocations
 		result = prime * result + (int) (blackLocations ^ (blackLocations >>> 32));
 		result = prime * result + endgameEval;
 		result = prime * result + ((endgameTables == null) ? 0 : endgameTables.hashCode());
-		result = prime * result + ((hashFeatureProvider == null) ? 0 : hashFeatureProvider.hashCode());
 		result = prime * result + midgameEval;
 		result = prime * result + ((midgameTables == null) ? 0 : midgameTables.hashCode());
 		result = prime * result + ((pieceLocations == null) ? 0 : pieceLocations.hashCode());
@@ -222,11 +211,6 @@ public final class DetailedPieceLocations
 			if (other.endgameTables != null)
 				return false;
 		} else if (!endgameTables.equals(other.endgameTables))
-			return false;
-		if (hashFeatureProvider == null) {
-			if (other.hashFeatureProvider != null)
-				return false;
-		} else if (!hashFeatureProvider.equals(other.hashFeatureProvider))
 			return false;
 		if (midgameEval != other.midgameEval)
 			return false;

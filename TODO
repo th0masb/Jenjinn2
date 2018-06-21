@@ -1,1 +1,2 @@
 2/ Need to test static exchange evaluator
+1/ Make PieceValue enum with midgame and endgame instances

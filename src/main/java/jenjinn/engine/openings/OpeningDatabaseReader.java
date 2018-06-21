@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.moves.ChessMove;
@@ -60,9 +62,11 @@ public class OpeningDatabaseReader implements Closeable
 	private Optional<ChessMove> extractMove(String line, long positionHash)
 	{
 		for (final String positionWithMove : getAllMatches(line, ReaderRegex.POS_AND_MOVE)) {
-			final String pos = findFirstMatch(positionWithMove, ReaderRegex.POSITION).orElseThrow(AssertionError::new);
+			final String pos = findFirstMatch(positionWithMove, ReaderRegex.POSITION)
+					.orElseThrow(AssertionError::new);
 			if (Long.parseUnsignedLong(pos, 16) == positionHash) {
-				final String encodedMove = findFirstMatch(positionWithMove, ReaderRegex.MOVE).orElseThrow(AssertionError::new);
+				final String encodedMove = findFirstMatch(positionWithMove, ReaderRegex.MOVE)
+						.orElseThrow(AssertionError::new);
 				return Optional.of(decodeMove(encodedMove));
 			}
 		}
@@ -94,23 +98,15 @@ public class OpeningDatabaseReader implements Closeable
 		src.close();
 	}
 
-//	public static void main(String[] args) throws IOException
-//	{
-//		//127a9aec8d69d3b9 7fd6fc9a72b32560
-//
-////		System.out.println(Long.parseUnsignedLong("127a9aec8d69d3b9", 16));
-////		System.out.println(Long.parseUnsignedLong("7fd6fc9a72b32560", 16));
-//
-//		final BoardState start = StartStateGenerator.getStartBoard();
-////		System.out.println(start.calculateHash());
-//		MoveCache.getMove(BoardSquare.D2, BoardSquare.D4).makeMove(start);
-////		System.out.println(start.calculateHash());
-//
-//		try (OpeningDatabaseReader reader = new OpeningDatabaseReader("classicalkid.odb")) {
-////			System.out.println(start.calculateHash());
-//			System.out.println(reader.searchForMove(start.calculateHash()));
-////			final String s = reader.src.readLine();
-////			System.out.println(getAllMatches(s, ReaderRegex.POS_AND_MOVE));
-//		}
-//	}
+	public static void main(String[] args) throws IOException
+	{
+
+		final BoardState start = StartStateGenerator.getStartBoard();
+		MoveCache.getMove(BoardSquare.D2, BoardSquare.D4).makeMove(start);
+		MoveCache.getMove(BoardSquare.G8, BoardSquare.F6).makeMove(start);
+
+		try (OpeningDatabaseReader reader = new OpeningDatabaseReader("classicalkid.odb")) {
+			System.out.println(reader.searchForMove(start.calculateHash()));
+		}
+	}
 }

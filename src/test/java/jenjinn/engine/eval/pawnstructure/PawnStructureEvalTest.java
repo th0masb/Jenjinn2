@@ -12,11 +12,16 @@ import static jenjinn.engine.eval.PawnStructureEvaluator.evaluateDoubledPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluateIsolatedPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluatePassedPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluatePawnChains;
+import static jenjinn.engine.eval.PawnStructureEvaluator.evaluatePhalanxFormations;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import jenjinn.engine.eval.PawnStructureEvaluator;
 import xawd.jflow.iterators.misc.IntPair;
 
 /**
@@ -42,7 +47,21 @@ class PawnStructureEvalTest
 				- isolatedDifferences.getSecond() * (ISOLATED_PENALTY + SEMIOPEN_FILE_BONUS);
 		assertEquals(expectedEval, evaluateIsolatedPawns(whitePawnLocs, blackPawnLocs));
 
+		final int expectedWhitePhalanxScore = expectedValues
+				.getWhitePhalanxSizes()
+				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
+				.reduce(0, (a, b) -> a + b);
+		assertEquals(expectedWhitePhalanxScore, evaluatePhalanxFormations(whitePawnLocs));
 
+		final int expectedBlackPhalanxScore = expectedValues
+				.getBlackPhalanxSizes()
+				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
+				.reduce(0, (a, b) -> a + b);
+		assertEquals(expectedBlackPhalanxScore, evaluatePhalanxFormations(blackPawnLocs));
 	}
 
+	static Stream<Arguments> test()
+	{
+		throw new RuntimeException();
+	}
 }

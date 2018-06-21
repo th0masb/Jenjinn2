@@ -57,7 +57,7 @@ public final class VisualGridGenerator
 
 	public static String from(final long... bitboards)
 	{
-		return StringifyBoard.formatGrids(Iterate.over(bitboards).mapToObject(TitledVisualGrid::from).toList());
+		return StringifyBoard.formatGrids(Iterate.overLongs(bitboards).mapToObject(TitledVisualGrid::from).toList());
 	}
 
 	public static TitledVisualGrid from(final String title, final PieceLocations locations)

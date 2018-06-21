@@ -55,7 +55,7 @@ public final class DetailedPieceLocations
 			final PieceSquareTables midgameTables,
 			final PieceSquareTables endgameTables)
 	{
-		this (Iterate.over(pieceLocations).mapToObject(LocationTracker::new).toList(),
+		this (Iterate.overLongs(pieceLocations).mapToObject(LocationTracker::new).toList(),
 				midgameTables,
 				endgameTables);
 	}

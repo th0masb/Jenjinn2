@@ -22,7 +22,7 @@ class CordParserTest
 	@MethodSource
 	void test(final String encodedCord, final int[] expectedSquareIndices)
 	{
-		final List<BoardSquare> squares = Iterate.over(expectedSquareIndices).mapToObject(BoardSquare::of).toList();
+		final List<BoardSquare> squares = Iterate.overInts(expectedSquareIndices).mapToObject(BoardSquare::of).toList();
 		assertEquals(squares, CordParser.parse(encodedCord));
 	}
 

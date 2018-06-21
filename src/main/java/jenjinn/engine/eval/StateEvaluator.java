@@ -1,23 +1,33 @@
+/**
+ *
+ */
 package jenjinn.engine.eval;
 
 import jenjinn.engine.boardstate.BoardState;
 import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.Lists;
 
 /**
  * @author ThomasB
  */
-public final class StateEvaluator
+public enum StateEvaluator
 {
+	INSTANCE(10000);
+
 	private final FlowList<EvaluationComponent> components;
 
-	public StateEvaluator(FlowList<EvaluationComponent> components)
+	private StateEvaluator(int pawnTableSize)
 	{
-		this.components = components.flow().toList();
+		components = Lists.of(
+				new DevelopmentEvaluator(),
+				new KingSafetyEvaluator(),
+				new PieceLocationEvaluator(),
+				new PawnStructureEvaluator(pawnTableSize));
 	}
 
-	public int evaluate(final BoardState state)
+	public int evaluate(BoardState state)
 	{
 		final int signedScore = components.mapToInt(c -> c.evaluate(state)).reduce(0, (a, b) -> a + b);
-		return (state.getActiveSide().isWhite()? 1 : -1)*signedScore;
+		return (state.getActiveSide().isWhite() ? 1 : -1) * signedScore;
 	}
 }

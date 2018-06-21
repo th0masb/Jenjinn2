@@ -34,7 +34,7 @@ public final class PgnMoveBuilder
 	/**
 	 * Maps PGN identifiers to piece ordinals mod 6.
 	 */
-	private static final Map<Character, Integer> CHARACTER_PIECE_MAP = Iterate.over('N', 'B', 'R', 'Q', 'K')
+	private static final Map<Character, Integer> CHARACTER_PIECE_MAP = Iterate.overInts('N', 'B', 'R', 'Q', 'K')
 			.zipWith(Iterate.over(ChessPieces.white()).drop(1))
 			.toMap(p -> Character.valueOf((char) p.getInt()), p -> p.getElement().ordinal());
 

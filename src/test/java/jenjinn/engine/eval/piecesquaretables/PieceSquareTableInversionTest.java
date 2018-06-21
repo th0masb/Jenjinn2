@@ -26,7 +26,7 @@ class PieceSquareTableInversionTest
 		final int[] expectedInvertedLocs = IterRange.between(7, -1, -1)
 				.map(i -> 8*i)
 				.mapToObject(i -> IterRange.between(i, i + 8).toArray())
-				.flattenToInts(Iterate::over)
+				.flattenToInts(Iterate::overInts)
 				.toArray();
 
 		final PieceSquareTable expectedInversion = new PieceSquareTable(BLACK_KNIGHT, -500, expectedInvertedLocs);

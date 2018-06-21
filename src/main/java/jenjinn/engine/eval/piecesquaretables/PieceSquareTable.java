@@ -25,7 +25,7 @@ public final class PieceSquareTable
 			throw new IllegalArgumentException();
 		}
 		this.associatedPiece = associatedPiece;
-		this.locationValues = Iterate.over(locationValues).map(n -> n + pieceValue).toArray();
+		this.locationValues = Iterate.overInts(locationValues).map(n -> n + pieceValue).toArray();
 	}
 
 	public ChessPiece getAssociatedPiece()

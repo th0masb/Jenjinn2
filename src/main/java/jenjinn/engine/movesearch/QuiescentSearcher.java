@@ -42,12 +42,10 @@ public final class QuiescentSearcher
 	private static final int BIG_DELTA = head(PIECE_VALUES) + (head(PIECE_VALUES) - tail(PIECE_VALUES));
 	private static final int DP_SAFETY_MARGIN = 20000;
 
-	private final StateEvaluator evaluator;
 	private final StaticExchangeEvaluator see = new StaticExchangeEvaluator();
 
-	public QuiescentSearcher(StateEvaluator evaluator)
+	public QuiescentSearcher()
 	{
-		this.evaluator = evaluator;
 	}
 
 	public int search(BoardState root, int alpha, int beta, int depth)
@@ -76,7 +74,7 @@ public final class QuiescentSearcher
 			movesToProbe = movesToProbe.insert(firstMove.get());
 		}
 		else {
-			final int standPat = evaluator.evaluate(root);
+			final int standPat = StateEvaluator.INSTANCE.evaluate(root);
 
 			if (standPat >= beta) {
 				return beta;

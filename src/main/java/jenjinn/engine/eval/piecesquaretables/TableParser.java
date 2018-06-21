@@ -45,7 +45,7 @@ public final class TableParser
 			final int[] locationValues = Iterate.reverseOver(take(8, lines))
 					.map(line -> getAllMatches(line, NUMBER_PATTERN))
 					.map(matches -> intMap(Integer::parseInt, matches))
-					.flattenToInts(Iterate::reverseOver)
+					.flattenToInts(Iterate::reverseOverInts)
 					.toArray();
 
 			 final int pieceValue = findFirstMatch(tail(lines), POSITIVE_INTEGER)

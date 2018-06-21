@@ -64,12 +64,12 @@ final class BitboardsInitialisationSection2
 
 	static int[] generateRookMagicBitshifts()
 	{
-		return Iterate.over(BitboardsImpl.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.overLongs(BitboardsImpl.ROOK_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	static int[] generateBishopMagicBitshifts()
 	{
-		return Iterate.over(BitboardsImpl.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
+		return Iterate.overLongs(BitboardsImpl.BISHOP_OCCUPANCY_MASKS).mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	/**

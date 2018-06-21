@@ -20,7 +20,7 @@ import jenjinn.engine.parseutils.BoardParseUtils;
 /**
  * @author ThomasB
  */
-public final class TestFileParser {
+final class TestFileParser {
 
 	private static final int STARTING_MOVE_COUNT = 10;
 

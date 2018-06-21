@@ -1,0 +1,16 @@
+// Test castling move generation without already castled + white enpassant available
+
+white_pieces: (b3 f5 f2 g2) (c3) (f3) (a1 h1) (c2) (e1)
+black_pieces: (c6 e5 f7 g7 h7) (b8) (b5 g6) (a8 h8) (c7) (e8)
+half_move_clock: 20
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: b1 c1 d2 e2 f1 g1 c8 d7 e7 f8 g8
+active_side: black
+enpassant_square: f4
+
+s[a8->a1] s[b8->{a6 d7}] s[b5->f1] s[b5->{a6 a4}] s[c6 c5] s[c7->{a5 b6 a7 b7 d7 e7 c8 d8 d6}]
+s[e5 e4] e[e5 f4] s[e8->{d8 d7 e7 f8}] c[bk] s[f7 f6] s[g6->{f5 h5}] s[h7->h5] s[h8->f8]
+---
+s[a8 a1] e[e5 f4] s[g6 f5]

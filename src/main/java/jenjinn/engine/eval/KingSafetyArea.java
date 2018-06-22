@@ -15,7 +15,7 @@ import xawd.jflow.collections.FlowList;
  */
 public final class KingSafetyArea
 {
-	private final long outer, inner, kingLoc;
+	private final long outer, inner, kingLoc, all;
 
 	private KingSafetyArea(BoardSquare src)
 	{
@@ -25,6 +25,7 @@ public final class KingSafetyArea
 		this.outer = BitboardIterator.from(inner)
 				.mapToLong(sq -> emptyBoardAttackset(king, sq))
 				.reduce(0L, (a, b) -> a | b) & ~(kingLoc | inner);
+		this.all = outer | inner | kingLoc;
 	}
 
 	public long getOuterArea()
@@ -42,6 +43,11 @@ public final class KingSafetyArea
 		return kingLoc;
 	}
 
+	public long getTotalArea()
+	{
+		return all;
+	}
+
 	private static final FlowList<KingSafetyArea> CACHE =
 			BoardSquare.iterateAll().map(KingSafetyArea::new).toList();
 
@@ -49,4 +55,10 @@ public final class KingSafetyArea
 	{
 		return CACHE.get(src.ordinal());
 	}
+
+//	public static void main(String[] args)
+//	{
+//		final KingSafetyArea a = get(BoardSquare.G1);
+//		System.out.println(VisualGridGenerator.from(a.outer, a.inner, a.kingLoc, a.all));
+//	}
 }

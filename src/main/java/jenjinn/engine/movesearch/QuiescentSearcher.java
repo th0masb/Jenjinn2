@@ -32,7 +32,7 @@ import xawd.jflow.iterators.factories.IterRange;
  */
 public final class QuiescentSearcher
 {
-	static final int DEPTH_CAP = 15;
+	public static final int DEPTH_CAP = 20;
 
 	static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
 			.mapToObject(i -> new DataForReversingMove()).toImmutableList();
@@ -52,8 +52,12 @@ public final class QuiescentSearcher
 	{
 	}
 
-	public static int search(BoardState root, int alpha, int beta, int depth)
+	public static int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
 	{
+		if (Thread.currentThread().isInterrupted()) {
+			throw new InterruptedException();
+		}
+
 		Flow<ChessMove> movesToProbe = LegalMoves.getMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
 		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());

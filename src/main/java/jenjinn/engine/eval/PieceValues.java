@@ -14,8 +14,8 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 public enum PieceValues
 {
-	MIDGAME(new int[] {100, 295, 310, 500, 900, 0}),
-	ENDGAME(new int[] {100, 295, 310, 500, 900, 0}),
+	MIDGAME(new int[] {100, 310, 320, 480, 910, 0}),
+	ENDGAME(new int[] {120, 270, 340, 550, 940, 0}),
 	TESTING(new int[] {100, 295, 310, 500, 900, 0});
 
 	private final int[] values;

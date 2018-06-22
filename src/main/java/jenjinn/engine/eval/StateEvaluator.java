@@ -12,7 +12,7 @@ import xawd.jflow.collections.Lists;
  */
 public enum StateEvaluator
 {
-	INSTANCE(10000);
+	INSTANCE(10);
 
 	private final FlowList<EvaluationComponent> components;
 

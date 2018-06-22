@@ -34,7 +34,7 @@ import jenjinn.engine.moves.ChessMove;
 public final class MoveDatabaseWriter implements Closeable
 {
 	private static final String PGN_EXT = ".pgn";
-	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 20;
+	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 12;
 
 	private final BufferedReader src;
 	private final BufferedWriter out;
@@ -78,7 +78,7 @@ public final class MoveDatabaseWriter implements Closeable
 	{
 		try {
 			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
-			final BoardState state = StartStateGenerator.getStartBoard();
+			final BoardState state = StartStateGenerator.createStartBoard();
 			for (int i = 0; i < min(GAME_DEPTH_CAP, moves.size()); i++) {
 				final ChessMove ithMove = moves.get(i);
 				final long stateHash = state.calculateHash();

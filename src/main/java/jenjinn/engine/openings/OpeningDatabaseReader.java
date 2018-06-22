@@ -101,7 +101,7 @@ public class OpeningDatabaseReader implements Closeable
 	public static void main(String[] args) throws IOException
 	{
 
-		final BoardState start = StartStateGenerator.getStartBoard();
+		final BoardState start = StartStateGenerator.createStartBoard();
 		MoveCache.getMove(BoardSquare.D2, BoardSquare.D4).makeMove(start);
 		MoveCache.getMove(BoardSquare.G8, BoardSquare.F6).makeMove(start);
 

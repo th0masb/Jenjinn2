@@ -7,7 +7,7 @@ package jenjinn.engine.enums;
  * @author t
  *
  */
-public enum NodeType 
+public enum TreeNodeType 
 {
-	PV, ALL, CUT;
+	PRINCIPLE_VALUE, ALL, CUT;
 }

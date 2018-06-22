@@ -32,7 +32,7 @@ import xawd.jflow.iterators.factories.IterRange;
  */
 public final class QuiescentSearcher
 {
-	static final int DEPTH_CAP = 20;
+	public static final int DEPTH_CAP = 20;
 
 	static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
 			.mapToObject(i -> new DataForReversingMove()).toImmutableList();
@@ -112,7 +112,9 @@ public final class QuiescentSearcher
 			final DataForReversingMove reversingdata = MOVE_REVERSERS.get(depth - 1);
 //			final BoardState cpy = root.copy();
 //			try {
-
+			if (depth == DEPTH_CAP) {
+				System.out.println(nextMove);
+			}
 				nextMove.makeMove(root, reversingdata);
 //			}
 //			catch (final AssertionError err) {

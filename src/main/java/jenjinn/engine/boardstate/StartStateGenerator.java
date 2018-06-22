@@ -49,7 +49,7 @@ public final class StartStateGenerator
 				PieceSquareTables.endgame());
 	}
 
-	public static BoardState getStartBoard()
+	public static BoardState createStartBoard()
 	{
 		return new BoardState(
 				new HashCache(),

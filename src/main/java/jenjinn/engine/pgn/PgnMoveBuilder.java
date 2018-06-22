@@ -44,8 +44,7 @@ public final class PgnMoveBuilder
 	private static final String PIECE = "(N|B|R|Q|K)";
 	private static final String CHECK = "(\\+|#)";
 
-	public static final String KINGSIDE_CASTLE = "(O-O)", QUEENSIDE_CASTLE = "(O-O-O)";
-	public static final String CASTLE_MOVE = "(" + KINGSIDE_CASTLE +"|" + QUEENSIDE_CASTLE + ")";
+	public static final String CASTLE_MOVE = "(O-O(-O)?)";
 	public static final String PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=Q" + ")";
 	public static final String STANDARD_MOVE = "(" + PIECE + "?([a-h]|[1-8]|([a-h][1-8]))?x?" + SQUARE + ")";
 	public static final String MOVE = "(" + STANDARD_MOVE + "|" + PROMOTION_MOVE + "|" + CASTLE_MOVE + ")";
@@ -54,6 +53,15 @@ public final class PgnMoveBuilder
 
 	private PgnMoveBuilder()
 	{
+	}
+
+	public static void main(String[] args)
+	{
+		final String pgn = "1.e4 e6 2.d4 d5 3.e5 c5 4.c3 Nc6 5.Nf3 Qb6 6.a3 c4 7.Nbd2 Na5 8.Rb1 "
+				+ "Bd7 9.g3 Ne7 10.h4 Nb3 11.Nxb3 Ba4 12.Nfd2 Nc6 13.Bh3 Na5 14.O-O Nxb3 "
+				+ "15.Nf3 O-O-O 1-0";
+
+		System.out.println(StringUtils.getAllMatches(pgn, MOVE));
 	}
 
 	public static ChessMove convertPgnCommand(final BoardState currentState, final String moveCommand) throws BadPgnException
@@ -155,7 +163,7 @@ public final class PgnMoveBuilder
 		final String mc = moveCommand;
 		final CastleZone kingSide = state.getActiveSide().isWhite()? CastleZone.WHITE_KINGSIDE : CastleZone.BLACK_KINGSIDE;
 		final CastleZone queenSide = state.getActiveSide().isWhite()? CastleZone.WHITE_QUEENSIDE : CastleZone.BLACK_QUEENSIDE;
-		final ChessMove mv = mc.matches(KINGSIDE_CASTLE)? new CastleMove(kingSide) : new CastleMove(queenSide);
+		final ChessMove mv = mc.matches("O-O")? new CastleMove(kingSide) : new CastleMove(queenSide);
 
 		if (legalMoves.contains(mv)) {
 			return mv;
@@ -163,13 +171,5 @@ public final class PgnMoveBuilder
 		else {
 			throw new BadPgnException(moveCommand); //
 		}
-	}
-
-	public static void main(final String[] args)
-	{
-		System.out.println(StringUtils.getAllMatches("23.Qd3 Rae8 24.Rf2 Rxe3 25.Qxe3 Bd4 26.Qe6+ Qxe6 27.dxe6 Bxf2+ 28.Kxf2 Bd5+", MOVE));
-		System.out.println(StringUtils.getAllMatches("Qd3", PIECE));
-		System.out.println(StringUtils.getAllMatches("Rad3", FILE));
-		System.out.println();
 	}
 }

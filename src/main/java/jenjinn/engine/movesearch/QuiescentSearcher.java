@@ -32,7 +32,7 @@ import xawd.jflow.iterators.factories.IterRange;
  */
 public final class QuiescentSearcher
 {
-	static final int DEPTH_CAP = 15;
+	static final int DEPTH_CAP = 20;
 
 	static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
 			.mapToObject(i -> new DataForReversingMove()).toImmutableList();
@@ -52,8 +52,12 @@ public final class QuiescentSearcher
 	{
 	}
 
-	public static int search(BoardState root, int alpha, int beta, int depth)
+	public static int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
 	{
+		if (Thread.currentThread().isInterrupted()) {
+			throw new InterruptedException();
+		}
+
 		Flow<ChessMove> movesToProbe = LegalMoves.getMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
 		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
@@ -106,7 +110,16 @@ public final class QuiescentSearcher
 		while (movesToProbe.hasNext()) {
 			final ChessMove nextMove = movesToProbe.next();
 			final DataForReversingMove reversingdata = MOVE_REVERSERS.get(depth - 1);
-			nextMove.makeMove(root, reversingdata);
+//			final BoardState cpy = root.copy();
+//			try {
+
+				nextMove.makeMove(root, reversingdata);
+//			}
+//			catch (final AssertionError err) {
+//				System.out.println(nextMove);
+//				System.out.println(VisualGridGenerator.from(cpy.getPieceLocations()));
+//				throw err;
+//			}
 			final int score = -search(root, -beta, -alpha, depth - 1);
 			nextMove.reverseMove(root, reversingdata);
 

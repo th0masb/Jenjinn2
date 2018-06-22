@@ -9,5 +9,5 @@ package jenjinn.engine.enums;
  */
 public enum TreeNodeType 
 {
-	PV, ALL, CUT;
+	PRINCIPLE_VALUE, ALL, CUT;
 }

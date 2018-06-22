@@ -10,26 +10,28 @@ package jenjinn.engine.eval;
 public final class PawnTable
 {
 	private final int size;
+	private final long indexer;
 	private final Entry[] table;
 
 
-	public PawnTable(int size)
+	public PawnTable(int twoPower)
 	{
-		if (size < 0) {
+		if (twoPower < 0) {
 			throw new IllegalArgumentException();
 		}
-		this.size = size;
+		this.size = 1 << twoPower;
+		this.indexer = size - 1;
 		this.table = new Entry[size];
 	}
 
 	Entry get(long hash)
 	{
-		return table[(int) (hash % size)];
+		return table[(int) (hash & indexer)];
 	}
 
 	void set(Entry newEntry)
 	{
-		table[(int) (newEntry.hash % size)] = newEntry;
+		table[(int) (newEntry.hash & indexer)] = newEntry;
 	}
 
 	public static class Entry

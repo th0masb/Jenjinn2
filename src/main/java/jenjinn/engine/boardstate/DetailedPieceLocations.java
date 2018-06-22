@@ -77,6 +77,7 @@ public final class DetailedPieceLocations
 
 	public void removePieceAt(final BoardSquare location, final ChessPiece pieceToRemove)
 	{
+//		assert !pieceToRemove.isKing();
 		squarePieceFeatureHash ^= BoardHasher.INSTANCE.getSquarePieceFeature(location, pieceToRemove);
 		midgameEval -= midgameTables.getLocationValue(pieceToRemove, location);
 		endgameEval -= endgameTables.getLocationValue(pieceToRemove, location);

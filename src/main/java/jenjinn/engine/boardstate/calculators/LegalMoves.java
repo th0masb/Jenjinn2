@@ -61,6 +61,14 @@ public final class LegalMoves
 	static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
+
+//		if (bitboardsIntersect(SquareControl.calculate(state, active), state.getPieceLocations().locationOverviewOf(ChessPieces.king(passive))))
+//		{
+//			System.out.println(state.getActiveSide());
+//			System.out.println(VisualGridGenerator.from(state.getPieceLocations()));
+//			throw new AssertionError();
+//		}
+
 		final long passivePieceLocs = state.getPieceLocations().getSideLocations(passive);
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(active);
 		final ChessPiece activeKing = tail(activePieces);

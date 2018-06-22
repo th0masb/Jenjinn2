@@ -6,6 +6,7 @@ package jenjinn.engine.boardstate.calculators;
 import static java.lang.Math.abs;
 import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.tail;
@@ -73,7 +74,7 @@ public final class LegalMoves
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(active);
 		final ChessPiece activeKing = tail(activePieces);
 		final BoardSquare kingLoc = state.getPieceLocations().iterateLocs(activeKing).next();
-		final long passiveControl = SquareControl.calculate(state, passive);
+		long passiveControl = SquareControl.calculate(state, passive);
 		final PinnedPieceCollection pinnedPieces = PinnedPieces.in(state);
 
 		final boolean inCheck = bitboardsIntersect(passiveControl, kingLoc.asBitboard());
@@ -83,6 +84,9 @@ public final class LegalMoves
 
 		if (inCheck) {
 			final List<PieceSquarePair> attackers = getPassiveAttackersOfActiveKing(state);
+			for (final PieceSquarePair attacker : attackers) {
+				passiveControl |= emptyBoardAttackset(attacker.getPiece(), attacker.getSquare());
+			}
 			if (sizeOf(attackers) > 1) {
 				allowedMoveArea = 0L;
 			} else {
@@ -104,6 +108,7 @@ public final class LegalMoves
 
 		// Add king moves
 		final long kingConstraint = forceAttacks? ~passiveControl & passivePieceLocs : ~passiveControl;
+//		System.out.println(VisualGridGenerator.from(kingConstraint));
 		moves = moves.append(getMovesForKing(state, kingLoc, kingConstraint));
 
 		return moves;

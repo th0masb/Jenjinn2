@@ -1,0 +1,14 @@
+// Checks that xrays 'pass through king' i.e. the king doesn't block ray attacks
+white_pieces: () () (a1) (e3) () (h1)
+black_pieces: () () () () () (c3)
+half_move_clock: 20
+castling_rights:
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: black
+enpassant_square: none
+
+s[c3->{c4 c2 b4 d2}]
+---
+none

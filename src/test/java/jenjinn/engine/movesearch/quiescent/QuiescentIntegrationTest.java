@@ -12,7 +12,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.misc.Infinity;
 import jenjinn.engine.movesearch.QuiescentSearcher;
-import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -27,7 +26,6 @@ class QuiescentIntegrationTest
 	@MethodSource
 	void test(BoardState root, String result)
 	{
-		System.out.println(VisualGridGenerator.from(root.getPieceLocations()));
 		try {
 			final int res = QuiescentSearcher.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
 		}

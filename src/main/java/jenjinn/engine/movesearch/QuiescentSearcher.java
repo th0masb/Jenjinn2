@@ -110,18 +110,7 @@ public final class QuiescentSearcher
 		while (movesToProbe.hasNext()) {
 			final ChessMove nextMove = movesToProbe.next();
 			final DataForReversingMove reversingdata = MOVE_REVERSERS.get(depth - 1);
-//			final BoardState cpy = root.copy();
-//			try {
-			if (depth == DEPTH_CAP) {
-				System.out.println(nextMove);
-			}
-				nextMove.makeMove(root, reversingdata);
-//			}
-//			catch (final AssertionError err) {
-//				System.out.println(nextMove);
-//				System.out.println(VisualGridGenerator.from(cpy.getPieceLocations()));
-//				throw err;
-//			}
+			nextMove.makeMove(root, reversingdata);
 			final int score = -search(root, -beta, -alpha, depth - 1);
 			nextMove.reverseMove(root, reversingdata);
 

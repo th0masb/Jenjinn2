@@ -41,8 +41,8 @@ public final class DetailedPieceLocations
 			throw new IllegalArgumentException();
 		}
 		this.pieceLocations = pieceLocations;
-		this.whiteLocations = Iterate.over(pieceLocations).take(6).mapToLong(x -> x.allLocs()).reduce(0L, (a, b) -> a | b);
-		this.blackLocations = Iterate.over(pieceLocations).drop(6).mapToLong(x -> x.allLocs()).reduce(0L, (a, b) -> a | b);
+		this.whiteLocations = Iterate.over(pieceLocations).take(6).mapToLong(x -> x.allLocs()).fold(0L, (a, b) -> a | b);
+		this.blackLocations = Iterate.over(pieceLocations).drop(6).mapToLong(x -> x.allLocs()).fold(0L, (a, b) -> a | b);
 		this.midgameTables = midgameTables;
 		this.endgameTables = endgameTables;
 		this.midgameEval = midgameTables.evaluateLocations(pieceLocations);

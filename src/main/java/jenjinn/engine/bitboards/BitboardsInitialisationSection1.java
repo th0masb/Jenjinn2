@@ -33,7 +33,7 @@ final class BitboardsInitialisationSection1
 	static long[] generateFileBitboards()
 	{
 		return IterRange.to(8)
-				.mapToLong(i -> IterRange.to(8).mapToLong(j -> (1L << i) << (8*j)).reduce(0L, (a, b) -> a | b))
+				.mapToLong(i -> IterRange.to(8).mapToLong(j -> (1L << i) << (8*j)).fold(0L, (a, b) -> a | b))
 				.toArray();
 	}
 

@@ -27,7 +27,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 	public LocationTracker(final Set<BoardSquare> locations)
 	{
 		locs.addAll(locations);
-		allLocs = iterator().mapToLong(BoardSquare::asBitboard).reduce(0L, (a, b) -> a | b);
+		allLocs = iterator().mapToLong(BoardSquare::asBitboard).fold(0L, (a, b) -> a | b);
 	}
 
 	public LocationTracker(final long locations)

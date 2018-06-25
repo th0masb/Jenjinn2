@@ -37,13 +37,13 @@ class SquareControlTest
 
 		final long expectedWhitecontrol = ChessPieces.iterate().take(6)
 				.mapToLong(expectedControl::get)
-				.reduce(0L, (a, b) -> a | b);
+				.fold(0L, (a, b) -> a | b);
 
 		assertEquals(expectedWhitecontrol, SquareControl.calculate(state, Side.WHITE));
 
 		final long expectedBlackcontrol = ChessPieces.iterate().drop(6)
 				.mapToLong(expectedControl::get)
-				.reduce(0L, (a, b) -> a | b);
+				.fold(0L, (a, b) -> a | b);
 
 		assertEquals(expectedBlackcontrol, SquareControl.calculate(state, Side.BLACK));
 	}

@@ -80,11 +80,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 
 		final long whash = BitboardIterator.from(wpawns)
 				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, wp))
-				.reduce(0L, (a, b) -> a ^ b);
+				.fold(0L, (a, b) -> a ^ b);
 
 		final long bhash = BitboardIterator.from(bpawns)
 				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, bp))
-				.reduce(0L, (a, b) -> a ^ b);
+				.fold(0L, (a, b) -> a ^ b);
 
 		return whash ^ bhash;
 	}

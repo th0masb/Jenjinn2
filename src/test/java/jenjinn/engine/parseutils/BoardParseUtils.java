@@ -138,7 +138,7 @@ public final class BoardParseUtils
 	{
 		/* Arbitrary number of boardsquare separated by whitespace in parentheses */
 		final String groupedSquares = "\\( *([a-h][1-8] *)?( +[a-h][1-8])* *\\)";
-		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquares).reduce(" *", (a, b) -> a + " +" + b);
+		final String sixGroupedSquareSets = IterRange.to(6).mapToObject(i -> groupedSquares).fold(" *", (a, b) -> a + " +" + b);
 
 		assertTrue(whiteLocs.trim().matches("^white_pieces:" + sixGroupedSquareSets + "$"));
 		assertTrue(blackLocs.trim().matches("^black_pieces:" + sixGroupedSquareSets + "$"));

@@ -78,7 +78,7 @@ public enum BoardHasher
 		for (final ChessPiece piece : ChessPieces.all()) {
 			hash ^= pieceLocations.get(piece.ordinal()).iterator()
 					.mapToLong(loc -> getSquarePieceFeature(loc, piece))
-					.reduce(0L, (a, b) -> a ^ b);
+					.fold(0L, (a, b) -> a ^ b);
 		}
 		return hash;
 	}
@@ -87,7 +87,7 @@ public enum BoardHasher
 	{
 		long hash = activeSide.isWhite()? 0L : getBlackToMoveFeature();
 		hash ^= enpassantSquare == null? 0L : getEnpassantFileFeature(enpassantSquare);
-		hash ^= Iterate.over(castlingStatus.getCastlingRights()).mapToLong(this::getCastleRightsFeature).reduce(0L, (a, b) -> a ^ b);
+		hash ^= Iterate.over(castlingStatus.getCastlingRights()).mapToLong(this::getCastleRightsFeature).fold(0L, (a, b) -> a ^ b);
 		return hash;
 	}
 }

@@ -49,7 +49,7 @@ public final class StandardMove extends AbstractChessMove
 					.insert(getSource())
 					.append(getTarget())
 					.mapToLong(BoardSquare::asBitboard)
-					.reduce(0L, (a, b) -> a ^ b);
+					.fold(0L, (a, b) -> a ^ b);
 		}
 		else {
 			return Long.MIN_VALUE;

@@ -72,6 +72,6 @@ class LegalMovesGenerationTest
 		return CycledIteration.of("0")
 				.take(3 - sizeOf(caseString))
 				.append(caseString)
-				.reduce("", (a, b) -> a + b);
+				.fold("", (a, b) -> a + b);
 	}
 }

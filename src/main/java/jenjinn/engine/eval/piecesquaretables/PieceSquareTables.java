@@ -45,7 +45,7 @@ public final class PieceSquareTables
 			final PieceSquareTable pieceTable = tables.get(i);
 			eval += pieceLocations.get(i).iterator()
 					.mapToInt(loc -> pieceTable.getValueAt(loc))
-					.reduce(0, (a, b) -> a + b);
+					.fold(0, (a, b) -> a + b);
 		}
 		return eval;
 	}

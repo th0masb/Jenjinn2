@@ -24,7 +24,7 @@ public final class KingSafetyArea
 		this.inner = emptyBoardAttackset(king, src);
 		this.outer = BitboardIterator.from(inner)
 				.mapToLong(sq -> emptyBoardAttackset(king, sq))
-				.reduce(0L, (a, b) -> a | b) & ~(kingLoc | inner);
+				.fold(0L, (a, b) -> a | b) & ~(kingLoc | inner);
 		this.all = outer | inner | kingLoc;
 	}
 

@@ -96,6 +96,6 @@ public final class TestFileParser
 				.map(String::toUpperCase)
 				.map(BoardSquare::valueOf)
 				.mapToLong(BoardSquare::asBitboard)
-				.reduce(0L, (a, b) -> a | b);
+				.fold(0L, (a, b) -> a | b);
 	}
 }

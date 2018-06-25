@@ -38,7 +38,7 @@ public final class BitboardUtils
 
 	public static long bitwiseOr(final Flow<BoardSquare> args)
 	{
-		return args.mapToLong(BoardSquare::asBitboard).reduce(0L, (a, b) -> a | b);
+		return args.mapToLong(BoardSquare::asBitboard).fold(0L, (a, b) -> a | b);
 	}
 
 //	public static Flow<BoardSquare> iterateSelectedSquares(final long bitboard)

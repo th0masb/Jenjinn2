@@ -27,7 +27,7 @@ public enum StateEvaluator
 
 	public int evaluate(BoardState state)
 	{
-		final int signedScore = components.mapToInt(c -> c.evaluate(state)).reduce(0, (a, b) -> a + b);
+		final int signedScore = components.mapToInt(c -> c.evaluate(state)).fold(0, (a, b) -> a + b);
 		return (state.getActiveSide().isWhite() ? 1 : -1) * signedScore;
 	}
 }

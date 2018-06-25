@@ -50,13 +50,13 @@ class PawnStructureEvalTest
 		final int expectedWhitePhalanxScore = expectedValues
 				.getWhitePhalanxSizes()
 				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
-				.reduce(0, (a, b) -> a + b);
+				.fold(0, (a, b) -> a + b);
 		assertEquals(expectedWhitePhalanxScore, evaluatePhalanxFormations(whitePawnLocs));
 
 		final int expectedBlackPhalanxScore = expectedValues
 				.getBlackPhalanxSizes()
 				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
-				.reduce(0, (a, b) -> a + b);
+				.fold(0, (a, b) -> a + b);
 		assertEquals(expectedBlackPhalanxScore, evaluatePhalanxFormations(blackPawnLocs));
 	}
 

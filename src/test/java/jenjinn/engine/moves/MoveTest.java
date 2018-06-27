@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
 
@@ -28,7 +28,7 @@ class MoveTest extends AbstractBoardStateTest
 	void test(final ChessMove moveToTest, final BoardState startState, final BoardState expected)
 	{
 		final BoardState startCopy = startState.copy();
-		final DataForReversingMove reversalData = new DataForReversingMove();
+		final MoveReversalData reversalData = new MoveReversalData();
 
 		moveToTest.makeMove(startState, reversalData);
 		assertBoardStatesAreEqual(expected, startState);

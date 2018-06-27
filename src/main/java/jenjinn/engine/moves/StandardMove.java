@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
@@ -80,7 +80,7 @@ public final class StandardMove extends AbstractChessMove
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final BoardSquare source = getSource(), target = getTarget();
 		final Side activeSide = state.getActiveSide(), passiveSide = activeSide.otherSide();
@@ -120,7 +120,7 @@ public final class StandardMove extends AbstractChessMove
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		// Reset locations
 		final ChessPiece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());

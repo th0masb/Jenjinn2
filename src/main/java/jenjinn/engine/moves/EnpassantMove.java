@@ -6,7 +6,7 @@ package jenjinn.engine.moves;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
@@ -30,7 +30,7 @@ public final class EnpassantMove extends AbstractChessMove
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
 		final ChessPiece activePawn = ChessPieces.pawn(activeSide);
@@ -48,13 +48,13 @@ public final class EnpassantMove extends AbstractChessMove
 	}
 
 	@Override
-	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateDevelopedPieces(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		unmakeDataStore.setPieceDeveloped(null);
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
 		final ChessPiece activePawn = ChessPieces.pawn(activeSide);

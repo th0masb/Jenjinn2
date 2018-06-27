@@ -15,7 +15,7 @@ import jenjinn.engine.pieces.ChessPiece;
  * @author ThomasB
  *
  */
-public class DataForReversingMove {
+public class MoveReversalData {
 
 	/**
 	 * Populating instance in forward direction sets consumed to false. Using
@@ -33,7 +33,7 @@ public class DataForReversingMove {
 	private long discardedHash;
 	private int discardedHalfMoveClock;
 
-	public DataForReversingMove() {
+	public MoveReversalData() {
 	}
 
 	public boolean isConsumed()

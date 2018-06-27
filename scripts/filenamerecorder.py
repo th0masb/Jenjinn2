@@ -24,3 +24,4 @@ if len(args) == 2:
         print('Two folders must be passed as cmd line args')
 else:
     print('Two folders must be passed as cmd line args')
+

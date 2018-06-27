@@ -6,8 +6,7 @@ package jenjinn.engine.movesearch;
 import java.util.Optional;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
-import jenjinn.engine.boardstate.StartStateGenerator;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.enums.GameTermination;
@@ -15,35 +14,79 @@ import jenjinn.engine.enums.TreeNodeType;
 import jenjinn.engine.misc.Infinity;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TranspositionTable.Entry;
-import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB
- *
  */
-public enum TreeSearcher
+public final class TreeSearcher
 {
-	INSTANCE;
-
 	private final TranspositionTable table = new TranspositionTable(15);
 	private final int maxDepth = 20;
-	private final FlowList<DataForReversingMove> moveReversers =
-			IterRange.to(maxDepth)
-			.mapToObject(i -> new DataForReversingMove()).toList();
+
+	private final FlowList<MoveReversalData> moveReversers = IterRange.to(maxDepth)
+			.mapToObject(i -> new MoveReversalData()).toList();
 
 	private int bestFirstMoveIndex = -1;
 
+	/**
+	 * Given some root state this method heuristically calculates the 'best' move
+	 * that the active side in the root state could take to improve their position.
+	 * Note that in order for the computation to complete in a reasonable amount of
+	 * time the thread running it must be manually interrupted.
+	 *
+	 * @param root
+	 *            The state in which calculate the best move for the active side.
+	 * @return Nothing if there are no legal moves, otherwise the 'best' move
+	 *         available.
+	 */
 	public Optional<ChessMove> getBestMoveFrom(BoardState root)
 	{
 		final Optional<ChessMove> legalMoves = LegalMoves.getMoves(root).safeNext();
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
 			return Optional.empty();
 		}
-		bestFirstMoveIndex = -1;
 
-		throw new RuntimeException();
+		bestFirstMoveIndex = -1;
+		ChessMove bestMove;
+		try {
+			bestMove = getBestMoveFrom(root, 1);
+		} catch (final InterruptedException ex) {
+			throw new AssertionError("More time must be allocated for searching!");
+		}
+
+		for (int targetDepth = 2; targetDepth <= maxDepth; targetDepth++) {
+			try {
+				final ChessMove newBestMove = getBestMoveFrom(root, targetDepth);
+				bestMove = newBestMove;
+			} catch (final InterruptedException e) {
+				Thread.interrupted();
+				break;
+			}
+		}
+		return Optional.of(bestMove);
+	}
+
+	private ChessMove getBestMoveFrom(BoardState root, int depth) throws InterruptedException
+	{
+		final FlowList<ChessMove> legalMoves = LegalMoves.getMoves(root).toImmutableList();
+		final int[] indices = IterRange.to(legalMoves.size()).toArray();
+		changeFirstIndex(indices, bestFirstMoveIndex);
+
+		int alpha = Infinity.IC_ALPHA;
+		for (final int index : indices) {
+			final ChessMove mv = legalMoves.get(index);
+			final MoveReversalData reversalData = moveReversers.get(depth);
+			mv.makeMove(root, reversalData);
+			final int bestReply = -negamax(root, -Infinity.IC_BETA, -alpha, depth - 1);
+			mv.reverseMove(root, reversalData);
+			if (bestReply > alpha) {
+				alpha = bestReply;
+				bestFirstMoveIndex = index;
+			}
+		}
+		return legalMoves.get(bestFirstMoveIndex);
 	}
 
 	private int negamax(BoardState root, int alpha, int beta, int depth) throws InterruptedException
@@ -52,22 +95,12 @@ public enum TreeSearcher
 			throw new InterruptedException();
 		}
 
-		// Check whether this is a terminal node of the game tree.
 		final Optional<ChessMove> firstMove = LegalMoves.getMoves(root).safeNext();
 		final GameTermination termination = TerminationState.of(root, firstMove.isPresent());
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
-		}
-		else if (depth == 0) {
-			BoardState cpy = root.copy();
-			try {
-				return QuiescentSearcher.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
-			}
-			catch (final Throwable t) {
-				System.out.println(cpy.getActiveSide());
-				System.out.println(VisualGridGenerator.from(cpy.getPieceLocations()));
-				throw t;
-			}
+		} else if (depth == 0) {
+			return QuiescentSearcher.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 
 		final long rootHash = root.calculateHash();
@@ -100,11 +133,11 @@ public enum TreeSearcher
 		int bestMoveIndex = -1, refutationMoveIndex = -1;
 		for (final int i : moveIndices) {
 			final ChessMove mv = legalMoves.get(i);
-			final DataForReversingMove reverser = moveReversers.get(depth);
+			final MoveReversalData reverser = moveReversers.get(depth);
 			mv.makeMove(root, reverser);
 			final int bestReply = -negamax(root, -beta, -alpha, depth - 1);
 			mv.reverseMove(root, reverser);
-			bestMoveIndex = bestReply > alpha? i : bestMoveIndex;
+			bestMoveIndex = bestReply > alpha ? i : bestMoveIndex;
 			alpha = Math.max(alpha, bestReply);
 			bestValue = Math.max(bestValue, bestReply);
 			if (alpha >= beta) {
@@ -114,11 +147,9 @@ public enum TreeSearcher
 		}
 		if (bestValue <= alpha) {
 			updateEntryToNewAllEntry(tableEntry, rootHash, bestValue, depth);
-		}
-		else if (bestValue >= beta) {
+		} else if (bestValue >= beta) {
 			updateEntryToNewCutEntry(tableEntry, rootHash, bestValue, refutationMoveIndex, depth);
-		}
-		else{
+		} else {
 			updateEntryToNewPVEntry(tableEntry, rootHash, bestValue, bestMoveIndex, depth);
 		}
 		return Math.min(beta, Math.max(alpha, bestValue));
@@ -136,7 +167,8 @@ public enum TreeSearcher
 		currentEntry.type = TreeNodeType.ALL;
 	}
 
-	private void updateEntryToNewCutEntry(Entry currentEntry, long newHash, int bestValue, int refutationMoveIndex, int depth)
+	private void updateEntryToNewCutEntry(Entry currentEntry, long newHash, int bestValue, int refutationMoveIndex,
+			int depth)
 	{
 		if (currentEntry == null) {
 			currentEntry = new Entry();
@@ -169,10 +201,5 @@ public enum TreeSearcher
 			indices[0] = indices[recommendedMoveIndex];
 			indices[recommendedMoveIndex] = tmp;
 		}
-	}
-
-	public static void main(String[] args) throws InterruptedException
-	{
-		System.out.println(INSTANCE.negamax(StartStateGenerator.createStartBoard(), Infinity.IC_ALPHA, Infinity.IC_BETA, 6));
 	}
 }

@@ -8,7 +8,7 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import java.util.Optional;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.SquareControl;
@@ -34,8 +34,8 @@ public final class QuiescentSearcher
 {
 	public static final int DEPTH_CAP = 20;
 
-	static final FlowList<DataForReversingMove> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
-			.mapToObject(i -> new DataForReversingMove()).toImmutableList();
+	static final FlowList<MoveReversalData> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
+			.mapToObject(i -> new MoveReversalData()).toImmutableList();
 
 	static final int DP_SAFETY_MARGIN = 200;
 
@@ -109,7 +109,7 @@ public final class QuiescentSearcher
 
 		while (movesToProbe.hasNext()) {
 			final ChessMove nextMove = movesToProbe.next();
-			final DataForReversingMove reversingdata = MOVE_REVERSERS.get(depth - 1);
+			final MoveReversalData reversingdata = MOVE_REVERSERS.get(depth - 1);
 			nextMove.makeMove(root, reversingdata);
 			final int score = -search(root, -beta, -alpha, depth - 1);
 			nextMove.reverseMove(root, reversingdata);

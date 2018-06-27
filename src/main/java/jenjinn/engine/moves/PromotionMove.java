@@ -6,7 +6,7 @@ package jenjinn.engine.moves;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
@@ -25,7 +25,7 @@ public final class PromotionMove extends AbstractChessMove
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
 		state.getPieceLocations().removePieceAt(getSource(), activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN);
@@ -47,7 +47,7 @@ public final class PromotionMove extends AbstractChessMove
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
 		state.getPieceLocations().removePieceAt(getTarget(), activeSide.isWhite()? ChessPiece.WHITE_QUEEN : ChessPiece.BLACK_QUEEN);

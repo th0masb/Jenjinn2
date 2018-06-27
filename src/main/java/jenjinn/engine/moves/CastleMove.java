@@ -9,7 +9,7 @@ import static jenjinn.engine.moves.MoveConstants.WHITE_CASTLE_REMOVALS;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
@@ -33,13 +33,13 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
-	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateDevelopedPieces(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		unmakeDataStore.setPieceDeveloped(null);
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side currentActiveSide = state.getActiveSide();
 		final boolean whiteActive = currentActiveSide.isWhite();
@@ -63,21 +63,21 @@ public final class CastleMove extends AbstractChessMove
 	}
 
 	@Override
-	void updateCastlingStatus(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateCastlingStatus(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		super.updateCastlingStatus(state, unmakeDataStore);
 		state.getCastlingStatus().setCastlingStatus(wrappedZone);
 	}
 
 	@Override
-	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	public void reverseMove(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		super.reverseMove(state, unmakeDataStore);
 		state.getCastlingStatus().removeCastlingStatus(wrappedZone);
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final boolean whiteActive = state.getActiveSide().isWhite();
 		final ChessPiece king = whiteActive ? ChessPiece.WHITE_KING : ChessPiece.BLACK_KING;

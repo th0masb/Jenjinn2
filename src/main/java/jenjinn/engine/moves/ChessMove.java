@@ -9,7 +9,7 @@ import static xawd.jflow.utilities.CollectionUtil.tail;
 import java.util.List;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import xawd.jflow.utilities.StringUtils;
@@ -28,28 +28,28 @@ public interface ChessMove
 	/**
 	 * Mutate the state of the parameter {@linkplain BoardState} according to this
 	 * move. Store required data for reversing this move in the parameter
-	 * {@linkplain DataForReversingMove} instance. Upon mutation of the state of the
+	 * {@linkplain MoveReversalData} instance. Upon mutation of the state of the
 	 * board in this forward direction a {@linkplain ChessMove} <b>must update
-	 * all</b> the parameters in the {@linkplain DataForReversingMove} instance.
+	 * all</b> the parameters in the {@linkplain MoveReversalData} instance.
 	 *
 	 * @param state
 	 * @param unmakeDataStore
 	 */
-	void makeMove(BoardState state, DataForReversingMove unmakeDataStore);
+	void makeMove(BoardState state, MoveReversalData unmakeDataStore);
 
 	default void makeMove(final BoardState state)
 	{
-		makeMove(state, new DataForReversingMove());
+		makeMove(state, new MoveReversalData());
 	}
 
 	/**
-	 * Using the supplied {@linkplain DataForReversingMove} to mutate the state of
+	 * Using the supplied {@linkplain MoveReversalData} to mutate the state of
 	 * the parameter {@linkplain BoardState} instance to reverse this move.
 	 *
 	 * @param state
 	 * @param unmakeDataStore
 	 */
-	void reverseMove(BoardState state, DataForReversingMove unmakeDataStore);
+	void reverseMove(BoardState state, MoveReversalData unmakeDataStore);
 
 	/**
 	 * @param repr

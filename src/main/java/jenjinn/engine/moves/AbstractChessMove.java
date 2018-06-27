@@ -7,7 +7,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.DataForReversingMove;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
@@ -28,7 +28,7 @@ public abstract class AbstractChessMove implements ChessMove
 	}
 
 	@Override
-	public void makeMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	public void makeMove(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		assert unmakeDataStore.isConsumed();
 		updateCastlingStatus(state, unmakeDataStore);
@@ -39,7 +39,7 @@ public abstract class AbstractChessMove implements ChessMove
 		unmakeDataStore.setConsumed(false);
 	}
 
-	void updateCastlingStatus(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateCastlingStatus(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		if (state.getCastlingStatus().getCastlingRights().size() > 0) {
 			final Set<CastleZone> toBeRemoved = getAllRightsToBeRemoved();
@@ -55,9 +55,9 @@ public abstract class AbstractChessMove implements ChessMove
 
 	/**
 	 * Responsible for updating the set of {@linkplain DevelopmentPiece} field in the parameter {@linkplain BoardState}
-	 * and updating the pieceDeveloped field in the {@linkplain DataForReversingMove} parameter.
+	 * and updating the pieceDeveloped field in the {@linkplain MoveReversalData} parameter.
 	 */
-	void updateDevelopedPieces(final BoardState state, final DataForReversingMove unmakeDataStore)
+	void updateDevelopedPieces(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Set<DevelopmentPiece> developedPieces = state.getDevelopedPieces();
 		unmakeDataStore.setPieceDeveloped(null);
@@ -84,12 +84,12 @@ public abstract class AbstractChessMove implements ChessMove
 	/**
 	 * Responsible for updating the {@linkplain DetailedPieceLocations} field in the parameter {@linkplain BoardState},
 	 * the enpassant square and also the half move clock. This means that it is responsible for updating the discardedPiece,
-	 * discardedEnpassantSquare, discardedHalfMoveClock fields in the {@linkplain DataForReversingMove} parameter too.
+	 * discardedEnpassantSquare, discardedHalfMoveClock fields in the {@linkplain MoveReversalData} parameter too.
 	 */
-	abstract void updatePieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore);
+	abstract void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore);
 
 	@Override
-	public void reverseMove(final BoardState state, final DataForReversingMove unmakeDataStore)
+	public void reverseMove(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		assert !unmakeDataStore.isConsumed();
 		state.switchActiveSide();
@@ -102,7 +102,7 @@ public abstract class AbstractChessMove implements ChessMove
 		unmakeDataStore.setConsumed(true);
 	}
 
-	abstract void resetPieceLocations(final BoardState state, final DataForReversingMove unmakeDataStore);
+	abstract void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore);
 
 
 	@Override

@@ -21,9 +21,9 @@ public enum KingSafetyTable
 			500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500,
 			500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500 };
 
-	private final int[] outerUnits = {0, 1, 1, 2, 2, 0};
-	private final int[] innerUnits = {0, 2, 2, 4, 5, 0};
-	private final int[] checkUnits = {0, 2, 3, 8, 12, 0};
+	private final int[] outerUnits = {0, 1, 1, 3, 3, 0};
+	private final int[] innerUnits = {0, 2, 2, 6, 8, 0};
+//	private final int[] checkUnits = {0, 2, 3, 8, 12, 0};
 
 	private KingSafetyTable(double scale)
 	{
@@ -40,10 +40,10 @@ public enum KingSafetyTable
 		return innerUnits[piece.ordinal() % 6];
 	}
 
-	public int getCheckUnitValue(ChessPiece piece)
-	{
-		return checkUnits[piece.ordinal() % 6];
-	}
+//	public int getCheckUnitValue(ChessPiece piece)
+//	{
+//		return checkUnits[piece.ordinal() % 6];
+//	}
 
 	public int indexSafetyTable(int indexValue)
 	{

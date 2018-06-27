@@ -43,7 +43,7 @@ public final class KingSafetyEvaluator implements EvaluationComponent
 				final long control = piece.getSquaresOfControl(locs.next(), white, black);
 				bAttackUnits += bitCount(control & wSafetyArea.getOuterArea()) * kst.getOuterUnitValue(piece);
 				bAttackUnits += bitCount(control & wSafetyArea.getInnerArea()) * kst.getInnerUnitValue(piece);
-				bAttackUnits += bitCount(control & wSafetyArea.getCheckArea()) * kst.getCheckUnitValue(piece);
+//				bAttackUnits += bitCount(control & wSafetyArea.getCheckArea()) * kst.getCheckUnitValue(piece);
 			}
 		}
 
@@ -57,7 +57,7 @@ public final class KingSafetyEvaluator implements EvaluationComponent
 				final long control = piece.getSquaresOfControl(locs.next(), white, black);
 				wAttackUnits += bitCount(control & bSafetyArea.getOuterArea()) * kst.getOuterUnitValue(piece);
 				wAttackUnits += bitCount(control & bSafetyArea.getInnerArea()) * kst.getInnerUnitValue(piece);
-				wAttackUnits += bitCount(control & bSafetyArea.getCheckArea()) * kst.getCheckUnitValue(piece);
+//				wAttackUnits += bitCount(control & bSafetyArea.getCheckArea()) * kst.getCheckUnitValue(piece);
 			}
 		}
 

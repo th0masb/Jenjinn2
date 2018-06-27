@@ -10,15 +10,13 @@ import xawd.jflow.collections.Lists;
 /**
  * @author ThomasB
  */
-public enum StateEvaluator
+public class StateEvaluator
 {
-	INSTANCE(10);
-
 	private final FlowList<EvaluationComponent> components;
 
-	private StateEvaluator(int pawnTableSize)
+	public StateEvaluator(int pawnTableSize)
 	{
-		components = Lists.of(
+		components = Lists.build(
 				new DevelopmentEvaluator(),
 				new KingSafetyEvaluator(),
 				new PieceLocationEvaluator(),

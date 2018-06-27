@@ -22,6 +22,7 @@ import xawd.jflow.iterators.factories.IterRange;
  */
 public final class TreeSearcher
 {
+	private final QuiescentSearcher quiescent = new QuiescentSearcher();
 	private final TranspositionTable table = new TranspositionTable(15);
 	private final int maxDepth = 20;
 
@@ -100,7 +101,7 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			return QuiescentSearcher.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
+			return quiescent.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 
 		final long rootHash = root.calculateHash();

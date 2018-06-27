@@ -8,8 +8,8 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import java.util.Optional;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
+import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.boardstate.calculators.TerminationState;
@@ -34,25 +34,18 @@ public final class QuiescentSearcher
 {
 	public static final int DEPTH_CAP = 20;
 
-	static final FlowList<MoveReversalData> MOVE_REVERSERS = IterRange.to(DEPTH_CAP)
+	private final FlowList<MoveReversalData> moveReversers = IterRange.to(DEPTH_CAP)
 			.mapToObject(i -> new MoveReversalData()).toImmutableList();
 
-	static final int DP_SAFETY_MARGIN = 200;
+	private final int deltaPruneSafetyMargin = 200;
+	private final int bigDelta = calculateBigDelta();
+	private final StateEvaluator evaluator = new StateEvaluator(10);
 
-	static final int BIG_DELTA = calculateBigDelta();
-
-	private static int calculateBigDelta()
-	{
-		final int leastValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_PAWN);
-		final int mostValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_QUEEN);
-		return 2 * mostValuable - leastValuable;
-	}
-
-	private QuiescentSearcher()
+	public QuiescentSearcher()
 	{
 	}
 
-	public static int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
+	public int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
 	{
 		if (Thread.currentThread().isInterrupted()) {
 			throw new InterruptedException();
@@ -82,7 +75,7 @@ public final class QuiescentSearcher
 			}
 			movesToProbe = movesToProbe.insert(firstMove.get());
 		} else {
-			final int standPat = StateEvaluator.INSTANCE.evaluate(root);
+			final int standPat = evaluator.evaluate(root);
 
 			if (standPat >= beta) {
 				return beta;
@@ -94,7 +87,7 @@ public final class QuiescentSearcher
 				return Math.max(alpha, standPat);
 			}
 
-			if (standPat < alpha - BIG_DELTA) {
+			if (standPat < alpha - bigDelta) {
 				/*
 				 * We return here if there is no way we can raise alpha by taking enemy
 				 * material.
@@ -109,7 +102,7 @@ public final class QuiescentSearcher
 
 		while (movesToProbe.hasNext()) {
 			final ChessMove nextMove = movesToProbe.next();
-			final MoveReversalData reversingdata = MOVE_REVERSERS.get(depth - 1);
+			final MoveReversalData reversingdata = moveReversers.get(depth - 1);
 			nextMove.makeMove(root, reversingdata);
 			final int score = -search(root, -beta, -alpha, depth - 1);
 			nextMove.reverseMove(root, reversingdata);
@@ -123,17 +116,24 @@ public final class QuiescentSearcher
 		return alpha;
 	}
 
-	private static boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
+	private boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
 	{
 		if (move instanceof EnpassantMove
-				&& standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + DP_SAFETY_MARGIN)) {
+				&& standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + deltaPruneSafetyMargin)) {
 			return true;
 		} else {
 			final Side active = root.getActiveSide(), passive = active.otherSide();
 			final BoardSquare source = move.getSource(), target = move.getTarget();
 			final int targVal = PieceValues.MIDGAME.valueOf(root.getPieceLocations().getPieceAt(target, passive));
-			return standPat >= alpha - (targVal + DP_SAFETY_MARGIN)
+			return standPat >= alpha - (targVal + deltaPruneSafetyMargin)
 					&& StaticExchangeEvaluator.INSTANCE.isGoodExchange(target, source, root);
 		}
+	}
+
+	private int calculateBigDelta()
+	{
+		final int leastValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_PAWN);
+		final int mostValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_QUEEN);
+		return 2 * mostValuable - leastValuable;
 	}
 }

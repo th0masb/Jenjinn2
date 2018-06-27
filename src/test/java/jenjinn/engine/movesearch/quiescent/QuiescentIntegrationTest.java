@@ -26,8 +26,10 @@ class QuiescentIntegrationTest
 	@MethodSource
 	void test(BoardState root, String result)
 	{
+		final QuiescentSearcher quiescent = new QuiescentSearcher();
 		try {
-			final int res = QuiescentSearcher.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
+			@SuppressWarnings("unused")
+			final int res = quiescent.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 		catch (final Throwable t) {
 			t.printStackTrace();

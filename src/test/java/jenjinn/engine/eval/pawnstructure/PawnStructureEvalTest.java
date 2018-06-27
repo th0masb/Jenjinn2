@@ -33,35 +33,37 @@ class PawnStructureEvalTest
 	@MethodSource
 	void test(Long whitePawnLocs, Long blackPawnLocs, ExpectedValues expectedValues)
 	{
+		final long w = whitePawnLocs, b = blackPawnLocs;
+		//		System.out.println(VisualGridGenerator.from(w, b));
 		final int doubledDifference = expectedValues.getDoubledPawnCountDifference();
-		assertEquals(-doubledDifference*DOUBLED_PENALTY, evaluateDoubledPawns(whitePawnLocs, blackPawnLocs));
+		assertEquals(-doubledDifference*DOUBLED_PENALTY, evaluateDoubledPawns(w, b));
 
 		final int passedDifference = expectedValues.getPassedPawnCountDifference();
-		assertEquals(passedDifference*PASSED_BONUS, evaluatePassedPawns(whitePawnLocs, blackPawnLocs));
+		assertEquals(passedDifference*PASSED_BONUS, evaluatePassedPawns(w, b));
 
 		final int chainLinkDifference = expectedValues.getChainLinkCountDifference();
-		assertEquals(chainLinkDifference*CHAIN_BONUS, evaluatePawnChains(whitePawnLocs, blackPawnLocs));
+		assertEquals(chainLinkDifference*CHAIN_BONUS, evaluatePawnChains(w, b));
 
 		final IntPair isolatedDifferences = expectedValues.getIsolatedPawnCountDifferences();
 		final int expectedEval = -isolatedDifferences.getFirst() * ISOLATED_PENALTY
 				- isolatedDifferences.getSecond() * (ISOLATED_PENALTY + SEMIOPEN_FILE_BONUS);
-		assertEquals(expectedEval, evaluateIsolatedPawns(whitePawnLocs, blackPawnLocs));
+		assertEquals(expectedEval, evaluateIsolatedPawns(w, b));
 
 		final int expectedWhitePhalanxScore = expectedValues
 				.getWhitePhalanxSizes()
 				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
-				.fold(0, (a, b) -> a + b);
-		assertEquals(expectedWhitePhalanxScore, evaluatePhalanxFormations(whitePawnLocs));
+				.fold(0, (x, y) -> x + y);
+		assertEquals(expectedWhitePhalanxScore, evaluatePhalanxFormations(w));
 
 		final int expectedBlackPhalanxScore = expectedValues
 				.getBlackPhalanxSizes()
 				.mapToInt(i -> PawnStructureEvaluator.PHALANX_BONUSES[i])
-				.fold(0, (a, b) -> a + b);
-		assertEquals(expectedBlackPhalanxScore, evaluatePhalanxFormations(blackPawnLocs));
+				.fold(0, (x, y) -> x + y);
+		assertEquals(expectedBlackPhalanxScore, evaluatePhalanxFormations(b));
 	}
 
 	static Stream<Arguments> test()
 	{
-		throw new RuntimeException();
+		return Stream.of("case001").map(TestFileParser::parse);
 	}
 }

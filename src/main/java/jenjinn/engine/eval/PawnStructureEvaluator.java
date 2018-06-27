@@ -21,15 +21,15 @@ import jenjinn.engine.pieces.ChessPiece;
  */
 public final class PawnStructureEvaluator implements EvaluationComponent
 {
-	public static final int SEMIOPEN_FILE_BONUS = 300;
+	public static final int SEMIOPEN_FILE_BONUS = 10;
 
-	public static final int CHAIN_BONUS = 100;
-	public static final int PASSED_BONUS = 800;
+	public static final int CHAIN_BONUS = 10;
+	public static final int PASSED_BONUS = 150;
 	public static final int[] PHALANX_BONUSES = {0, 0, 700, 500, 50, 0, 0, 0, 0};
 
-	public static final int DOUBLED_PENALTY = 700;
-	public static final int ISOLATED_PENALTY = 600;
-	public static final int BACKWARD_PENALTY = 500;
+	public static final int DOUBLED_PENALTY = 70;
+	public static final int ISOLATED_PENALTY = 55;
+	public static final int BACKWARD_PENALTY = 50;
 
 	private final PawnTable cachedEvaluations;
 
@@ -211,40 +211,43 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 			final long file = fileBitboard(i);
 			final long adjacentFiles = getAdjacentFiles(i) | file;
 
-			final long wfile = wpawns & file;
-			if (bitCount(wfile) > 0) {
-				long remainingRanksToPromotion = rankBitboard(7);
-				for (int j = 6; j > 0; j--) {
-					final long rank = rankBitboard(j);
-					if (!bitboardsIntersect(rank, wfile)) {
-						remainingRanksToPromotion |= rank;
-					}
-					else {
-						break;
-					}
+			final long wfile = wpawns & file, badj = bpawns & adjacentFiles;
+			final int wFileCount = bitCount(wfile), bAdjCount = bitCount(badj);
+			if (wFileCount > 0) {
+				if (bAdjCount == 0) {
+					score += wFileCount * PASSED_BONUS;
 				}
-				if (!bitboardsIntersect(adjacentFiles & remainingRanksToPromotion, bpawns)) {
-					score += PASSED_BONUS;
+				else {
+					for (int rankIndex = 7; rankIndex > 1; rankIndex--) {
+						final long workingRank = rankBitboard(rankIndex);
+						if (bitboardsIntersect(workingRank, wfile)) {
+							score += PASSED_BONUS;
+						}
+						if (bitboardsIntersect(workingRank, badj)) {
+							break;
+						}
+					}
 				}
 			}
-			final long bfile = bpawns & file;
-			if (bitCount(bfile) > 0) {
-				long remainingRanksToPromotion = rankBitboard(0);
-				for (int j = 1; j < 7; j++) {
-					final long rank = rankBitboard(j);
-					if (!bitboardsIntersect(rank, bfile)) {
-						remainingRanksToPromotion |= rank;
-					}
-					else {
-						break;
-					}
+			final long bfile = bpawns & file, wadj = wpawns & adjacentFiles;
+			final int bFileCount = bitCount(bfile), wAdjCount = bitCount(wadj);
+			if (bFileCount > 0) {
+				if (wAdjCount == 0) {
+					score -= bFileCount * PASSED_BONUS;
 				}
-				if (!bitboardsIntersect(adjacentFiles & remainingRanksToPromotion, wpawns)) {
-					score -= PASSED_BONUS;
+				else {
+					for (int rankIndex = 1; rankIndex < 7; rankIndex++) {
+						final long workingRank = rankBitboard(rankIndex);
+						if (bitboardsIntersect(workingRank, bfile)) {
+							score -= PASSED_BONUS;
+						}
+						if (bitboardsIntersect(workingRank, wadj)) {
+							break;
+						}
+					}
 				}
 			}
 		}
-
 		return score;
 	}
 

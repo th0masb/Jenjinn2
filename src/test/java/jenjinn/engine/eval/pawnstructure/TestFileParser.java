@@ -31,9 +31,9 @@ public final class TestFileParser
 	{
 		final Class<?> cls = TestFileParser.class;
 		final List<String> lines = FileUtils.loadResourceFromPackageOf(cls, filename)
-		.map(String::trim)
-		.filter(s -> !(s.isEmpty() || s.startsWith("//")))
-		.collect(toList());
+				.map(String::trim)
+				.filter(s -> !(s.isEmpty() || s.startsWith("//")))
+				.collect(toList());
 
 		if (lines.size() == 8) {
 			final String encodedWhiteLocs = head(lines), encodedBlackLocs = lines.get(1);
@@ -43,17 +43,19 @@ public final class TestFileParser
 			final IntPair doubledPawnCounts = decodeIntegerPair(lines.get(2));
 			final IntPair passedPawnCounts = decodeIntegerPair(lines.get(3));
 			final IntPair chainLinkCounts = decodeIntegerPair(lines.get(4));
-			final FlowList<Integer> isolatedPawnCounts = decodeIntegerSequence(lines.get(5));
+			final IntPair backwardCounts = decodeIntegerPair(lines.get(5));
+			final FlowList<Integer> isolatedPawnCounts = decodeIntegerSequence(lines.get(6));
 
 			final ExpectedValues expected = new ExpectedValues(
 					doubledPawnCounts.getFirst() - doubledPawnCounts.getSecond(),
 					passedPawnCounts.getFirst() - passedPawnCounts.getSecond(),
 					chainLinkCounts.getFirst() - chainLinkCounts.getSecond(),
+					backwardCounts.getFirst() - backwardCounts.getSecond(),
 					IntPair.of(
 							isolatedPawnCounts.get(0) - isolatedPawnCounts.get(2),
 							isolatedPawnCounts.get(1) - isolatedPawnCounts.get(3)),
-					decodeIntegerSequence(lines.get(6)),
-					decodeIntegerSequence(lines.get(7)));
+					decodeIntegerSequence(lines.get(7)),
+					decodeIntegerSequence(lines.get(8)));
 
 			return Arguments.of(whiteLocs, blackLocs, expected);
 		}

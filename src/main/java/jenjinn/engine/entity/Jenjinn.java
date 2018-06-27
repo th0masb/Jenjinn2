@@ -13,7 +13,6 @@ import java.util.Optional;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TreeSearcher;
-import jenjinn.engine.openings.OpeningDatabaseReader;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.collections.impl.FlowArrayList;
 

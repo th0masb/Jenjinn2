@@ -3,11 +3,13 @@
  */
 package jenjinn.engine.eval.pawnstructure;
 
+import static jenjinn.engine.eval.PawnStructureEvaluator.BACKWARD_PENALTY;
 import static jenjinn.engine.eval.PawnStructureEvaluator.CHAIN_BONUS;
 import static jenjinn.engine.eval.PawnStructureEvaluator.DOUBLED_PENALTY;
 import static jenjinn.engine.eval.PawnStructureEvaluator.ISOLATED_PENALTY;
 import static jenjinn.engine.eval.PawnStructureEvaluator.PASSED_BONUS;
 import static jenjinn.engine.eval.PawnStructureEvaluator.SEMIOPEN_FILE_BONUS;
+import static jenjinn.engine.eval.PawnStructureEvaluator.evaluateBackwardPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluateDoubledPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluateIsolatedPawns;
 import static jenjinn.engine.eval.PawnStructureEvaluator.evaluatePassedPawns;
@@ -34,7 +36,6 @@ class PawnStructureEvalTest
 	void test(Long whitePawnLocs, Long blackPawnLocs, ExpectedValues expectedValues)
 	{
 		final long w = whitePawnLocs, b = blackPawnLocs;
-		//		System.out.println(VisualGridGenerator.from(w, b));
 		final int doubledDifference = expectedValues.getDoubledPawnCountDifference();
 		assertEquals(-doubledDifference*DOUBLED_PENALTY, evaluateDoubledPawns(w, b));
 
@@ -43,6 +44,9 @@ class PawnStructureEvalTest
 
 		final int chainLinkDifference = expectedValues.getChainLinkCountDifference();
 		assertEquals(chainLinkDifference*CHAIN_BONUS, evaluatePawnChains(w, b));
+
+		final int backwardCountDifference = expectedValues.getBackwardCountDifference();
+		assertEquals(-backwardCountDifference*BACKWARD_PENALTY, evaluateBackwardPawns(w, b));
 
 		final IntPair isolatedDifferences = expectedValues.getIsolatedPawnCountDifferences();
 		final int expectedEval = -isolatedDifferences.getFirst() * ISOLATED_PENALTY
@@ -64,6 +68,6 @@ class PawnStructureEvalTest
 
 	static Stream<Arguments> test()
 	{
-		return Stream.of("case001").map(TestFileParser::parse);
+		return Stream.of("case001", "case002").map(TestFileParser::parse);
 	}
 }

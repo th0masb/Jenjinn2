@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.openings;
+package jenjinn.engine.entity;
 
 /**
  * @author ThomasB

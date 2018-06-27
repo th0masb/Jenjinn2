@@ -25,11 +25,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 
 	public static final int CHAIN_BONUS = 10;
 	public static final int PASSED_BONUS = 150;
-	public static final int[] PHALANX_BONUSES = {0, 0, 700, 500, 50, 0, 0, 0, 0};
+	public static final int[] PHALANX_BONUSES = {0, 0, 70, 50, 50, 0, 0, 0, 0};
 
-	public static final int DOUBLED_PENALTY = 70;
+	public static final int DOUBLED_PENALTY = 55;
 	public static final int ISOLATED_PENALTY = 55;
-	public static final int BACKWARD_PENALTY = 50;
+	public static final int BACKWARD_PENALTY = 20;
 
 	private final PawnTable cachedEvaluations;
 
@@ -283,11 +283,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		for (int i = 0; i < 8; i++) {
 			final long file = fileBitboard(i);
 			if (bitboardsIntersect(wIsolated, 1L << i)) {
-				final boolean semiOpen = bitboardsIntersect(file, bpawns);
+				final boolean semiOpen = !bitboardsIntersect(file, bpawns);
 				score -= bitCount(wpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
 			if (bitboardsIntersect(bIsolated, 1L << i)) {
-				final boolean semiOpen = bitboardsIntersect(file, wpawns);
+				final boolean semiOpen = !bitboardsIntersect(file, wpawns);
 				score += bitCount(bpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
 		}

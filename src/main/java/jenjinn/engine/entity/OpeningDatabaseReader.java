@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.openings;
+package jenjinn.engine.entity;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;

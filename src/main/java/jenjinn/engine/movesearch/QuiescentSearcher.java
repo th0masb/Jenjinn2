@@ -40,6 +40,7 @@ public final class QuiescentSearcher
 	private final int deltaPruneSafetyMargin = 200;
 	private final int bigDelta = calculateBigDelta();
 	private final StateEvaluator evaluator = new StateEvaluator(10);
+	private final StaticExchangeEvaluator see = new StaticExchangeEvaluator();
 
 	public QuiescentSearcher()
 	{
@@ -125,8 +126,7 @@ public final class QuiescentSearcher
 			final Side active = root.getActiveSide(), passive = active.otherSide();
 			final BoardSquare source = move.getSource(), target = move.getTarget();
 			final int targVal = PieceValues.MIDGAME.valueOf(root.getPieceLocations().getPieceAt(target, passive));
-			return standPat >= alpha - (targVal + deltaPruneSafetyMargin)
-					&& StaticExchangeEvaluator.INSTANCE.isGoodExchange(target, source, root);
+			return standPat >= alpha - (targVal + deltaPruneSafetyMargin) && see.isGoodExchange(source, target, root);
 		}
 	}
 

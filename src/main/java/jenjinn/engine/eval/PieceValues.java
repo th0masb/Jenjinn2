@@ -10,7 +10,6 @@ import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
- *
  */
 public enum PieceValues
 {

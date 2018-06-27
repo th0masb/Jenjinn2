@@ -20,25 +20,23 @@ import xawd.jflow.iterators.Flow;
  * @author ThomasB
  *
  */
-public enum StaticExchangeEvaluator
+public class StaticExchangeEvaluator
 {
-	INSTANCE;
-
 	private long target, source, attadef, xrays;
 
-	public boolean isGoodExchange(final BoardSquare targ, final BoardSquare from, final BoardState state)
+	public boolean isGoodExchange(final BoardSquare sourceSquare, final BoardSquare targetSquare, final BoardState state)
 	{
 		// Make sure all instance variables set correctly first
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		source = from.asBitboard();
-		target = targ.asBitboard();
+		source = sourceSquare.asBitboard();
+		target = targetSquare.asBitboard();
 		generateAttackDefenseInfo(pieceLocs);
 		final long knightLocs = pieceLocs.locationOverviewOf(ChessPiece.WHITE_KNIGHT)
 				| pieceLocs.locationOverviewOf(ChessPiece.BLACK_KNIGHT);
 
 		int d = 0;
 		final int[] gain = new int[32];
-		gain[d] = PieceValues.MIDGAME.valueOf(pieceLocs.getPieceAt(targ));
+		gain[d] = PieceValues.MIDGAME.valueOf(pieceLocs.getPieceAt(targetSquare));
 		ChessPiece attPiece = pieceLocs.getPieceAt(source);
 
 		Side activeSide = state.getActiveSide();

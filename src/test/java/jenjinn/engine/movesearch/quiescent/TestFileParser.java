@@ -42,7 +42,6 @@ class TestFileParser
 
 	private static String parseResultLine(String tail)
 	{
-
 		return "";
 	}
 }

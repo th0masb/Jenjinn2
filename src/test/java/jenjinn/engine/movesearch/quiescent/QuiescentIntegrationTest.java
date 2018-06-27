@@ -29,7 +29,7 @@ class QuiescentIntegrationTest
 		final QuiescentSearcher quiescent = new QuiescentSearcher();
 		try {
 			@SuppressWarnings("unused")
-			final int res = quiescent.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
+			final int res = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 		catch (final Throwable t) {
 			t.printStackTrace();

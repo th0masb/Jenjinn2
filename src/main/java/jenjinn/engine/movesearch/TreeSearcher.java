@@ -75,12 +75,12 @@ public final class TreeSearcher
 		final int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 
-		int alpha = Infinity.IC_ALPHA;
+		int alpha = Infinity.INITIAL_ALPHA;
 		for (final int index : indices) {
 			final ChessMove mv = legalMoves.get(index);
 			final MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
-			final int bestReply = -negamax(root, -Infinity.IC_BETA, -alpha, depth - 1);
+			final int bestReply = -negamax(root, -Infinity.INITIAL_BETA, -alpha, depth - 1);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
 				alpha = bestReply;
@@ -101,7 +101,7 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			return quiescent.search(root, Infinity.IC_ALPHA, Infinity.IC_BETA, QuiescentSearcher.DEPTH_CAP);
+			return quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 
 		final long rootHash = root.calculateHash();

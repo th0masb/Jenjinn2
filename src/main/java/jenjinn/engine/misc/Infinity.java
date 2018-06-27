@@ -9,12 +9,10 @@ package jenjinn.engine.misc;
 public final class Infinity
 {
 	public static final int INT_INFINITY = Integer.MAX_VALUE - 1;
-
 	public static final long LONG_INFINITY = Long.MAX_VALUE - 1;
-
 	public static final short SHORT_INFINITY = Short.MAX_VALUE - 1;
 
-	public static final int IC_ALPHA = -INT_INFINITY / 2, IC_BETA = INT_INFINITY / 2;
+	public static final int INITIAL_ALPHA = -INT_INFINITY, INITIAL_BETA = INT_INFINITY;
 
 	private Infinity()
 	{

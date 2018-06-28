@@ -19,18 +19,17 @@ import xawd.jflow.iterators.Flow;
 public final class BitboardIterator extends AbstractFlow<BoardSquare>
 {
 	private final long source;
-	private final int cardinality;
 	private int cached = -1, elementsReturned = 0;
 
 	public BitboardIterator(final long source) {
+		super(bitCount(source));
 		this.source = source;
-		this.cardinality = bitCount(source);
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		return elementsReturned < cardinality;
+		return elementsReturned < size;
 	}
 
 	@Override

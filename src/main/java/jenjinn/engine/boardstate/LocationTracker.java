@@ -72,7 +72,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 	public Flow<BoardSquare> iterator()
 	{
 		final Iterator<BoardSquare> src = locs.iterator();
-		return new AbstractFlow<BoardSquare>() {
+		return new AbstractFlow<BoardSquare>(locs.size()) {
 			@Override
 			public boolean hasNext() {
 				return src.hasNext();

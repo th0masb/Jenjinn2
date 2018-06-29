@@ -35,7 +35,7 @@ public final class QuiescentSearcher
 	public static final int DEPTH_CAP = 20;
 
 	private final FlowList<MoveReversalData> moveReversers = IterRange.to(DEPTH_CAP)
-			.mapToObject(i -> new MoveReversalData()).toImmutableList();
+			.mapToObject(i -> new MoveReversalData()).toList();
 
 	private final int deltaPruneSafetyMargin = 200;
 	private final int bigDelta = calculateBigDelta();

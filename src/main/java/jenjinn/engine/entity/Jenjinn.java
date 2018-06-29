@@ -32,7 +32,7 @@ public final class Jenjinn
 				.collect(toCollection(FlowArrayList::new));
 
 		Collections.shuffle(files); // Different openings each time.
-		openingFiles = files.flow().toImmutableList();
+		openingFiles = files.flow().toList();
 	}
 
 	public Optional<ChessMove> calculateBestMove(BoardState state)

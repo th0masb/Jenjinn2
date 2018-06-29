@@ -32,7 +32,7 @@ public enum BoardHasher
 			throw new IllegalArgumentException();
 		}
 		final Random numberGenerator = new Random(seed);
-		boardSquareFeatures = BoardSquare.iterateAll().map(x -> randomArray(12, numberGenerator)).toImmutableList();
+		boardSquareFeatures = BoardSquare.iterateAll().map(x -> randomArray(12, numberGenerator)).toList();
 		castleRightsFeatures = randomArray(4, numberGenerator);
 		enpassantFileFeatures = randomArray(8, numberGenerator);
 		blackToMoveFeature = numberGenerator.nextLong();

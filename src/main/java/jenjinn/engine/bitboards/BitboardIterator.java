@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.AbstractFlow;
 import xawd.jflow.iterators.Flow;
+import xawd.jflow.valuewrappers.Optionals;
 
 /**
  * @author ThomasB
@@ -22,14 +23,14 @@ public final class BitboardIterator extends AbstractFlow<BoardSquare>
 	private int cached = -1, elementsReturned = 0;
 
 	public BitboardIterator(final long source) {
-		super(bitCount(source));
+		super(Optionals.ofInt(bitCount(source)));
 		this.source = source;
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		return elementsReturned < size;
+		return elementsReturned < size.getAsInt();
 	}
 
 	@Override

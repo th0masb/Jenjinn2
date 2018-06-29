@@ -19,12 +19,12 @@ public final class MoveCache {
 
 	private MoveCache() {}
 
-	private static final List<CastleMove> CASTLE_MOVE_CACHE = CastleZone.iterateAll().map(CastleMove::new).toImmutableList();
+	private static final List<CastleMove> CASTLE_MOVE_CACHE = CastleZone.iterateAll().map(CastleMove::new).toList();
 	private static final List<StandardMove[]> STANDARD_MOVE_CACHE = createStandardMoveCache();
 
 	static List<StandardMove[]> createStandardMoveCache()
 	{
-		final List<StandardMove[]> moveCache = BoardSquare.iterateAll().map(i -> new StandardMove[64]).toImmutableList();
+		final List<StandardMove[]> moveCache = BoardSquare.iterateAll().map(i -> new StandardMove[64]).toList();
 
 		for (final ChessPiece piece : asList(ChessPiece.WHITE_KNIGHT, ChessPiece.WHITE_QUEEN)) {
 			BoardSquare.iterateAll().forEach(square ->

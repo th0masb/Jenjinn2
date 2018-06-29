@@ -19,8 +19,8 @@ import xawd.jflow.iterators.Flow;
  */
 public final class KingSafetyEvaluator implements EvaluationComponent
 {
-	static final FlowList<ChessPiece> WKING_ATTACKERS = ChessPieces.black().drop(1).take(4).toImmutableList();
-	static final FlowList<ChessPiece> BKING_ATTACKERS = ChessPieces.white().drop(1).take(4).toImmutableList();
+	static final FlowList<ChessPiece> WKING_ATTACKERS = ChessPieces.black().drop(1).take(4).toList();
+	static final FlowList<ChessPiece> BKING_ATTACKERS = ChessPieces.white().drop(1).take(4).toList();
 
 	public KingSafetyEvaluator()
 	{

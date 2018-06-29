@@ -27,7 +27,7 @@ public final class PieceSquareTables
 		}
 		this.tables = Iterate.over(whiteTables)
 				.append(Iterate.over(whiteTables).map(PieceSquareTable::invertValues))
-				.toImmutableList();
+				.toList();
 	}
 
 	public int getLocationValue(final ChessPiece piece, final BoardSquare location)

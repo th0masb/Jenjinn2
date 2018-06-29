@@ -71,7 +71,7 @@ public final class TreeSearcher
 
 	private ChessMove getBestMoveFrom(BoardState root, int depth) throws InterruptedException
 	{
-		final FlowList<ChessMove> legalMoves = LegalMoves.getMoves(root).toImmutableList();
+		final FlowList<ChessMove> legalMoves = LegalMoves.getMoves(root).toList();
 		final int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 

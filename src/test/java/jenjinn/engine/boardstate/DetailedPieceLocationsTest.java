@@ -134,6 +134,6 @@ class DetailedPieceLocationsTest
 
 	private List<BoardSquare> getLocationSquares()
 	{
-		return IterRange.between(0, 64, 4).take(12).mapToObject(BoardSquare::of).toImmutableList();
+		return IterRange.between(0, 64, 4).take(12).mapToObject(BoardSquare::of).toList();
 	}
 }

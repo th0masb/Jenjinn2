@@ -14,6 +14,7 @@ import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.AbstractFlow;
 import xawd.jflow.iterators.Flow;
+import xawd.jflow.valuewrappers.Optionals;
 
 /**
  * @author t
@@ -72,7 +73,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 	public Flow<BoardSquare> iterator()
 	{
 		final Iterator<BoardSquare> src = locs.iterator();
-		return new AbstractFlow<BoardSquare>(locs.size()) {
+		return new AbstractFlow<BoardSquare>(Optionals.ofInt(locs.size())) {
 			@Override
 			public boolean hasNext() {
 				return src.hasNext();

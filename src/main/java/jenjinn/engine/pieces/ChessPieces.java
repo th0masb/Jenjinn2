@@ -21,8 +21,8 @@ public final class ChessPieces
 	private ChessPieces() {}
 
 	private static final FlowList<ChessPiece> ALL_PIECES = new ImmutableFlowList<>(ChessPiece.values());
-	private static final FlowList<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toImmutableList();
-	private static final FlowList<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).drop(6).toImmutableList();
+	private static final FlowList<ChessPiece> WHITE_PIECES = Iterate.over(ALL_PIECES).take(6).toList();
+	private static final FlowList<ChessPiece> BLACK_PIECES = Iterate.over(ALL_PIECES).drop(6).toList();
 	private static final FlowList<ChessPiece> WHITE_PINNING_PIECES = new ImmutableFlowList<>(ChessPiece.WHITE_QUEEN, ChessPiece.WHITE_ROOK, ChessPiece.WHITE_BISHOP);
 	private static final FlowList<ChessPiece> BLACK_PINNING_PIECES = new ImmutableFlowList<>(ChessPiece.BLACK_QUEEN, ChessPiece.BLACK_ROOK, ChessPiece.BLACK_BISHOP);
 

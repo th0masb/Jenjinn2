@@ -41,7 +41,7 @@ final class TestFileParser
 	private static Integer parseConstraintEvaluation(List<String> attackerInfo)
 	{
 		if (attackerInfo.size() != 12) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(attackerInfo.toString());
 		}
 
 		final List<String> whiteAttackers = take(6, attackerInfo);

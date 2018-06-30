@@ -1,0 +1,29 @@
+// A nine line standard description of a boardstate.
+white_pieces: (f2 g2) (f3) (g3) (e1) () (g1)
+black_pieces: () (g4) () () (c6) (d7)
+half_move_clock: 20
+castling_rights:
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: white
+enpassant_square: none
+
+// Six lines, one for each white piece describing quantity of attacks on enemy
+// king zone.
+// outer inner attackingPieceCount
+0 0 0
+1 0 1
+2 2 1
+1 3 1
+0 0 0
+0 0 0
+// Six lines, one for each black piece describing quantity of attacks on enemy 
+// king zone.
+// outer inner attackingPieceCount
+0 0 0
+1 2 1
+0 0 0
+0 0 0
+1 0 1
+0 0 0

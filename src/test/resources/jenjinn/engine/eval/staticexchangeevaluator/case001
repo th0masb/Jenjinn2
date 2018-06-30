@@ -1,0 +1,18 @@
+// A nine line standard description of a boardstate.
+white_pieces: (e4) (c3) () (d2) () ()
+black_pieces: (d5 e6) () () () (b5) ()
+half_move_clock: 20
+castling_rights: wk wq bk bq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: white
+enpassant_square: none
+
+// A sequence of at least 1 case on separate lines
+// A case consists of: source target GOOD/BAD
+e4 d5 GOOD
+c3 d5 BAD
+d2 d5 BAD
+c3 b5 GOOD
+d5 e4 GOOD

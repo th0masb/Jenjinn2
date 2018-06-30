@@ -6,7 +6,6 @@ package jenjinn.engine.eval.staticexchangeevaluator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,6 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.eval.StaticExchangeEvaluator;
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
@@ -34,8 +35,8 @@ class StaticExchangeEvaluatorTest
 		}
 	}
 
-	static Stream<Arguments> test()
+	static Flow<Arguments> test()
 	{
-		throw new RuntimeException();
+		return Iterate.over("case001").map(TestFileParser::parse);
 	}
 }

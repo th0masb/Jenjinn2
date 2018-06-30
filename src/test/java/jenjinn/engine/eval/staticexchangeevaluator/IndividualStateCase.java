@@ -33,7 +33,10 @@ final class IndividualStateCase
 	{
 		final String sq = CommonRegex.SINGLE_SQUARE, doubleSq = CommonRegex.DOUBLE_SQUARE;
 		if (encoded.matches("^" + doubleSq + " +(GOOD|BAD)$")) {
-			final FlowList<BoardSquare> sqs = getAllMatches(encoded, sq).map(BoardSquare::valueOf).toList();
+			final FlowList<BoardSquare> sqs = getAllMatches(encoded, sq)
+					.map(String::toUpperCase)
+					.map(BoardSquare::valueOf)
+					.toList();
 			return new IndividualStateCase(head(sqs), tail(sqs), findFirstMatch(encoded, "GOOD").isPresent());
 		}
 		else {

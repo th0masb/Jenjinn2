@@ -31,8 +31,8 @@ public class StaticExchangeEvaluator
 		source = sourceSquare.asBitboard();
 		target = targetSquare.asBitboard();
 		generateAttackDefenseInfo(pieceLocs);
-		final long knightLocs = pieceLocs.locationOverviewOf(ChessPiece.WHITE_KNIGHT)
-				| pieceLocs.locationOverviewOf(ChessPiece.BLACK_KNIGHT);
+		final long knightLocs = pieceLocs.locationsOf(ChessPiece.WHITE_KNIGHT)
+				| pieceLocs.locationsOf(ChessPiece.BLACK_KNIGHT);
 
 		int d = 0;
 		final int[] gain = new int[32];
@@ -105,7 +105,7 @@ public class StaticExchangeEvaluator
 	private long getLeastValuablePiece(final DetailedPieceLocations locationProvider, final Side fromSide)
 	{
 		for (final ChessPiece p : ChessPieces.ofSide(fromSide)) {
-			final long intersection = attadef & locationProvider.locationOverviewOf(p);
+			final long intersection = attadef & locationProvider.locationsOf(p);
 			if (intersection != 0) {
 				return (intersection & -intersection);
 			}

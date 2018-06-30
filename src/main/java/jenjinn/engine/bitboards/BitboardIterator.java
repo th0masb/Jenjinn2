@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.AbstractFlow;
 import xawd.jflow.iterators.Flow;
-import xawd.jflow.valuewrappers.Optionals;
+import xawd.jflow.utilities.Optionals;
 
 /**
  * @author ThomasB

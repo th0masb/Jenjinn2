@@ -15,13 +15,13 @@ public enum PieceValues
 {
 	MIDGAME(new int[] {100, 310, 320, 480, 910, 0}),
 	ENDGAME(new int[] {120, 270, 340, 550, 940, 0}),
-	TESTING(new int[] {100, 295, 310, 500, 900, 0});
+	TESTING(new int[] {100, 300, 310, 500, 900, 0});
 
 	private final int[] values;
 
 	private PieceValues(int[] values)
 	{
-		Iterate.overInts(values).allMatch(i -> i >= 0).throwIfFailed(AssertionError::new);
+		Iterate.overInts(values).allMatch(i -> i >= 0).throwIfFalse(AssertionError::new);
 		this.values = Arrays.copyOf(values, values.length);
 	}
 

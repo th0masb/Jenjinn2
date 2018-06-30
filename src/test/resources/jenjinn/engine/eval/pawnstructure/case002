@@ -8,6 +8,8 @@ b6 c5 d6 e7 e4 g5 h5
 2 2
 // Number of pawn chain links ...
 0 3
+// Number of backward pawns
+1 2
 // Number of isolated pawns, ones on closed files + ones on semi-open file
 // wclosed wsemiopen bclosed bsemiopen
 1 0 0 0

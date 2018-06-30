@@ -63,7 +63,7 @@ public final class QuiescentSearcher
 		final DetailedPieceLocations pieceLocs = root.getPieceLocations();
 		final long passiveControl = SquareControl.calculate(root, passive);
 
-		final boolean inCheck = bitboardsIntersect(pieceLocs.locationOverviewOf(ChessPieces.king(active)),
+		final boolean inCheck = bitboardsIntersect(pieceLocs.locationsOf(ChessPieces.king(active)),
 				passiveControl);
 
 		if (inCheck) {

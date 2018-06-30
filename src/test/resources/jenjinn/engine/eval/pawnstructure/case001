@@ -8,8 +8,10 @@ b6 c5 d5 e5 g5 h5
 1 0
 // Number of pawn chain links ...
 1 1
+// backward pawns
+2 1
 // Number of isolated pawns, ones on closed files + ones on semi-open file
-1 1 0 1
+0 1 0 0
 // Sizes of white phalanx formations
 1 2 1 1
 // Sizes of black phalanx formations

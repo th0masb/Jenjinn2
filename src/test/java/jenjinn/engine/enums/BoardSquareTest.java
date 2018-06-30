@@ -89,8 +89,8 @@ class BoardSquareTest
 	{
 		final BoardSquare a1 = BoardSquare.A1;
 		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
-		partitioned.iterateAccepted().forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
-		partitioned.iterateRejected().forEach(dir -> assertTrue(a1.getNumberOfSquaresLeftInDirection(dir) > 0));
+		partitioned.getAccepted().forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
+		partitioned.getRejected().forEach(dir -> assertTrue(a1.getNumberOfSquaresLeftInDirection(dir) > 0));
 
 		final BoardSquare d4 = BoardSquare.D4;
 		assertEquals(4, d4.getNumberOfSquaresLeftInDirection(Direction.N));
@@ -106,8 +106,8 @@ class BoardSquareTest
 	{
 		final BoardSquare a1 = BoardSquare.A1;
 		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
-		partitioned.iterateAccepted().forEach(dir -> assertNull(a1.getNextSquareInDirection(dir)));
-		partitioned.iterateRejected().forEach(dir -> assertNotNull(a1.getNextSquareInDirection(dir)));
+		partitioned.getAccepted().forEach(dir -> assertNull(a1.getNextSquareInDirection(dir)));
+		partitioned.getRejected().forEach(dir -> assertNotNull(a1.getNextSquareInDirection(dir)));
 
 		final BoardSquare d4 = BoardSquare.D4;
 		assertEquals(BoardSquare.D5, d4.getNextSquareInDirection(Direction.N));

@@ -35,7 +35,7 @@ public final class TestFileParser
 				.filter(s -> !(s.isEmpty() || s.startsWith("//")))
 				.collect(toList());
 
-		if (lines.size() == 8) {
+		if (lines.size() == 9) {
 			final String encodedWhiteLocs = head(lines), encodedBlackLocs = lines.get(1);
 			final Long whiteLocs = decodeLocations(encodedWhiteLocs);
 			final Long blackLocs = decodeLocations(encodedBlackLocs);

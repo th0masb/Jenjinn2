@@ -45,7 +45,7 @@ public final class SquareControl {
 	private static long calculatePawn(final BoardState state, final ChessPiece piece)
 	{
 		assert piece.isPawn();
-		final long pawnLocs = state.getPieceLocations().locationOverviewOf(piece);
+		final long pawnLocs = state.getPieceLocations().locationsOf(piece);
 		assert !bitboardsIntersect(pawnLocs, rankBitboard(0)) && !bitboardsIntersect(pawnLocs, rankBitboard(7));
 		final long aFileRemover = ~fileBitboard(7), hFileRemover = ~fileBitboard(0);
 		if (piece.isWhite()) {

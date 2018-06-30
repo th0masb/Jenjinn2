@@ -42,7 +42,7 @@ class DetailedPieceLocationsTest
 		for (final ChessPiece piece : ChessPieces.white()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
-			assertEquals(loc.asBitboard(), locations.locationOverviewOf(piece));
+			assertEquals(loc.asBitboard(), locations.locationsOf(piece));
 			assertEquals(bitwiseOr(take(piece.ordinal() + 1, locationsToAddPieceAt)), locations.getWhiteLocations());
 			assertEquals(0L, locations.getBlackLocations());
 
@@ -57,7 +57,7 @@ class DetailedPieceLocationsTest
 		for (final ChessPiece piece : ChessPieces.black()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
-			assertEquals(loc.asBitboard(), locations.locationOverviewOf(piece));
+			assertEquals(loc.asBitboard(), locations.locationsOf(piece));
 			assertEquals(bitwiseOr(take(6, locationsToAddPieceAt)), locations.getWhiteLocations());
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(6, piece.ordinal() + 1)), locations.getBlackLocations());
 
@@ -84,7 +84,7 @@ class DetailedPieceLocationsTest
 		for (final ChessPiece piece : ChessPieces.white()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.removePieceAt(loc, piece);
-			assertEquals(0L, locations.locationOverviewOf(piece));
+			assertEquals(0L, locations.locationsOf(piece));
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 6)), locations.getWhiteLocations());
 			assertEquals(bitwiseOr(drop(6, locationsToAddPieceAt)), locations.getBlackLocations());
 
@@ -99,7 +99,7 @@ class DetailedPieceLocationsTest
 		for (final ChessPiece piece : ChessPieces.black()) {
 			final BoardSquare loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.removePieceAt(loc, piece);
-			assertEquals(0L, locations.locationOverviewOf(piece));
+			assertEquals(0L, locations.locationsOf(piece));
 			assertEquals(0L, locations.getWhiteLocations());
 			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 12)), locations.getBlackLocations());
 

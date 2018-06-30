@@ -42,8 +42,8 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 	public int evaluate(BoardState state)
 	{
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final long wpawns = pieceLocs.locationOverviewOf(ChessPiece.WHITE_PAWN);
-		final long bpawns = pieceLocs.locationOverviewOf(ChessPiece.BLACK_PAWN);
+		final long wpawns = pieceLocs.locationsOf(ChessPiece.WHITE_PAWN);
+		final long bpawns = pieceLocs.locationsOf(ChessPiece.BLACK_PAWN);
 		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns);
 
 		final PawnTable.Entry cached = cachedEvaluations.get(pawnHash);

@@ -6,7 +6,6 @@ package jenjinn.engine.boardstate.calculators;
 import static java.lang.Math.abs;
 import static java.util.Arrays.asList;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
-import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.tail;
@@ -32,6 +31,7 @@ import jenjinn.engine.moves.MoveCache;
 import jenjinn.engine.moves.PromotionMove;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
+import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.EmptyIteration;
 import xawd.jflow.iterators.factories.Iterate;
@@ -63,29 +63,39 @@ public final class LegalMoves
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
 
-		//		if (bitboardsIntersect(SquareControl.calculate(state, active), state.getPieceLocations().locationOverviewOf(ChessPieces.king(passive))))
-		//		{
-		//			System.out.println(state.getActiveSide());
-		//			System.out.println(VisualGridGenerator.from(state.getPieceLocations()));
-		//			throw new AssertionError();
-		//		}
+		// if (bitboardsIntersect(SquareControl.calculate(state, active),
+		// state.getPieceLocations().locationOverviewOf(ChessPieces.king(passive))))
+		// {
+		// System.out.println(state.getActiveSide());
+		// System.out.println(VisualGridGenerator.from(state.getPieceLocations()));
+		// throw new AssertionError();
+		// }
 
-		final long passivePieceLocs = state.getPieceLocations().getSideLocations(passive);
+		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		final long passivePieceLocs = pieceLocs.getSideLocations(passive);
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(active);
 		final ChessPiece activeKing = tail(activePieces);
-		final BoardSquare kingLoc = state.getPieceLocations().iterateLocs(activeKing).next();
+		final BoardSquare kingLoc = pieceLocs.iterateLocs(activeKing).next();
 		long passiveControl = SquareControl.calculate(state, passive);
 		final PinnedPieceCollection pinnedPieces = PinnedPieces.in(state);
 
 		final boolean inCheck = bitboardsIntersect(passiveControl, kingLoc.asBitboard());
-		final boolean castlingAllowed = !inCheck && !forceAttacks && state.getCastlingStatus().getStatusFor(active) == null;
-		Flow<ChessMove> moves = castlingAllowed? getCastlingMoves(state, passiveControl) : EmptyIteration.ofObjects();
-		long allowedMoveArea = forceAttacks? passivePieceLocs : Bitboards.universal();
+		final boolean castlingAllowed = !inCheck && !forceAttacks
+				&& state.getCastlingStatus().getStatusFor(active) == null;
+		Flow<ChessMove> moves = castlingAllowed ? getCastlingMoves(state, passiveControl) : EmptyIteration.ofObjects();
+		long allowedMoveArea = forceAttacks ? passivePieceLocs : Bitboards.universal();
 
 		if (inCheck) {
 			final List<PieceSquarePair> attackers = getPassiveAttackersOfActiveKing(state);
 			for (final PieceSquarePair attacker : attackers) {
-				passiveControl |= emptyBoardAttackset(attacker.getPiece(), attacker.getSquare());
+				final ChessPiece piece = attacker.getPiece();
+				if (piece.isSlidingPiece()) {
+					final boolean whiteAttack = piece.isWhite();
+					final long kloc = kingLoc.asBitboard();
+					final long white = whiteAttack ? pieceLocs.getWhiteLocations() : pieceLocs.getWhiteLocations() ^ kloc;
+					final long black = whiteAttack ? pieceLocs.getBlackLocations() ^ kloc : pieceLocs.getBlackLocations();
+					passiveControl |= piece.getSquaresOfControl(attacker.getSquare(), white, black);
+				}
 			}
 			if (sizeOf(attackers) > 1) {
 				allowedMoveArea = 0L;
@@ -103,12 +113,12 @@ public final class LegalMoves
 		// Add moves from non king pieces
 		final long faa = allowedMoveArea;
 		moves = moves.append(
-				Iterate.reverseOver(activePieces).drop(1).flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa))
-				);
+				Iterate.reverseOver(activePieces).drop(1).flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa)));
 
 		// Add king moves
-		final long kingConstraint = forceAttacks? ~passiveControl & passivePieceLocs : ~passiveControl;
-		//		System.out.println(VisualGridGenerator.from(kingConstraint));
+		System.out.println(VisualGridGenerator.from(passiveControl));
+		final long kingConstraint = forceAttacks ? ~passiveControl & passivePieceLocs : ~passiveControl;
+		// System.out.println(VisualGridGenerator.from(kingConstraint));
 		moves = moves.append(getMovesForKing(state, kingLoc, kingConstraint));
 
 		return moves;
@@ -117,12 +127,11 @@ public final class LegalMoves
 	private static Flow<ChessMove> getCastlingMoves(final BoardState state, final long passiveControl)
 	{
 		final Side activeSide = state.getActiveSide();
-		final Predicate<CastleZone> sideFilter = activeSide.isWhite()? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
+		final Predicate<CastleZone> sideFilter = activeSide.isWhite() ? z -> z.isWhiteZone() : z -> !z.isWhiteZone();
 		final Set<CastleZone> allRights = state.getCastlingStatus().getCastlingRights();
 		final Flow<CastleZone> availableRights = Iterate.over(allRights).filter(sideFilter);
 		final long allPieces = state.getPieceLocations().getAllLocations();
-		final Flow<CastleZone> legalAvailableRights = availableRights.filter(zone ->
-		{
+		final Flow<CastleZone> legalAvailableRights = availableRights.filter(zone -> {
 			final long reqClearArea = zone.getRequiredFreeSquares();
 			final long kingLoc = state.getPieceLocations().locationsOf(ChessPieces.king(activeSide));
 			return !bitboardsIntersect(reqClearArea, allPieces)
@@ -180,8 +189,7 @@ public final class LegalMoves
 							if (pinnedPieces.containsLocation(sq)) {
 								final long areaCons = pinnedPieces.getConstraintAreaOfPieceAt(sq);
 								return bitboardsIntersect(areaCons, ep.asBitboard());
-							}
-							else {
+							} else {
 								return true;
 							}
 						} else {
@@ -189,8 +197,7 @@ public final class LegalMoves
 						}
 					}).map(sq -> new EnpassantMove(sq, ep));
 			return allContributions.append(epContribution);
-		}
-		else {
+		} else {
 			return allContributions;
 		}
 	}

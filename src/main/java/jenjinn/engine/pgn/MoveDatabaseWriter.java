@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
@@ -44,7 +43,8 @@ public final class MoveDatabaseWriter implements Closeable
 
 	public MoveDatabaseWriter(final Path sourceFilePath, final Path outFilePath) throws IOException
 	{
-		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath) || !sourceFilePath.toString().endsWith(PGN_EXT)) {
+		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath)
+				|| !sourceFilePath.toString().endsWith(PGN_EXT)) {
 			throw new IllegalArgumentException();
 		}
 		src = Files.newBufferedReader(sourceFilePath, Charset.forName("ISO-8859-1"));
@@ -62,19 +62,15 @@ public final class MoveDatabaseWriter implements Closeable
 		}
 		flushBuffer(writeBuffer);
 
-		final String outputLog = new StringBuilder("We searched " )
-				.append(totalGamesSearched)
-				.append(" games and extracted ")
-				.append(usedPositions.size())
-				.append(" moves. There were ")
-				.append(totalErrorsInGames)
-				.append(" pgns which caused an error.")
-				.toString();
+		final String outputLog = new StringBuilder("We searched ").append(totalGamesSearched)
+				.append(" games and extracted ").append(usedPositions.size()).append(" moves. There were ")
+				.append(totalErrorsInGames).append(" pgns which caused an error.").toString();
 
 		System.out.println(outputLog);
 	}
 
-	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer) throws IOException
+	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer)
+			throws IOException
 	{
 		try {
 			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
@@ -84,7 +80,8 @@ public final class MoveDatabaseWriter implements Closeable
 				final long stateHash = state.calculateHash();
 				if (!usedPositions.contains(stateHash)) {
 					usedPositions.add(stateHash);
-					final PositionalInstruction newInstruction = new PositionalInstruction(stateHash, ithMove.toCompactString());
+					final PositionalInstruction newInstruction = new PositionalInstruction(stateHash,
+							ithMove.toCompactString());
 					addPositionToBuffer(newInstruction, writeBuffer);
 				}
 				ithMove.makeMove(state);
@@ -96,7 +93,8 @@ public final class MoveDatabaseWriter implements Closeable
 		}
 	}
 
-	private void addPositionToBuffer(final PositionalInstruction instructionToAdd, final List<PositionalInstruction> buffer) throws IOException
+	private void addPositionToBuffer(final PositionalInstruction instructionToAdd,
+			final List<PositionalInstruction> buffer) throws IOException
 	{
 		if (buffer.size() == POSITIONS_PER_LINE) {
 			flushBuffer(buffer);
@@ -121,8 +119,7 @@ public final class MoveDatabaseWriter implements Closeable
 		String nextLine = src.readLine();
 		if (nextLine == null) {
 			return Optional.empty();
-		}
-		else {
+		} else {
 			final String gameStart = PgnGameConverter.GAME_START, gameEnd = PgnGameConverter.GAME_TERMINATION;
 			while (!matchesAnywhere(nextLine, gameStart)) {
 				nextLine = src.readLine();
@@ -135,8 +132,7 @@ public final class MoveDatabaseWriter implements Closeable
 				nextLine = src.readLine();
 				if (nextLine == null) {
 					return Optional.empty();
-				}
-				else {
+				} else {
 					game.append(nextLine).append(" ");
 				}
 			}
@@ -151,7 +147,8 @@ public final class MoveDatabaseWriter implements Closeable
 		out.close();
 	}
 
-	private class PositionalInstruction {
+	private class PositionalInstruction
+	{
 		private final long positionHash;
 		private final String compactMoveString;
 
@@ -162,24 +159,31 @@ public final class MoveDatabaseWriter implements Closeable
 		}
 
 		@Override
-		public String toString() {
+		public String toString()
+		{
 			return toHexString(positionHash) + compactMoveString.toUpperCase();
 		}
 	}
 
 	public static void main(final String[] args) throws IOException
 	{
-		final Path source = Paths.get("/home", "t", "chesspgns", "FrenchAdvance.pgn");
-		final Path out = Paths.get("/home", "t", "git", "Jenjinn2", "databasefiles", "frenchadvance.odb");
+		final Path source = Paths.get("/home", "t", "chesspgns", "test");
+		final Path outFolder = Paths.get("/home", "t", "chesspgns", "convertedtest");
 
-		///home/t/chesspgns /home/t/git/Jenjinn2/databasefiles
-		final Consumer<Object> print = System.out::println;
-
-		print.accept(Files.exists(source));
-		print.accept(Files.exists(out));
-
-		try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(source, out)) {
-			writer.writeUniquePositions();
+		if (!outFolder.toFile().exists()) {
+			Files.createDirectory(outFolder);
+			Files.newDirectoryStream(source).forEach(src -> {
+				final String outFileName = src.getFileName().toString().replaceFirst(PGN_EXT, "");
+				final Path out = Paths.get(outFolder.toString(), outFileName);
+				System.out.println(out);
+				try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(src, out)) {
+					writer.writeUniquePositions();
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} else {
+			throw new AssertionError();
 		}
 	}
 }

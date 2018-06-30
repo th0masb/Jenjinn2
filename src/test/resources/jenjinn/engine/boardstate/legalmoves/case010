@@ -1,0 +1,13 @@
+white_pieces: (a2 b2 c2 e6 f2 g2 h2) (f6 g1) (c1) (a1 h1) (d6) (e1)
+black_pieces: (a7 c7 e4 e5 g5 h7) (b8) (h6) (h8) () (e7)
+half_move_clock: 20
+castling_rights: wk wq
+white_castle_status: none
+black_castle_status: none
+developed_pieces: e2 e7
+active_side: black
+enpassant_square: none
+
+s[e7->{d6 f6}] s[c7 d6]
+---
+s[e7->{d6 f6}] s[c7 d6]

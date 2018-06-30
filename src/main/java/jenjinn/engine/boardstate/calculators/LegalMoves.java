@@ -31,7 +31,6 @@ import jenjinn.engine.moves.MoveCache;
 import jenjinn.engine.moves.PromotionMove;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.EmptyIteration;
 import xawd.jflow.iterators.factories.Iterate;
@@ -62,15 +61,6 @@ public final class LegalMoves
 	static Flow<ChessMove> getLegalMoves(final BoardState state, final boolean forceAttacks)
 	{
 		final Side active = state.getActiveSide(), passive = active.otherSide();
-
-		// if (bitboardsIntersect(SquareControl.calculate(state, active),
-		// state.getPieceLocations().locationOverviewOf(ChessPieces.king(passive))))
-		// {
-		// System.out.println(state.getActiveSide());
-		// System.out.println(VisualGridGenerator.from(state.getPieceLocations()));
-		// throw new AssertionError();
-		// }
-
 		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
 		final long passivePieceLocs = pieceLocs.getSideLocations(passive);
 		final List<ChessPiece> activePieces = ChessPieces.ofSide(active);
@@ -116,9 +106,7 @@ public final class LegalMoves
 				Iterate.reverseOver(activePieces).drop(1).flatten(p -> getNonKingMoves(state, p, pinnedPieces, faa)));
 
 		// Add king moves
-		System.out.println(VisualGridGenerator.from(passiveControl));
 		final long kingConstraint = forceAttacks ? ~passiveControl & passivePieceLocs : ~passiveControl;
-		// System.out.println(VisualGridGenerator.from(kingConstraint));
 		moves = moves.append(getMovesForKing(state, kingLoc, kingConstraint));
 
 		return moves;
@@ -133,9 +121,8 @@ public final class LegalMoves
 		final long allPieces = state.getPieceLocations().getAllLocations();
 		final Flow<CastleZone> legalAvailableRights = availableRights.filter(zone -> {
 			final long reqClearArea = zone.getRequiredFreeSquares();
-			final long kingLoc = state.getPieceLocations().locationsOf(ChessPieces.king(activeSide));
-			return !bitboardsIntersect(reqClearArea, allPieces)
-					&& !bitboardsIntersect(passiveControl, kingLoc | reqClearArea);
+			final long reqUncontrolledArea = zone.getRequiredUncontrolledSquares();
+			return !bitboardsIntersect(reqClearArea, allPieces) && !bitboardsIntersect(passiveControl, reqUncontrolledArea);
 		});
 		return legalAvailableRights.map(MoveCache::getMove);
 	}

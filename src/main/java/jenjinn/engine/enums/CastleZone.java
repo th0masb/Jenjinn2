@@ -31,14 +31,13 @@ import xawd.jflow.iterators.factories.Iterate;
 public enum CastleZone
 {
 	// Don't change order
-	WHITE_KINGSIDE(E1, G1, H1, F1),
-	WHITE_QUEENSIDE(E1, C1, A1, D1),
-	BLACK_KINGSIDE(E8, G8, H8, F8),
-	BLACK_QUEENSIDE(E8, C8, A8, D8);
+	WHITE_KINGSIDE(E1, G1, H1, F1), WHITE_QUEENSIDE(E1, C1, A1, D1), BLACK_KINGSIDE(E8, G8, H8, F8), BLACK_QUEENSIDE(E8,
+			C8, A8, D8);
 
 	private final BoardSquare kingSource, kingTarget, rookSource, rookTarget;
 
-	private CastleZone(final BoardSquare kingSource, final BoardSquare kingTarget, final BoardSquare rookSource, final BoardSquare rookTarget)
+	private CastleZone(final BoardSquare kingSource, final BoardSquare kingTarget, final BoardSquare rookSource,
+			final BoardSquare rookTarget)
 	{
 		this.kingSource = kingSource;
 		this.kingTarget = kingTarget;
@@ -77,8 +76,8 @@ public enum CastleZone
 	}
 
 	/**
-	 * @return a bitboard representing the squares which must be clear in order for a player to castle
-	 * in this zone.
+	 * @return a bitboard representing the squares which must be clear in order for
+	 *         a player to castle in this zone.
 	 */
 	public long getRequiredFreeSquares()
 	{
@@ -86,9 +85,24 @@ public enum CastleZone
 			long requiredFreeSquares = kingSource.asBitboard() >>> 1;
 			requiredFreeSquares |= requiredFreeSquares >>> 1;
 			return requiredFreeSquares;
+		} else {
+			long requiredFreeSquares = kingSource.asBitboard() << 1;
+			requiredFreeSquares |= requiredFreeSquares << 1;
+			requiredFreeSquares |= requiredFreeSquares << 1;
+			return requiredFreeSquares;
+		}
+	}
+
+	public long getRequiredUncontrolledSquares()
+	{
+		if (isKingsideZone()) {
+			long requiredFreeSquares = kingSource.asBitboard();
+			requiredFreeSquares |= requiredFreeSquares >>> 1;
+			requiredFreeSquares |= requiredFreeSquares >>> 1;
+			return requiredFreeSquares;
 		}
 		else {
-			long requiredFreeSquares = kingSource.asBitboard() << 1;
+			long requiredFreeSquares = kingSource.asBitboard();
 			requiredFreeSquares |= requiredFreeSquares << 1;
 			requiredFreeSquares |= requiredFreeSquares << 1;
 			return requiredFreeSquares;
@@ -98,7 +112,7 @@ public enum CastleZone
 	public String getSimpleIdentifier()
 	{
 		final String[] split = name().toLowerCase().split("_");
-		return new String(new char[] {split[0].charAt(0), split[1].charAt(0)});
+		return new String(new char[] { split[0].charAt(0), split[1].charAt(0) });
 	}
 
 	public static CastleZone fromSimpleIdentifier(final String identifier)
@@ -106,8 +120,7 @@ public enum CastleZone
 		final String id = identifier.trim().toLowerCase();
 		if (id.matches(CommonRegex.CASTLE_ZONE)) {
 			return iterateAll().filter(z -> z.getSimpleIdentifier().equals(id)).next();
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException(identifier);
 		}
 	}
@@ -117,7 +130,8 @@ public enum CastleZone
 		return Iterate.over(asList(values()));
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args)
+	{
 		System.out.println(VisualGridGenerator.from(BLACK_QUEENSIDE.getRequiredFreeSquares()));
 	}
 }

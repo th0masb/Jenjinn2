@@ -49,7 +49,7 @@ public final class PgnGameConverter
 
 	public static void main(String[] args) throws BadPgnException
 	{
-		final String pgn = "1.e4 e5 2.Bc4 d5 3.Bxd5 Be6 4.Bxb7 Nf6 5.Bxa8 Nxe4 6.Bxe4 Qe7 7.Nc3 g5 8.d4 f5 9.d5 Bh6 10.dxe6 fxe4 11.Nd5 Qd6 12.Nf6+ Ke7 13.Qxd6+ 1-0";//Kxf6 14.Qxc7 Rc8 15.Qf7+  1-0";
+		final String pgn = "1.e4 e5 2.Bc4 Nf6 3.d4 exd4 4.e5 d5 5.Qxd4 dxc4 6.Qxd8+ Kxd8 7.exf6 gxf6 8.Nf3 Nc6 9.Be3 Bf5 10.c3 Ne5 11.Nxe5 fxe5 12.Nd2 Bd3 13.Bg5+ Kd7 0-1";// 14.O-O-O Bd6 15.g3 Rhg8 16.Be3 Rae8 17.f3 f6 18.Rde1 b5 19.Nb1 a5 20.Rhg1 b4 21.Bd2 Rb8 22.Rg2 c5 23.Rf2 a4 24.Rg2 a3 25.Rf2 axb2+ 26.Kxb2 bxc3+ 27.Kxc3 Bxb1 28.Bc1 Bd3 29.Bb2 Bc7  0-1";
 		final List<ChessMove> moves = parse(pgn);
 		final BoardState state = StartStateGenerator.createStartBoard();
 		System.out.println(VisualGridGenerator.from(state.getPieceLocations()));

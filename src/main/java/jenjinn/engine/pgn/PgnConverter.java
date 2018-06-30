@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,9 +29,9 @@ import jenjinn.engine.moves.ChessMove;
  * @author ThomasB
  *
  */
-public final class MoveDatabaseWriter implements Closeable
+public final class PgnConverter implements Closeable
 {
-	private static final String PGN_EXT = ".pgn";
+	public static final String PGN_EXT = ".pgn";
 	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 12;
 
 	private final BufferedReader src;
@@ -41,7 +40,7 @@ public final class MoveDatabaseWriter implements Closeable
 
 	private int totalGamesSearched = 0, totalErrorsInGames = 0;
 
-	public MoveDatabaseWriter(final Path sourceFilePath, final Path outFilePath) throws IOException
+	public PgnConverter(final Path sourceFilePath, final Path outFilePath) throws IOException
 	{
 		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath)
 				|| !sourceFilePath.toString().endsWith(PGN_EXT)) {
@@ -49,6 +48,15 @@ public final class MoveDatabaseWriter implements Closeable
 		}
 		src = Files.newBufferedReader(sourceFilePath, Charset.forName("ISO-8859-1"));
 		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+	}
+
+	public void writeLines() throws IOException
+	{
+		Optional<String> game = readGame();
+		while (game.isPresent()) {
+			out.write(game.get() + System.lineSeparator());
+			game = readGame();
+		}
 	}
 
 	public void writeUniquePositions() throws IOException
@@ -162,28 +170,6 @@ public final class MoveDatabaseWriter implements Closeable
 		public String toString()
 		{
 			return toHexString(positionHash) + compactMoveString.toUpperCase();
-		}
-	}
-
-	public static void main(final String[] args) throws IOException
-	{
-		final Path source = Paths.get("/home", "t", "chesspgns", "test");
-		final Path outFolder = Paths.get("/home", "t", "chesspgns", "convertedtest");
-
-		if (!outFolder.toFile().exists()) {
-			Files.createDirectory(outFolder);
-			Files.newDirectoryStream(source).forEach(src -> {
-				final String outFileName = src.getFileName().toString().replaceFirst(PGN_EXT, "");
-				final Path out = Paths.get(outFolder.toString(), outFileName);
-				System.out.println(out);
-				try (final MoveDatabaseWriter writer = new MoveDatabaseWriter(src, out)) {
-					writer.writeUniquePositions();
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-			});
-		} else {
-			throw new AssertionError();
 		}
 	}
 }

@@ -5,6 +5,7 @@ package jenjinn.engine.moves;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.StringUtils.findLastMatch;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
+import xawd.jflow.utilities.Optionals;
 import xawd.jflow.utilities.StringUtils;
 
 /**
@@ -43,8 +45,8 @@ public interface ChessMove
 	}
 
 	/**
-	 * Using the supplied {@linkplain MoveReversalData} to mutate the state of
-	 * the parameter {@linkplain BoardState} instance to reverse this move.
+	 * Using the supplied {@linkplain MoveReversalData} to mutate the state of the
+	 * parameter {@linkplain BoardState} instance to reverse this move.
 	 *
 	 * @param state
 	 * @param unmakeDataStore
@@ -54,21 +56,25 @@ public interface ChessMove
 	/**
 	 * @param repr
 	 *            A string encoding a chess move, it must be the same as the output
-	 *            of .toString() of one of the concrete subclasses of this
-	 *            interface.
+	 *            of {@link #toString()} or {@link #toCompactString()} of one of the
+	 *            concrete subclasses of this interface.
 	 * @return the decoded move.
 	 */
 	static ChessMove decode(final String repr)
 	{
-		final String explicitNonCastleMoveRegex = "([SECP][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\])";
-		final String compactNonCastleMoveRegex = "([SECP][a-h][1-8][a-h][1-8])";
-		final String nonCastleMoveRx = "^" + explicitNonCastleMoveRegex + "|" + compactNonCastleMoveRegex + "$";
+		final String explicitStandardEnpassantRx = "([SE][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\])";
+		final String compactStandardEnpassantRx = "([SE]([a-h][1-8]){2})";
+		final String standardEnpassantRx = "^" + explicitStandardEnpassantRx + "|" + compactStandardEnpassantRx + "$";
 
-		final String explicitCastleMoveRegex = "(CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\])";
-		final String compactCastleMoveRx = "((wk)|(wq)|(bk)|(bq))";
-		final String castleMoveRx = "^" + explicitCastleMoveRegex + "|" + compactCastleMoveRx + "$";
+		final String explicitCastleRx = "(CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\])";
+		final String compactCastleRx = "((wk)|(wq)|(bk)|(bq))";
+		final String castleMoveRx = "^" + explicitCastleRx + "|" + compactCastleRx + "$";
 
-		if (repr.matches(nonCastleMoveRx)) {
+		final String explicitPromotionRx = "(PromotionMove[source=[a-h][1-8]\\|target=[a-h][1-8]\\|result=[NBRQ]\\])";
+		final String compactPromotionRx = "(P([a-h][1-8]){2}[NBRQ])";
+		final String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
+
+		if (repr.matches(standardEnpassantRx)) {
 			final List<String> squares = StringUtils.getAllMatches(repr, "[a-h][1-8]");
 			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
 			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
@@ -78,11 +84,15 @@ public interface ChessMove
 				return new StandardMove(source, target);
 			case 'E':
 				return new EnpassantMove(source, target);
-			case 'P':
-				return new PromotionMove(source, target);
 			default:
 				throw new RuntimeException();
 			}
+		} else if (repr.matches(promotionRx)) {
+			final List<String> squares = StringUtils.getAllMatches(repr, "[a-h][1-8]");
+			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
+			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
+			final PromotionResult result = PromotionResult.valueOf(Optionals.getOrError(findLastMatch(repr, "[NBRQ]")));
+			return new PromotionMove(source, target, result);
 		} else if (repr.matches(castleMoveRx)) {
 			final String zoneId = StringUtils.findFirstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();
 			return new CastleMove(CastleZone.fromSimpleIdentifier(zoneId));

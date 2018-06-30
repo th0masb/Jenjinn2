@@ -19,9 +19,12 @@ import jenjinn.engine.pieces.ChessPiece;
  */
 public final class PromotionMove extends AbstractChessMove
 {
-	public PromotionMove(final BoardSquare start, final BoardSquare target)
+	private final PromotionResult promotionResult;
+
+	public PromotionMove(final BoardSquare start, final BoardSquare target, PromotionResult promotionResult)
 	{
 		super(start, target);
+		this.promotionResult = promotionResult;
 	}
 
 	@Override
@@ -29,7 +32,7 @@ public final class PromotionMove extends AbstractChessMove
 	{
 		final Side activeSide = state.getActiveSide();
 		state.getPieceLocations().removePieceAt(getSource(), activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN);
-		state.getPieceLocations().addPieceAt(getTarget(), activeSide.isWhite() ? ChessPiece.WHITE_QUEEN : ChessPiece.BLACK_QUEEN);
+		state.getPieceLocations().addPieceAt(getTarget(), promotionResult.toPiece(activeSide));
 
 		final ChessPiece removedPiece = state.getPieceLocations().getPieceAt(getTarget(), activeSide.otherSide());
 		if (removedPiece != null) {
@@ -50,7 +53,7 @@ public final class PromotionMove extends AbstractChessMove
 	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{
 		final Side activeSide = state.getActiveSide();
-		state.getPieceLocations().removePieceAt(getTarget(), activeSide.isWhite()? ChessPiece.WHITE_QUEEN : ChessPiece.BLACK_QUEEN);
+		state.getPieceLocations().removePieceAt(getTarget(), promotionResult.toPiece(activeSide));
 		state.getPieceLocations().addPieceAt(getSource(), activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN);
 
 		final ChessPiece pieceToReplace = unmakeDataStore.getPieceTaken();
@@ -72,11 +75,26 @@ public final class PromotionMove extends AbstractChessMove
 	}
 
 	@Override
+	public String toString()
+	{
+		return new StringBuilder(getClass().getSimpleName())
+				.append("[source=")
+				.append(getSource().name().toLowerCase())
+				.append("|target=")
+				.append(getTarget().name().toLowerCase())
+				.append("|result=")
+				.append(promotionResult.name())
+				.append("]")
+				.toString();
+	}
+
+	@Override
 	public String toCompactString()
 	{
 		return new StringBuilder("P")
 				.append(getSource().name())
 				.append(getTarget().name())
+				.append(promotionResult.name())
 				.toString();
 	}
 }

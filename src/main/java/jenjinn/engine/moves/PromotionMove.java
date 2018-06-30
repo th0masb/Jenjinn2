@@ -12,6 +12,8 @@ import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.pieces.ChessPiece;
+import xawd.jflow.iterators.Flow;
+import xawd.jflow.iterators.factories.Iterate;
 
 /**
  * @author ThomasB
@@ -25,6 +27,11 @@ public final class PromotionMove extends AbstractChessMove
 	{
 		super(start, target);
 		this.promotionResult = promotionResult;
+	}
+
+	public static Flow<ChessMove> generateAllPossibilities(final BoardSquare start, final BoardSquare target)
+	{
+		return Iterate.over(PromotionResult.values()).map(res -> new PromotionMove(start, target, res));
 	}
 
 	@Override
@@ -96,5 +103,23 @@ public final class PromotionMove extends AbstractChessMove
 				.append(getTarget().name())
 				.append(promotionResult.name())
 				.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (super.equals(obj)) {
+			final PromotionMove other = (PromotionMove) obj;
+			return promotionResult.equals(other.promotionResult);
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return 31*super.hashCode() + promotionResult.hashCode();
 	}
 }

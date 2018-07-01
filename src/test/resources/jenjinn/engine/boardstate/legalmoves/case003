@@ -8,8 +8,9 @@ developed_pieces: none
 active_side: white
 enpassant_square: none
 
-s[a4->d1] s[a4->c6] p[a7->{a8 b8}] s[b1->b8] s[b1->{a1 c1 d1}] 
-c[wk] s[e1->{d1 d2 f1}] s[f2 f3] s[g2->g4] s[f5->{e3 g3 h4 h6 g7 e7 d6}]
-s[h1->f1] s[h1->h7]
+s[a4->d1] s[a4->c6] p[a7->{a8 b8} N] p[a7->{a8 b8} B] p[a7->{a8 b8} R] 
+p[a7->{a8 b8} Q] s[b1->b8] s[b1->{a1 c1 d1}] c[wk] s[e1->{d1 d2 f1}] 
+s[f2 f3] s[g2->g4] s[f5->{e3 g3 h4 h6 g7 e7 d6}]s[h1->f1] s[h1->h7]
 ---
-p[a7 b8] s[a4 c6] s[b1 b8] s[f5->g7] s[h1 h7]
+p[a7 b8 N] p[a7 b8 B] p[a7 b8 R] p[a7 b8 Q] s[a4 c6] s[b1 b8] s[f5->g7] 
+s[h1 h7]

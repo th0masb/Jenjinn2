@@ -20,6 +20,7 @@ import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.PromotionMove;
+import jenjinn.engine.moves.PromotionResult;
 import jenjinn.engine.moves.StandardMove;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
@@ -43,8 +44,8 @@ class ShorthandMoveParserTest
 				Arguments.of("s[a1->a3]", asList(new StandardMove(A1, A2), new StandardMove(A1, A3))),
 				Arguments.of("S[a1->{ a2 a3  }]", asList(new StandardMove(A1, A2), new StandardMove(A1, A3))),
 
-				Arguments.of("p[a1->a3]", asList(new PromotionMove(A1, A2), new PromotionMove(A1, A3))),
-				Arguments.of("P[a1->{ a2 a3  }]", asList(new PromotionMove(A1, A2), new PromotionMove(A1, A3))),
+				Arguments.of("p[a1->a3 R]", asList(new PromotionMove(A1, A2, PromotionResult.R), new PromotionMove(A1, A3, PromotionResult.R))),
+				Arguments.of("P[a1->{ a2 a3  } Q]", asList(new PromotionMove(A1, A2, PromotionResult.Q), new PromotionMove(A1, A3, PromotionResult.Q))),
 
 				Arguments.of("c[ wq bk]", asList(new CastleMove(CastleZone.WHITE_QUEENSIDE), new CastleMove(CastleZone.BLACK_KINGSIDE))),
 				Arguments.of("c[wk]", asList(new CastleMove(CastleZone.WHITE_KINGSIDE))),

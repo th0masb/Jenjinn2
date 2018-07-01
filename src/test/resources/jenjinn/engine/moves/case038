@@ -1,5 +1,5 @@
 // Testing white promotion
-PromotionMove[source=c7|target=b8]
+PromotionMove[source=c7|target=b8|result=Q]
 
 white_pieces: (c7 f2 g2) () (f3) (b1) () (e1)
 black_pieces: (c2 f7 g7 h7) () (g6) (b8) () (e8)

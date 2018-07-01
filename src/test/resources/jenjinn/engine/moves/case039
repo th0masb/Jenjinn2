@@ -1,5 +1,5 @@
 // Testing black promotion
-PromotionMove[source=c2|target=b1]
+PromotionMove[source=c2|target=b1|result=N]
 
 white_pieces: (c7 f2 g2) () (f3) (b1) () (e1)
 black_pieces: (c2 f7 g7 h7) () (g6) (b8) () (e8)
@@ -12,7 +12,7 @@ active_side: black
 enpassant_square: none
 
 white_pieces: (c7 f2 g2) () (f3) () () (e1)
-black_pieces: (f7 g7 h7) () (g6) (b8) (b1) (e8)
+black_pieces: (f7 g7 h7) (b1) (g6) (b8) () (e8)
 half_move_clock: 0
 castling_rights: wk wq bk bq
 white_castle_status: none

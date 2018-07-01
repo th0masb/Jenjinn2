@@ -17,6 +17,7 @@ import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.PromotionMove;
+import jenjinn.engine.moves.PromotionResult;
 import jenjinn.engine.moves.StandardMove;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
@@ -95,19 +96,21 @@ public final class ShorthandMoveParser
 	private static List<ChessMove> parsePromotionMoves(final String ec)
 	{
 		final String mtarg = CommonRegex.MULTI_TARGET, cord = CommonRegex.CORD;
-		if (ec.matches("P\\[(" + mtarg + "|" + cord + ")\\]")) {
-			final Pair<BoardSquare, Iterable<BoardSquare>> moves = parseMultiMove(ec.substring(2, ec.length() - 1));
+		final String result = StringUtils.findLastMatch(ec, "[NBRQ]")
+				.orElseThrow(() -> new IllegalArgumentException(ec));
+		if (ec.matches("P\\[(" + mtarg + "|" + cord + ") " + result + "\\]")) {
+			final Pair<BoardSquare, Iterable<BoardSquare>> moves = parseMultiMove(ec.substring(2, ec.length() - 3));
 			return Iterate.over(moves.second())
-					.map(target -> new PromotionMove(moves.first(), target))
+					.map(target -> new PromotionMove(moves.first(), target, PromotionResult.valueOf(result)))
 					.filterAndCastTo(ChessMove.class)
 					.toList();
 		}
-		else if (ec.matches("P\\[(" + CommonRegex.DOUBLE_SQUARE + ")\\]")) {
+		else if (ec.matches("P\\[(" + CommonRegex.DOUBLE_SQUARE + ") " + result + "\\]")) {
 			final List<BoardSquare> squares = Iterate.over(StringUtils.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
 					.map(s -> BoardSquare.valueOf(s.toUpperCase()))
 					.toList();
 
-			return asList(new PromotionMove(head(squares), tail(squares)));
+			return asList(new PromotionMove(head(squares), tail(squares), PromotionResult.valueOf(result)));
 		}
 		else {
 			throw new IllegalArgumentException(ec);

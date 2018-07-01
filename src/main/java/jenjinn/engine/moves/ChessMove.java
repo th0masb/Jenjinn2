@@ -70,7 +70,7 @@ public interface ChessMove
 		final String compactCastleRx = "((wk)|(wq)|(bk)|(bq))";
 		final String castleMoveRx = "^" + explicitCastleRx + "|" + compactCastleRx + "$";
 
-		final String explicitPromotionRx = "(PromotionMove[source=[a-h][1-8]\\|target=[a-h][1-8]\\|result=[NBRQ]\\])";
+		final String explicitPromotionRx = "(PromotionMove\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\|result=[NBRQ]\\])";
 		final String compactPromotionRx = "(P([a-h][1-8]){2}[NBRQ])";
 		final String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
 

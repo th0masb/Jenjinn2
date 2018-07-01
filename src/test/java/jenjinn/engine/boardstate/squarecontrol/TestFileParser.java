@@ -9,7 +9,7 @@ import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.take;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.HashSet;
 import java.util.List;

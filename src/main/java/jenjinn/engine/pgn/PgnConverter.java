@@ -5,7 +5,7 @@ package jenjinn.engine.pgn;
 
 import static java.lang.Long.toHexString;
 import static java.lang.Math.min;
-import static xawd.jflow.utilities.StringUtils.matchesAnywhere;
+import static xawd.jflow.utilities.Strings.matchesAnywhere;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -7,7 +7,7 @@ import static java.util.stream.Collectors.toList;
 import static jenjinn.engine.parseutils.BoardParseUtils.parseBoard;
 import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.Collections;
 import java.util.List;

@@ -10,7 +10,7 @@ import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.List;
 

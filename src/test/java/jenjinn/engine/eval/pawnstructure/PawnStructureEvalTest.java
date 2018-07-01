@@ -49,8 +49,8 @@ class PawnStructureEvalTest
 		assertEquals(-backwardCountDifference*BACKWARD_PENALTY, evaluateBackwardPawns(w, b));
 
 		final IntPair isolatedDifferences = expectedValues.getIsolatedPawnCountDifferences();
-		final int expectedEval = -isolatedDifferences.getFirst() * ISOLATED_PENALTY
-				- isolatedDifferences.getSecond() * (ISOLATED_PENALTY + SEMIOPEN_FILE_BONUS);
+		final int expectedEval = -isolatedDifferences.first() * ISOLATED_PENALTY
+				- isolatedDifferences.second() * (ISOLATED_PENALTY + SEMIOPEN_FILE_BONUS);
 		assertEquals(expectedEval, evaluateIsolatedPawns(w, b));
 
 		final int expectedWhitePhalanxScore = expectedValues

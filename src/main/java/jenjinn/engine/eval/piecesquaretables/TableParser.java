@@ -5,7 +5,7 @@ package jenjinn.engine.eval.piecesquaretables;
 
 import static java.util.stream.Collectors.toList;
 import static xawd.jflow.utilities.MapUtil.intMap;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.List;
 

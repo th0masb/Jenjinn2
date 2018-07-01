@@ -5,7 +5,7 @@ package jenjinn.engine.moves;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.StringUtils.findLastMatch;
+import static xawd.jflow.utilities.Strings.findLastMatch;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.CastleZone;
 import xawd.jflow.utilities.Optionals;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -75,7 +75,7 @@ public interface ChessMove
 		final String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
 
 		if (repr.matches(standardEnpassantRx)) {
-			final List<String> squares = StringUtils.getAllMatches(repr, "[a-h][1-8]");
+			final List<String> squares = Strings.getAllMatches(repr, "[a-h][1-8]");
 			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
 			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
 			final char firstChar = repr.charAt(0);
@@ -88,13 +88,13 @@ public interface ChessMove
 				throw new RuntimeException();
 			}
 		} else if (repr.matches(promotionRx)) {
-			final List<String> squares = StringUtils.getAllMatches(repr, "[a-h][1-8]");
+			final List<String> squares = Strings.getAllMatches(repr, "[a-h][1-8]");
 			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
 			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
 			final PromotionResult result = PromotionResult.valueOf(Optionals.getOrError(findLastMatch(repr, "[NBRQ]")));
 			return new PromotionMove(source, target, result);
 		} else if (repr.matches(castleMoveRx)) {
-			final String zoneId = StringUtils.findFirstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();
+			final String zoneId = Strings.findFirstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();
 			return new CastleMove(CastleZone.fromSimpleIdentifier(zoneId));
 		} else {
 			throw new IllegalArgumentException(repr);

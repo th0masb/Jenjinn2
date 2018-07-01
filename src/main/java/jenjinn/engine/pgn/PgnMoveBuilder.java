@@ -5,8 +5,8 @@ package jenjinn.engine.pgn;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.StringUtils.findFirstMatch;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.findFirstMatch;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.PromotionMove;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.Iterate;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -61,7 +61,7 @@ public final class PgnMoveBuilder
 				+ "Bd7 9.g3 Ne7 10.h4 Nb3 11.Nxb3 Ba4 12.Nfd2 Nc6 13.Bh3 Na5 14.O-O Nxb3 "
 				+ "15.Nf3 O-O-O 1-0";
 
-		System.out.println(StringUtils.getAllMatches(pgn, MOVE));
+		System.out.println(Strings.getAllMatches(pgn, MOVE));
 	}
 
 	public static ChessMove convertPgnCommand(final BoardState currentState, final String moveCommand) throws BadPgnException

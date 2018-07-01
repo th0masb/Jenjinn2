@@ -7,7 +7,7 @@ import static java.util.Arrays.asList;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import jenjinn.engine.moves.PromotionResult;
 import jenjinn.engine.moves.StandardMove;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -64,7 +64,7 @@ public final class ShorthandMoveParser
 					.toList();
 		}
 		else if (ec.matches("S\\[(" + CommonRegex.DOUBLE_SQUARE + ")\\]")) {
-			final List<BoardSquare> squares = Iterate.over(StringUtils.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
+			final List<BoardSquare> squares = Iterate.over(Strings.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
 					.map(s -> BoardSquare.valueOf(s.toUpperCase()))
 					.toList();
 
@@ -96,7 +96,7 @@ public final class ShorthandMoveParser
 	private static List<ChessMove> parsePromotionMoves(final String ec)
 	{
 		final String mtarg = CommonRegex.MULTI_TARGET, cord = CommonRegex.CORD;
-		final String result = StringUtils.findLastMatch(ec, "[NBRQ]")
+		final String result = Strings.findLastMatch(ec, "[NBRQ]")
 				.orElseThrow(() -> new IllegalArgumentException(ec));
 		if (ec.matches("P\\[(" + mtarg + "|" + cord + ") " + result + "\\]")) {
 			final Pair<BoardSquare, Iterable<BoardSquare>> moves = parseMultiMove(ec.substring(2, ec.length() - 3));
@@ -106,7 +106,7 @@ public final class ShorthandMoveParser
 					.toList();
 		}
 		else if (ec.matches("P\\[(" + CommonRegex.DOUBLE_SQUARE + ") " + result + "\\]")) {
-			final List<BoardSquare> squares = Iterate.over(StringUtils.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
+			final List<BoardSquare> squares = Iterate.over(Strings.getAllMatches(ec, CommonRegex.SINGLE_SQUARE))
 					.map(s -> BoardSquare.valueOf(s.toUpperCase()))
 					.toList();
 

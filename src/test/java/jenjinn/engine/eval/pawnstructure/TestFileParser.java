@@ -16,7 +16,7 @@ import jenjinn.engine.parseutils.CommonRegex;
 import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.misc.IntPair;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -47,10 +47,10 @@ public final class TestFileParser
 			final FlowList<Integer> isolatedPawnCounts = decodeIntegerSequence(lines.get(6));
 
 			final ExpectedValues expected = new ExpectedValues(
-					doubledPawnCounts.getFirst() - doubledPawnCounts.getSecond(),
-					passedPawnCounts.getFirst() - passedPawnCounts.getSecond(),
-					chainLinkCounts.getFirst() - chainLinkCounts.getSecond(),
-					backwardCounts.getFirst() - backwardCounts.getSecond(),
+					doubledPawnCounts.first() - doubledPawnCounts.second(),
+					passedPawnCounts.first() - passedPawnCounts.second(),
+					chainLinkCounts.first() - chainLinkCounts.second(),
+					backwardCounts.first() - backwardCounts.second(),
 					IntPair.of(
 							isolatedPawnCounts.get(0) - isolatedPawnCounts.get(2),
 							isolatedPawnCounts.get(1) - isolatedPawnCounts.get(3)),
@@ -70,7 +70,7 @@ public final class TestFileParser
 		if (!encodedSequence.matches("^" + num + "( " + num + ")+$")) {
 			throw new IllegalArgumentException(encodedSequence);
 		}
-		return StringUtils.getAllMatches(encodedSequence, num)
+		return Strings.getAllMatches(encodedSequence, num)
 				.map(Integer::parseInt)
 				.toList();
 	}
@@ -81,7 +81,7 @@ public final class TestFileParser
 		if (!encodedPair.matches("^" + num + " +" + num + "$")) {
 			throw new IllegalArgumentException(encodedPair);
 		}
-		final FlowList<Integer> decoded = StringUtils.getAllMatches(encodedPair, num)
+		final FlowList<Integer> decoded = Strings.getAllMatches(encodedPair, num)
 				.map(Integer::parseInt)
 				.toList();
 
@@ -94,7 +94,7 @@ public final class TestFileParser
 		if (!encodedLocs.matches("^" + sq + "( " + sq + ")*$")) {
 			throw new IllegalArgumentException(encodedLocs);
 		}
-		return StringUtils.getAllMatches(encodedLocs, sq)
+		return Strings.getAllMatches(encodedLocs, sq)
 				.map(String::toUpperCase)
 				.map(BoardSquare::valueOf)
 				.mapToLong(BoardSquare::asBitboard)

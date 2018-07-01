@@ -12,7 +12,7 @@ import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.stringutils.VisualGridGenerator;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author t
@@ -33,7 +33,7 @@ public final class PgnGameConverter
 		final String pgn = pgnInput.trim();
 		if (pgn.matches(GAME_STRING)) {
 			final BoardState state = StartStateGenerator.createStartBoard();
-			final List<String> encodedMoves = StringUtils.getAllMatches(pgn, PgnMoveBuilder.MOVE);
+			final List<String> encodedMoves = Strings.getAllMatches(pgn, PgnMoveBuilder.MOVE);
 			final List<ChessMove> decodedMoves = new ArrayList<>(encodedMoves.size());
 			for (final String encodedMove : encodedMoves) {
 				final ChessMove decodedMove = PgnMoveBuilder.convertPgnCommand(state, encodedMove);

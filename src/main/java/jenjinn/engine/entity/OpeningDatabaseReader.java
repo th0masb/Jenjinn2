@@ -5,8 +5,8 @@ package jenjinn.engine.entity;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.StringUtils.findFirstMatch;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.findFirstMatch;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.io.BufferedReader;
 import java.io.Closeable;

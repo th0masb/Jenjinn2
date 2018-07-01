@@ -7,8 +7,8 @@ import static jenjinn.engine.eval.piecesquaretables.TestingPieceSquareTables.get
 import static jenjinn.engine.eval.piecesquaretables.TestingPieceSquareTables.getMidgameTables;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static xawd.jflow.utilities.MapUtil.objMap;
-import static xawd.jflow.utilities.StringUtils.findFirstMatch;
-import static xawd.jflow.utilities.StringUtils.getAllMatches;
+import static xawd.jflow.utilities.Strings.findFirstMatch;
+import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -31,7 +31,7 @@ import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
-import xawd.jflow.utilities.StringUtils;
+import xawd.jflow.utilities.Strings;
 
 /**
  * Lets us construct {@linkplain BoardState} instances in an easy way via external files.
@@ -79,21 +79,21 @@ public final class BoardParseUtils
 	private static BoardSquare constructEnpassantSquare(final String enpassantSquare)
 	{
 		assertTrue(enpassantSquare.trim().matches("^enpassant_square: *((none)|([a-h][1-8]))$"));
-		final Optional<String> squareMatch = StringUtils.findFirstMatch(enpassantSquare, "[a-h][1-8]");
+		final Optional<String> squareMatch = Strings.findFirstMatch(enpassantSquare, "[a-h][1-8]");
 		return squareMatch.isPresent()? BoardSquare.valueOf(squareMatch.get().toUpperCase()) : null;
 	}
 
 	private static Side constructActiveSide(final String activeSide)
 	{
 		assertTrue(activeSide.trim().matches("^active_side: *(white|black)$"));
-		final Optional<String> whiteMatch = StringUtils.findFirstMatch(activeSide, "white");
+		final Optional<String> whiteMatch = Strings.findFirstMatch(activeSide, "white");
 		return whiteMatch.isPresent()? Side.WHITE : Side.BLACK;
 	}
 
 	private static Set<DevelopmentPiece> constructDevelopedPieces(final String developedPieces)
 	{
 		assertTrue(developedPieces.trim().matches("^developed_pieces:(( *none)|(( *[a-h][1-8])( +[a-h][1-8]){0,11}))$"), developedPieces);
-		final List<String> squaresMatched = StringUtils.getAllMatches(developedPieces, "[a-h][1-8]");
+		final List<String> squaresMatched = Strings.getAllMatches(developedPieces, "[a-h][1-8]");
 		final Set<BoardSquare> uniqueSquares = Iterate.over(squaresMatched).map(String::toUpperCase).map(BoardSquare::valueOf).toSet();
 		if (uniqueSquares.size() != squaresMatched.size()) {
 			throw new IllegalArgumentException(developedPieces);
@@ -111,17 +111,17 @@ public final class BoardParseUtils
 		final Map<String, CastleZone> regexMatchers = CastleZone.iterateAll().toMap(CastleZone::getSimpleIdentifier, Function.identity());
 
 		final Set<CastleZone> rightSet = Iterate.over(regexMatchers.keySet())
-				.filter(rx -> StringUtils.matchesAnywhere(rights, rx))
+				.filter(rx -> Strings.matchesAnywhere(rights, rx))
 				.map(regexMatchers::get)
 				.toCollection(() -> EnumSet.noneOf(CastleZone.class));
 
 		final CastleZone whiteCastleStatus = Iterate.over(regexMatchers.keySet())
-				.filter(rx -> StringUtils.matchesAnywhere(whiteStatus, rx))
+				.filter(rx -> Strings.matchesAnywhere(whiteStatus, rx))
 				.map(regexMatchers::get)
 				.safeNext().orElse(null);
 
 		final CastleZone blackCastleStatus = Iterate.over(regexMatchers.keySet())
-				.filter(rx -> StringUtils.matchesAnywhere(blackStatus, rx))
+				.filter(rx -> Strings.matchesAnywhere(blackStatus, rx))
 				.map(regexMatchers::get)
 				.safeNext().orElse(null);
 

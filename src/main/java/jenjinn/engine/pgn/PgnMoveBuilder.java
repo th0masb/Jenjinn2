@@ -146,7 +146,7 @@ public final class PgnMoveBuilder
 			return head(candidates);
 		}
 		else if (candidates.size() == 2) {
-			final char file = mc.charAt(0);
+			final char file = mc.toUpperCase().charAt(0);
 			return Iterate.over(candidates)
 					.filter(mv -> mv.getSource().name().charAt(0) == file)
 					.safeNext().orElseThrow(exSupplier);

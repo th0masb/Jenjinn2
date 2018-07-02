@@ -9,7 +9,7 @@ import static xawd.jflow.utilities.Strings.findFirstMatch;
 import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.parseutils.CommonRegex;
+import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.collections.FlowList;
 
 /**

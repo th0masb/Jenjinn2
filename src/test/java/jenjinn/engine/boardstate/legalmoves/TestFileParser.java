@@ -16,8 +16,8 @@ import java.util.Set;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.moves.ChessMove;
-import jenjinn.engine.parseutils.CommonRegex;
 import jenjinn.engine.parseutils.ShorthandMoveParser;
+import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

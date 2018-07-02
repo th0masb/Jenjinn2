@@ -5,6 +5,7 @@ package jenjinn.engine.boardstate.terminationstate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +20,7 @@ import xawd.jflow.iterators.Flow;
  */
 class TerminationStateTest
 {
+	@Disabled
 	@ParameterizedTest
 	@MethodSource
 	void test(final BoardState state, final Boolean hasLegalMoves, final GameTermination expectedTerminationState)

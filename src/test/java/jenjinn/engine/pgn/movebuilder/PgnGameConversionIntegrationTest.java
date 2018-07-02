@@ -19,7 +19,6 @@ import jenjinn.engine.moves.AbstractBoardStateTest;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.pgn.BadPgnException;
 import jenjinn.engine.pgn.PgnGameConverter;
-import jenjinn.engine.stringutils.VisualGridGenerator;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -37,7 +36,7 @@ class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 
 		for (final String filename : files) {
 			final Stream<String> pgns = loadResourceFromPackageOf(getClass(), filename);
-			pgns.limit(5000).forEach(pgn -> {
+			pgns.limit(500).forEach(pgn -> {
 				try {
 					final List<ChessMove> mvs = PgnGameConverter.parse(pgn.trim());
 					final BoardState state = StartStateGenerator.createStartBoard();
@@ -51,14 +50,5 @@ class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 				}
 			});
 		}
-	}
-
-	public static void main(String[] args) throws BadPgnException
-	{
-		final String pgn = "1.Nc3 c5 2.e4 e6 3.f4 Nc6 4.Bb5 Qc7 5.d3 a6 6.Bxc6 Qxc6 7.Nf3 Nf6 8.O-O Be7 9.Qe1 O-O 10.Bd2 b5 11.Ne5 Qc7 12.Qg3 d6 13.Ng4 b4 14.Nd1 Nxg4 15.Qxg4 f5 16.exf5 exf5 17.Qh3 Bf6 18.c3 a5 19.Ne3 Be6 20.Qf3 Qf7 21.a3 Rab8 22.axb4 axb4 23.Ra6 d5 24.Raa1 Rfd8 25.Nd1 bxc3 26.bxc3 d4 27.c4 Bc8 28.Ra7 Qe6 29.Ba5 Re8 30.Bc7 Qe1 1-0";//31.Bxg2
-		final List<ChessMove> mvs = PgnGameConverter.parse(pgn);
-		final BoardState state = StartStateGenerator.createStartBoard();
-		mvs.stream().forEach(mv -> mv.makeMove(state));
-		System.out.println(VisualGridGenerator.from(state.getPieceLocations()));
 	}
 }

@@ -32,3 +32,9 @@ dependencies {
 task wrapper(type: Wrapper) {
 	gradleVersion = '4.6'
 }
+
+test {
+  beforeTest { descriptor ->
+     logger.lifecycle("Running test: ${descriptor}")
+  }
+}

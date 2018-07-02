@@ -19,6 +19,7 @@ import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.PromotionMove;
 import jenjinn.engine.moves.PromotionResult;
 import jenjinn.engine.moves.StandardMove;
+import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
 import xawd.jflow.utilities.Strings;

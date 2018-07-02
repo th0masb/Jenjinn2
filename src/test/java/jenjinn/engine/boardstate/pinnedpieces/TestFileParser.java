@@ -17,7 +17,7 @@ import java.util.Set;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.parseutils.CommonRegex;
+import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

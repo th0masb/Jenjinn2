@@ -11,6 +11,7 @@ import java.util.List;
 
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Direction;
+import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.parseutils;
+package jenjinn.engine.pgn;
 
 /**
  * @author ThomasB

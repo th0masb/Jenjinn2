@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.parseutils.CommonRegex;
+import jenjinn.engine.pgn.CommonRegex;
 import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.misc.IntPair;

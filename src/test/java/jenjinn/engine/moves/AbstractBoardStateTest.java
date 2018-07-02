@@ -5,8 +5,6 @@ package jenjinn.engine.moves;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.stringutils.VisualGridGenerator;
 
@@ -16,11 +14,6 @@ import jenjinn.engine.stringutils.VisualGridGenerator;
  */
 public abstract class AbstractBoardStateTest
 {
-	public BoardState constructBoardState(final List<String> lines)
-	{
-		throw new RuntimeException();
-	}
-
 	public void assertBoardStatesAreEqual(final BoardState constraint, final BoardState toTest)
 	{
 		assertEquals(constraint.getActiveSide(), toTest.getActiveSide());

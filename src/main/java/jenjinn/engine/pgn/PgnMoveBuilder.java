@@ -21,8 +21,10 @@ import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.PromotionMove;
+import jenjinn.engine.moves.PromotionResult;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.Iterate;
+import xawd.jflow.utilities.Optionals;
 import xawd.jflow.utilities.Strings;
 
 /**
@@ -42,14 +44,11 @@ public final class PgnMoveBuilder
 	private static final String FILE = "([a-h])", RANK = "([1-8])";
 	private static final String SQUARE = "(" + FILE + RANK +")";
 	private static final String PIECE = "(N|B|R|Q|K)";
-	private static final String CHECK = "(\\+|#)";
 
 	public static final String CASTLE_MOVE = "(O-O(-O)?)";
-	public static final String PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=Q" + ")";
-	public static final String STANDARD_MOVE = "(" + PIECE + "?([a-h]|[1-8]|([a-h][1-8]))?x?" + SQUARE + ")";
+	public static final String PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=[NBRQ]" + ")";
+	public static final String STANDARD_MOVE = "(" + PIECE + "?([a-h]|[1-8]|([a-h][1-8]))?x?" + SQUARE + "(?!=))";
 	public static final String MOVE = "(" + STANDARD_MOVE + "|" + PROMOTION_MOVE + "|" + CASTLE_MOVE + ")";
-
-	public static final String EXCLUDED_PROMOTION_MOVE = "(([a-h]x)?" + SQUARE + "=(N|B|R)" + CHECK + "?)";
 
 	private PgnMoveBuilder()
 	{
@@ -57,9 +56,7 @@ public final class PgnMoveBuilder
 
 	public static void main(String[] args)
 	{
-		final String pgn = "1.e4 e6 2.d4 d5 3.e5 c5 4.c3 Nc6 5.Nf3 Qb6 6.a3 c4 7.Nbd2 Na5 8.Rb1 "
-				+ "Bd7 9.g3 Ne7 10.h4 Nb3 11.Nxb3 Ba4 12.Nfd2 Nc6 13.Bh3 Na5 14.O-O Nxb3 "
-				+ "15.Nf3 O-O-O 1-0";
+		final String pgn = "1.e4 e5 2.Bc4 Bc5 3.Qe2 Nf6 4.d3 Nc6 5.c3 Ne7 6.f4 exf4 7.d4 Bb6 8.Bxf4 d6 9.Bd3 Ng6 10.Be3 O-O 11.h3 Re8 12.Nd2 Qe7 13.O-O-O c5 14.Kb1 cxd4 15.cxd4 a5 16.Ngf3 Bd7 17.g4 h6 18.Rdg1 a4 19.g5 hxg5 20.Bxg5 a3 21.b3 Bc6 22.Rg4 Ba5 23.h4 Bxd2 24.Nxd2 Ra5 25.h5 Rxg5 26.Rxg5 Nf4 27.Qf3 Nxd3 28.d5 Nxd5 29.Rhg1 Nc3+ 30.Ka1 Bxe4 31.Rxg7+ Kh8 32.Qg3 Bg6 33.hxg6 Qe1+ 34.Rxe1 Rxe1+ 35.Qxe1 Nxe1 36.Rh7+ Kg8 37.gxf7+ Kxh7 38.f8=N+ Kh6 39.Nb1 Nc2+  0-1";
 
 		System.out.println(Strings.getAllMatches(pgn, MOVE));
 	}
@@ -137,11 +134,12 @@ public final class PgnMoveBuilder
 		final String mc = moveCommand;
 		final Supplier<BadPgnException> exSupplier = () -> new BadPgnException(moveCommand);
 
+		final PromotionResult piece = PromotionResult.valueOf(Optionals.getOrError(Strings.findLastMatch(mc, "[NBRQ]")));
 		final String encodedTarget = findFirstMatch(mc, SQUARE).orElseThrow(exSupplier);
 		final BoardSquare target = BoardSquare.valueOf(encodedTarget.toUpperCase());
 		final List<PromotionMove> candidates = Iterate.over(legalMoves)
 				.filterAndCastTo(PromotionMove.class)
-				.filter(mv -> mv.getTarget() == target)
+				.filter(mv -> mv.getTarget().equals(target) && mv.getPromotionResult().equals(piece))
 				.toList();
 
 		if (candidates.size() == 1) {

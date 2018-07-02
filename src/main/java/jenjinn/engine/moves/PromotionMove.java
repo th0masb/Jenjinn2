@@ -34,6 +34,11 @@ public final class PromotionMove extends AbstractChessMove
 		return Iterate.over(PromotionResult.values()).map(res -> new PromotionMove(start, target, res));
 	}
 
+	public PromotionResult getPromotionResult()
+	{
+		return promotionResult;
+	}
+
 	@Override
 	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
 	{

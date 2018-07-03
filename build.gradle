@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-	compile project(':JFlow')
-	//compile name: 'JFlow-0.1'
+	//compile project(':JFlowOpen')
+	compile name: 'JFlowOpen-0.3'
 
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
@@ -34,7 +34,6 @@ task wrapper(type: Wrapper) {
 }
 
 test {
-  beforeTest { descriptor ->
-     logger.lifecycle("Running test: ${descriptor}")
-  }
+    // This is necessary for JUnit5 tests to actually run!
+    useJUnitPlatform()
 }

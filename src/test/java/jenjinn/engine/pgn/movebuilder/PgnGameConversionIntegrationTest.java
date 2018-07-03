@@ -27,6 +27,8 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 {
+	private static final int N_GAMES_PER_FILE = 500;
+
 	@Test
 	void test()
 	{
@@ -36,7 +38,7 @@ class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 
 		for (final String filename : files) {
 			final Stream<String> pgns = loadResourceFromPackageOf(getClass(), filename);
-			pgns.limit(500).forEach(pgn -> {
+			pgns.limit(N_GAMES_PER_FILE).forEach(pgn -> {
 				try {
 					final List<ChessMove> mvs = PgnGameConverter.parse(pgn.trim());
 					final BoardState state = StartStateGenerator.createStartBoard();

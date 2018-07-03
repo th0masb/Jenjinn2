@@ -21,6 +21,7 @@ import xawd.jflow.iterators.misc.Pair;
  */
 public final class ChessBoard extends Region
 {
+	private final ColorScheme colors;
 	private final Canvas backingCanvas = new ResizableCanvas();
 	private final Canvas boardCanvas = new ResizableCanvas();
 	private final Canvas markerCanvas = new ResizableCanvas();
@@ -33,11 +34,9 @@ public final class ChessBoard extends Region
 	private Map<BoardSquare, ChessPiece> pieceLocations;
 	private final Side boardPerspective = Side.WHITE;
 
-	/**
-	 *
-	 */
-	public ChessBoard()
+	public ChessBoard(ColorScheme colors)
 	{
+		this.colors = colors;
 	}
 
 	@Override

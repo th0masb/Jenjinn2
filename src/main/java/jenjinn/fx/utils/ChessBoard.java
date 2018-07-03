@@ -3,6 +3,7 @@
  */
 package jenjinn.fx.utils;
 
+import static java.util.Comparator.comparing;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.Optional;
@@ -12,13 +13,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.moves.ChessMove;
+import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.misc.Pair;
+import xawd.jflow.utilities.Optionals;
 
 /**
  * @author ThomasB
@@ -27,12 +32,12 @@ import xawd.jflow.iterators.misc.Pair;
 public final class ChessBoard
 {
 	private final ColorScheme colors;
+	private final BoardState state;
 	private final VisualBoard board = new VisualBoard();
 
 	private BoardSquareLocations squareLocations = BoardSquareLocations.getDefault();
-	private final BoardState state;
 	private Side boardPerspective = Side.WHITE;
-	private final Optional<BoardSquare> selectedSquare = Optional.empty();
+	private Optional<BoardSquare> selectedSquare = Optional.empty();
 
 	public ChessBoard(ColorScheme colors, BoardState stateToWatch)
 	{
@@ -53,6 +58,7 @@ public final class ChessBoard
 		redrawBackground();
 		redrawSquares();
 		redrawMarkers();
+		redrawPieces();
 	}
 
 	public void redrawBackground()
@@ -123,6 +129,22 @@ public final class ChessBoard
 		gc.fillOval(locBounds.getMinX(), locBounds.getMinY(), locBounds.getWidth(), locBounds.getHeight());
 	}
 
+	public void redrawPieces()
+	{
+		final double size = board.getBoardSize(), sqSize = size / 8;
+		final GraphicsContext gc = board.getPieceGC();
+		gc.clearRect(0, 0, size, size);
+
+		for (final ChessPiece piece : ChessPieces.all()) {
+			final Image image = ImageCache.INSTANCE.getImageOf(piece);
+			state.getPieceLocations().iterateLocs(piece).forEach(sq -> {
+				final Point2D loc = squareLocations.get(sq);
+				final Bounds b = RenderUtils.getSquareBounds(loc, sqSize, 1);
+				gc.drawImage(image, b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+			});
+		}
+	}
+
 	/**
 	 * Calculates an association of BoardSquares to the centre point of their
 	 * required visual bounds relative to the local coordinate space of the canvas
@@ -152,6 +174,22 @@ public final class ChessBoard
 			squareLocations = calculateBoardPoints(board.getBoardSize());
 			Platform.runLater(this::redraw);
 		}
+	}
+
+	public Optional<BoardSquare> getSelectedSquare()
+	{
+		return selectedSquare;
+	}
+
+	public void setSelectedSquare(Optional<BoardSquare> selectedSquare)
+	{
+		this.selectedSquare = selectedSquare;
+		Platform.runLater(this::redraw);
+	}
+
+	public BoardSquare getClosestSquare(Point2D query)
+	{
+		return Optionals.getOrError(BoardSquare.iterateAll().min(comparing(sq -> query.distance(squareLocations.get(sq)))));
 	}
 
 	public VisualBoard getBoard()

@@ -3,9 +3,11 @@
  */
 package jenjinn.fx.utils;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.collections.Lists;
@@ -79,6 +81,11 @@ public final class VisualBoard extends Region
 	public GraphicsContext getPieceGC()
 	{
 		return pieceCanvas.getGraphicsContext2D();
+	}
+
+	public void setMouseClickInteractionProcedure(EventHandler<? super MouseEvent> evt)
+	{
+		interactionLayer.setOnMouseClicked(evt);
 	}
 
 	public void setInteractionEnabled()

@@ -63,7 +63,7 @@ public final class PgnMoveBuilder
 
 	public static ChessMove convertPgnCommand(final BoardState currentState, final String moveCommand) throws BadPgnException
 	{
-		final Set<ChessMove> legalMoves = LegalMoves.getMoves(currentState).toSet();
+		final Set<ChessMove> legalMoves = LegalMoves.getAllMoves(currentState).toSet();
 
 		if (moveCommand.matches(CASTLE_MOVE)) {
 			return decodeCastleMove(currentState, moveCommand, legalMoves);

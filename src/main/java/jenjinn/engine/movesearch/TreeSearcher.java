@@ -44,7 +44,7 @@ public final class TreeSearcher
 	 */
 	public Optional<ChessMove> getBestMoveFrom(BoardState root)
 	{
-		final Optional<ChessMove> legalMoves = LegalMoves.getMoves(root).safeNext();
+		final Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).safeNext();
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
 			return Optional.empty();
 		}
@@ -71,7 +71,7 @@ public final class TreeSearcher
 
 	private ChessMove getBestMoveFrom(BoardState root, int depth) throws InterruptedException
 	{
-		final FlowList<ChessMove> legalMoves = LegalMoves.getMoves(root).toList();
+		final FlowList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
 		final int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 
@@ -96,7 +96,7 @@ public final class TreeSearcher
 			throw new InterruptedException();
 		}
 
-		final Optional<ChessMove> firstMove = LegalMoves.getMoves(root).safeNext();
+		final Optional<ChessMove> firstMove = LegalMoves.getAllMoves(root).safeNext();
 		final GameTermination termination = TerminationState.of(root, firstMove.isPresent());
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
@@ -126,7 +126,7 @@ public final class TreeSearcher
 			recommendedFirstMoveIndex = tableEntry.notableMoveIndex;
 		}
 
-		final FlowList<ChessMove> legalMoves = LegalMoves.getMoves(root).toList();
+		final FlowList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
 		final int[] moveIndices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(moveIndices, recommendedFirstMoveIndex);
 

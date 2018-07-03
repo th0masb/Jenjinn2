@@ -53,7 +53,7 @@ public final class LegalMoves
 		return getLegalMoves(state, true);
 	}
 
-	public static Flow<ChessMove> getMoves(final BoardState state)
+	public static Flow<ChessMove> getAllMoves(final BoardState state)
 	{
 		return getLegalMoves(state, false);
 	}

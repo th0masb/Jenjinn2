@@ -33,7 +33,7 @@ class LegalMovesGenerationTest
 	@MethodSource
 	void test(final BoardState state, final Set<ChessMove> expectedMoves, final Set<ChessMove> expectedAttacks)
 	{
-		final Set<ChessMove> actualMoves = LegalMoves.getMoves(state).toSet();
+		final Set<ChessMove> actualMoves = LegalMoves.getAllMoves(state).toSet();
 		assertEquals(expectedMoves, actualMoves, formatDifferences(expectedMoves, actualMoves));
 
 		final Set<ChessMove> actualAttacks = LegalMoves.getAttacks(state).toSet();

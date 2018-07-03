@@ -52,7 +52,7 @@ public final class QuiescentSearcher
 			throw new InterruptedException();
 		}
 
-		Flow<ChessMove> movesToProbe = LegalMoves.getMoves(root);
+		Flow<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
 		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
 

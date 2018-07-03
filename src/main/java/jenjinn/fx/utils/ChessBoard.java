@@ -3,67 +3,124 @@
  */
 package jenjinn.fx.utils;
 
-import java.util.Map;
+import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
+import java.util.Optional;
+
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Region;
+import javafx.scene.canvas.GraphicsContext;
+import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.enums.Side;
-import jenjinn.engine.pieces.ChessPiece;
+import jenjinn.engine.moves.ChessMove;
 import xawd.jflow.collections.FlowList;
-import xawd.jflow.collections.Lists;
 import xawd.jflow.iterators.misc.Pair;
 
 /**
  * @author ThomasB
  *
  */
-public final class ChessBoard extends Region
+public final class ChessBoard
 {
 	private final ColorScheme colors;
-	private final Canvas backingCanvas = new ResizableCanvas();
-	private final Canvas boardCanvas = new ResizableCanvas();
-	private final Canvas markerCanvas = new ResizableCanvas();
-	private final Canvas pieceCanvas = new ResizableCanvas();
-	private final Canvas interactionLayer = new ResizableCanvas();
-	private final FlowList<Canvas> boardCanvasStack = Lists.build(boardCanvas, markerCanvas, pieceCanvas,
-			interactionLayer);
+	private final VisualBoard board = new VisualBoard();
 
 	private BoardSquareLocations squareLocations = BoardSquareLocations.getDefault();
-	private Map<BoardSquare, ChessPiece> pieceLocations;
-	private final Side boardPerspective = Side.WHITE;
+	private final BoardState state;
+	private Side boardPerspective = Side.WHITE;
+	private final Optional<BoardSquare> selectedSquare = Optional.empty();
 
-	public ChessBoard(ColorScheme colors)
+	public ChessBoard(ColorScheme colors, BoardState stateToWatch)
 	{
 		this.colors = colors;
+		this.state = stateToWatch;
+		board.widthProperty().addListener(this::sizeChangeAction);
+		board.heightProperty().addListener(this::sizeChangeAction);
 	}
 
-	@Override
-	protected void layoutChildren()
+	private void sizeChangeAction(ObservableValue<? extends Number> obs, Number oldVal, Number newVal)
 	{
-		final double w = getWidth(), h = getHeight();
-		if (w > 0.01 && h > 0.01) {
-			final boolean thin = w < h;
-			final double sideLength = Math.min(w, h);
-			final double boardSideLength = 19.0 / 20 * sideLength;
-			final double canvasLengthDifference = sideLength - boardSideLength;
+		squareLocations = calculateBoardPoints(board.getBoardSize());
+		Platform.runLater(this::redraw);
+	}
 
-			final Point2D backingUL = new Point2D(thin ? 0 : (w - sideLength) / 2, thin ? (h - sideLength) / 2 : 0);
-			final Point2D boardUL = backingUL.add(canvasLengthDifference / 2, canvasLengthDifference / 2);
+	public void redraw()
+	{
+		redrawBackground();
+		redrawSquares();
+		redrawMarkers();
+	}
 
-			backingCanvas.resizeRelocate(backingUL.getX(), backingUL.getY(), sideLength, sideLength);
-			boardCanvasStack.forEach(
-					canvas -> canvas.resizeRelocate(boardUL.getX(), boardUL.getY(), boardSideLength, boardSideLength));
-			squareLocations = calculateBoardPoints(boardCanvas.getWidth());
-			redraw();
+	public void redrawBackground()
+	{
+		final double size = board.getBoardSize();
+		final GraphicsContext gc = board.getBackingGC();
+		gc.clearRect(0, 0, size, size);
+		gc.setFill(colors.backingColor);
+		gc.fillRect(0, 0, size, size);
+	}
+
+	public void redrawSquares()
+	{
+		final double size = board.getBoardSize(), sqSize = size / 8;
+		final GraphicsContext gc = board.getBoardGC();
+		gc.clearRect(0, 0, size, size);
+		BoardSquare.iterateAll().forEach(square -> {
+			final Point2D c = squareLocations.get(square);
+			final boolean lightSquare = square.ordinal() % 2 == 0;
+			gc.setFill(lightSquare ? colors.lightSquares : colors.darkSquares);
+			gc.fillRect(c.getX() - sqSize / 2, c.getY() - sqSize / 2, sqSize, sqSize);
+		});
+	}
+
+	public void redrawMarkers()
+	{
+		final double size = board.getBoardSize(), sqSize = size / 8;
+		final GraphicsContext gc = board.getMarkerGC();
+		gc.clearRect(0, 0, size, size);
+		if (selectedSquare.isPresent()) {
+			final BoardSquare sq = selectedSquare.get();
+			drawLocationMarker(sq, gc, sqSize);
+			final FlowList<ChessMove> legalMoves = LegalMoves.getAllMoves(state)
+					.filter(mv -> mv.getSource().equals(sq))
+					.toList();
+
+			final long allPieces = state.getPieceLocations().getAllLocations();
+			legalMoves.forEach(mv -> {
+				if (bitboardsIntersect(allPieces, mv.getTarget().asBitboard())) {
+					drawAttackMarker(mv.getTarget(), gc, sqSize);
+				}
+				else {
+					drawMovementMarker(mv.getTarget(), gc, sqSize);
+				}
+			});
 		}
 	}
 
-	private void redraw()
+	private void drawAttackMarker(BoardSquare square, GraphicsContext gc, double size)
 	{
-		// TODO Auto-generated method stub
+		final Point2D loc = squareLocations.get(square);
+		final Bounds renderBounds = RenderUtils.getSquareBounds(loc, size, 1);
+		RenderUtils.strokeTarget(gc, renderBounds, colors.attackMarker);
+	}
 
+	private void drawMovementMarker(BoardSquare square, GraphicsContext gc, double size)
+	{
+		final Point2D centre = squareLocations.get(square);
+		final Bounds locBounds = RenderUtils.getSquareBounds(centre, size, 0.9);
+		RenderUtils.strokeOval(gc, locBounds, size / 20, colors.moveMarker);
+	}
+
+	private void drawLocationMarker(BoardSquare square, GraphicsContext gc, double size)
+	{
+		gc.setFill(colors.locationMarker);
+		final Point2D centre = squareLocations.get(square);
+		final Bounds locBounds = RenderUtils.getSquareBounds(centre, size, 0.9);
+		gc.fillOval(locBounds.getMinX(), locBounds.getMinY(), locBounds.getWidth(), locBounds.getHeight());
 	}
 
 	/**
@@ -78,14 +135,27 @@ public final class ChessBoard extends Region
 	{
 		final double squareWidth = width / 8;
 		final BoardSquareLocations locs = BoardSquare.iterateAll()
-		.map(sq -> Pair.of(sq, new Point2D((7.5 - sq.file()) * squareWidth, (7.5 - sq.rank()) * squareWidth)))
-		.build(BoardSquareLocations::new);
+				.map(sq -> Pair.of(sq, new Point2D((7.5 - sq.file()) * squareWidth, (7.5 - sq.rank()) * squareWidth)))
+				.build(BoardSquareLocations::new);
 
 		if (boardPerspective.isWhite()) {
 			return locs;
-		}
-		else {
+		} else {
 			return locs.rotate(width);
 		}
+	}
+
+	public void setPerspective(Side side)
+	{
+		if (!side.equals(boardPerspective)) {
+			boardPerspective = side;
+			squareLocations = calculateBoardPoints(board.getBoardSize());
+			Platform.runLater(this::redraw);
+		}
+	}
+
+	public VisualBoard getBoard()
+	{
+		return board;
 	}
 }

@@ -27,13 +27,13 @@ public enum Side
 		return this == Side.WHITE;
 	}
 
+	public boolean isBlack()
+	{
+		return this == BLACK;
+	}
+
 	public Side otherSide()
 	{
-		if (this == BLACK) {
-			return WHITE;
-		}
-		else {
-			return BLACK;
-		}
+		return isWhite()? BLACK : WHITE;
 	}
 }

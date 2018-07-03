@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.pgn.movebuilder;
+package jenjinn.engine.integrationtests;
 
 import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -27,7 +27,7 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 {
-	private static final int N_GAMES_PER_FILE = 500;
+	private static final int N_GAMES_PER_FILE = 100;
 
 	@Test
 	void test()

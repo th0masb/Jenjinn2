@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.eval;
 
-import java.util.Arrays;
-
 import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -22,7 +20,7 @@ public enum PieceValues
 	private PieceValues(int[] values)
 	{
 		Iterate.overInts(values).allMatch(i -> i >= 0).throwIfFalse(AssertionError::new);
-		this.values = Arrays.copyOf(values, values.length);
+		this.values = Iterate.overInts(values).map(i -> (int) 1.5*i).toArray();
 	}
 
 	public int valueOf(ChessPiece piece)

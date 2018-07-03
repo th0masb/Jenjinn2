@@ -12,8 +12,8 @@ import jenjinn.engine.enums.DevelopmentPiece;
  */
 public final class DevelopmentEvaluator implements EvaluationComponent
 {
-	private static final int[] DEVELOPMENT_VALUES = {1100, 1000, 2000, 2000, 1000, 1000};
-	private static final int[] CASTLING_VALUES = {2000, 1800};
+	private static final int[] DEVELOPMENT_VALUES = {110, 100, 200, 200, 100, 100};
+	private static final int[] CASTLING_VALUES = {200, 180};
 
 	public DevelopmentEvaluator()
 	{

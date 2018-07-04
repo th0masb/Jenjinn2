@@ -6,9 +6,9 @@ package jenjinn.engine.boardstate;
 import java.util.EnumSet;
 import java.util.Set;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

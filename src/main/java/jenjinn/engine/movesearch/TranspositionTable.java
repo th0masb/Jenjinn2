@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.movesearch;
 
-import jenjinn.engine.enums.TreeNodeType;
-
 /**
  * @author ThomasB
  *

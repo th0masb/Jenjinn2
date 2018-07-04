@@ -4,9 +4,9 @@
 package jenjinn.engine.bitboards;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.enums.BoardSquare.C1;
-import static jenjinn.engine.enums.BoardSquare.D2;
-import static jenjinn.engine.enums.BoardSquare.H1;
+import static jenjinn.engine.base.BoardSquare.C1;
+import static jenjinn.engine.base.BoardSquare.D2;
+import static jenjinn.engine.base.BoardSquare.H1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

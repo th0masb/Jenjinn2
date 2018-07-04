@@ -9,10 +9,10 @@ import static xawd.jflow.utilities.Strings.findLastMatch;
 
 import java.util.List;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
 import xawd.jflow.utilities.Optionals;
 import xawd.jflow.utilities.Strings;
 

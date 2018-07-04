@@ -4,7 +4,7 @@
 package jenjinn.engine.enums;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.enums.BoardSquare.*;
+import static jenjinn.engine.base.BoardSquare.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,6 +25,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.Direction;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.PredicatePartition;

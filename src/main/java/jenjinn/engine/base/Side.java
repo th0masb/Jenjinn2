@@ -1,4 +1,4 @@
-package jenjinn.engine.enums;
+package jenjinn.engine.base;
 
 /**
  * Enumeration of the two sides in a chessgame.

@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.parseutils.AbstractTestFileParser;
 import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.collections.FlowList;

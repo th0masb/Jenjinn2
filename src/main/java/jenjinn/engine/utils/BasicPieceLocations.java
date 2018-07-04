@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.misc;
+package jenjinn.engine.utils;
 
 import static java.lang.Long.toHexString;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 /**
  * @author ThomasB
  */
-public final class PieceLocations
+public final class BasicPieceLocations
 {
 	private static final Pattern LOCATION_PATTERN = Pattern.compile(":[abcdef0-9]+");
 
 	private final long whiteLocations, blackLocations;
 
-	public PieceLocations(final long whiteLocations, final long blackLocations)
+	public BasicPieceLocations(final long whiteLocations, final long blackLocations)
 	{
 		if (bitboardsIntersect(whiteLocations, blackLocations)) {
 			throw new IllegalArgumentException();
@@ -48,7 +48,7 @@ public final class PieceLocations
 				.toString();
 	}
 
-	public static PieceLocations reconstructFrom(final String stringRepresentation)
+	public static BasicPieceLocations reconstructFrom(final String stringRepresentation)
 	{
 		final Matcher matcher = LOCATION_PATTERN.matcher(stringRepresentation);
 		try {
@@ -56,7 +56,7 @@ public final class PieceLocations
 			final long whiteLocations = Long.parseUnsignedLong(matcher.group().substring(1), 16);
 			matcher.find();
 			final long blackLocations = Long.parseUnsignedLong(matcher.group().substring(1), 16);
-			return new PieceLocations(whiteLocations, blackLocations);
+			return new BasicPieceLocations(whiteLocations, blackLocations);
 		}
 		catch (final IllegalStateException ex) {
 			System.err.println("error parsing: " + stringRepresentation);
@@ -81,7 +81,7 @@ public final class PieceLocations
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final PieceLocations other = (PieceLocations) obj;
+		final BasicPieceLocations other = (BasicPieceLocations) obj;
 		if (blackLocations != other.blackLocations)
 			return false;
 		if (whiteLocations != other.whiteLocations)

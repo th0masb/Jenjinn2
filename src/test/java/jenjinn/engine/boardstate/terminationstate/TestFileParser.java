@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import jenjinn.engine.base.GameTermination;
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.enums.GameTermination;
 import jenjinn.engine.parseutils.BoardParser;
 
 /**

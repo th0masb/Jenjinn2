@@ -3,9 +3,9 @@
  */
 package jenjinn.engine.eval;
 
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
 
 /**
  * @author ThomasB

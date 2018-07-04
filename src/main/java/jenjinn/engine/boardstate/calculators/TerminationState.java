@@ -3,10 +3,10 @@
  */
 package jenjinn.engine.boardstate.calculators;
 
+import jenjinn.engine.base.GameTermination;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.bitboards.BitboardUtils;
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.enums.GameTermination;
-import jenjinn.engine.enums.Side;
 import jenjinn.engine.pieces.ChessPieces;
 
 /**

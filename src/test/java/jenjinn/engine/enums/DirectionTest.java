@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.Direction;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

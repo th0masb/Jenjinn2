@@ -8,11 +8,11 @@ import static jenjinn.engine.moves.MoveConstants.WHITE_CASTLE_REMOVALS;
 
 import java.util.Set;
 
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

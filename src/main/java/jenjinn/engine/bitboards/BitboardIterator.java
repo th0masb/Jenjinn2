@@ -8,7 +8,7 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.NoSuchElementException;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import xawd.jflow.iterators.AbstractFlow;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.utilities.Optionals;

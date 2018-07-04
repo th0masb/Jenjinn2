@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.misc.PieceLocations;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.Iterate;
@@ -60,14 +59,14 @@ public final class VisualGridGenerator
 		return StringifyBoard.formatGrids(Iterate.overLongs(bitboards).mapToObject(TitledVisualGrid::from).toList());
 	}
 
-	public static TitledVisualGrid from(final String title, final PieceLocations locations)
+	public static TitledVisualGrid from(final String title, final BasicPieceLocations locations)
 	{
 		final Map<BoardSquare, CharPair> locs = BitboardIterator.from(locations.getWhite()).toMap(x -> x, i -> new CharPair('X', 'W'));
 		locs.putAll(BitboardIterator.from(locations.getBlack()).toMap(x -> x, i -> new CharPair('X', 'B')));
 		return new TitledVisualGrid(title, locs);
 	}
 
-	public static TitledVisualGrid fromPieceLocations(final PieceLocations locations)
+	public static TitledVisualGrid fromPieceLocations(final BasicPieceLocations locations)
 	{
 		return from("", locations);
 	}

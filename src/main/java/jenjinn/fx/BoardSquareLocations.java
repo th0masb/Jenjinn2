@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.geometry.Point2D;
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.misc.Pair;
 

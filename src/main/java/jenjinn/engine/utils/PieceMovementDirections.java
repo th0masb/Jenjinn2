@@ -1,10 +1,10 @@
-package jenjinn.engine.misc;
+package jenjinn.engine.utils;
 
 import static java.util.Arrays.asList;
 
 import java.util.List;
 
-import jenjinn.engine.enums.Direction;
+import jenjinn.engine.base.Direction;
 
 /**
  * Convenience class containing the directions each piece type can move /

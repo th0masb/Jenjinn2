@@ -8,8 +8,8 @@ import static xawd.jflow.utilities.CollectionUtil.string;
 import java.util.EnumSet;
 import java.util.Set;
 
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.Side;
 
 /**
  * @author ThomasB

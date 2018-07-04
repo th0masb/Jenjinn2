@@ -8,8 +8,8 @@ import static xawd.jflow.utilities.CollectionUtil.reverse;
 import java.util.List;
 import java.util.Map;
 
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.bitboards.BitboardIterator;
-import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**

@@ -7,9 +7,9 @@ import static java.util.Arrays.asList;
 
 import java.util.List;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.bitboards.BitboardIterator;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

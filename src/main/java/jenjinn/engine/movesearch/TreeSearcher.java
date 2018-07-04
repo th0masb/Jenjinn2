@@ -5,15 +5,14 @@ package jenjinn.engine.movesearch;
 
 import java.util.Optional;
 
+import jenjinn.engine.base.GameTermination;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.TerminationState;
-import jenjinn.engine.enums.GameTermination;
-import jenjinn.engine.enums.TreeNodeType;
-import jenjinn.engine.misc.IntConstants;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TranspositionTable.Entry;
+import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.factories.IterRange;
 

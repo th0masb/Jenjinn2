@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.moves;
 
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.Direction;
-import jenjinn.engine.misc.PieceMovementDirections;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.Direction;
+import jenjinn.engine.utils.PieceMovementDirections;
 import xawd.jflow.iterators.factories.Iterate;
 
 /**

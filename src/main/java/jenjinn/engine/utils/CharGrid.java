@@ -5,7 +5,7 @@ package jenjinn.engine.utils;
 
 import java.util.Arrays;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**

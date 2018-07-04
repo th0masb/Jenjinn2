@@ -1,9 +1,9 @@
 /**
  *
  */
-package jenjinn.engine.misc;
+package jenjinn.engine.boardstate.calculators;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 
 /**
  * Represents a piece at the given location whose movement area is constrained

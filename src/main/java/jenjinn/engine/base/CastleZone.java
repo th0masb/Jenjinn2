@@ -1,23 +1,23 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.base;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.enums.BoardSquare.A1;
-import static jenjinn.engine.enums.BoardSquare.A8;
-import static jenjinn.engine.enums.BoardSquare.C1;
-import static jenjinn.engine.enums.BoardSquare.C8;
-import static jenjinn.engine.enums.BoardSquare.D1;
-import static jenjinn.engine.enums.BoardSquare.D8;
-import static jenjinn.engine.enums.BoardSquare.E1;
-import static jenjinn.engine.enums.BoardSquare.E8;
-import static jenjinn.engine.enums.BoardSquare.F1;
-import static jenjinn.engine.enums.BoardSquare.F8;
-import static jenjinn.engine.enums.BoardSquare.G1;
-import static jenjinn.engine.enums.BoardSquare.G8;
-import static jenjinn.engine.enums.BoardSquare.H1;
-import static jenjinn.engine.enums.BoardSquare.H8;
+import static jenjinn.engine.base.BoardSquare.A1;
+import static jenjinn.engine.base.BoardSquare.A8;
+import static jenjinn.engine.base.BoardSquare.C1;
+import static jenjinn.engine.base.BoardSquare.C8;
+import static jenjinn.engine.base.BoardSquare.D1;
+import static jenjinn.engine.base.BoardSquare.D8;
+import static jenjinn.engine.base.BoardSquare.E1;
+import static jenjinn.engine.base.BoardSquare.E8;
+import static jenjinn.engine.base.BoardSquare.F1;
+import static jenjinn.engine.base.BoardSquare.F8;
+import static jenjinn.engine.base.BoardSquare.G1;
+import static jenjinn.engine.base.BoardSquare.G8;
+import static jenjinn.engine.base.BoardSquare.H1;
+import static jenjinn.engine.base.BoardSquare.H8;
 
 import jenjinn.engine.pgn.CommonRegex;
 import jenjinn.engine.utils.VisualGridGenerator;

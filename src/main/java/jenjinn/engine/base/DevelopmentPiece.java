@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.base;
 
 import static java.util.Arrays.asList;
 

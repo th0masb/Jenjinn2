@@ -7,12 +7,12 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.List;
 
-import jenjinn.engine.enums.BoardHasher;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
+import jenjinn.engine.utils.BoardHasher;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 

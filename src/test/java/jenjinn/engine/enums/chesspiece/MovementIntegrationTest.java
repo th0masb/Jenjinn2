@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.misc.PieceLocations;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import jenjinn.engine.utils.FileUtils;
+import jenjinn.engine.utils.BasicPieceLocations;
 
 /**
  * For each
@@ -44,12 +44,12 @@ class MovementIntegrationTest
 		piecesToTest.stream().forEach(piece ->
 		{
 			FileUtils.loadResourceFromPackageOf(getClass(), INPUT_FILE_NAME)
-			.map(PieceLocations::reconstructFrom)
+			.map(BasicPieceLocations::reconstructFrom)
 			.forEach(locations -> testMovesAreCorrect(piece, square, locations));
 		});
 	}
 
-	void testMovesAreCorrect(final ChessPiece piece, final BoardSquare square, final PieceLocations pieceLocations)
+	void testMovesAreCorrect(final ChessPiece piece, final BoardSquare square, final BasicPieceLocations pieceLocations)
 	{
 		final TestChessPiece constraintPiece = TestChessPiece.values()[piece.ordinal()];
 		final long white = pieceLocations.getWhite(), black = pieceLocations.getBlack();

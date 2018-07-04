@@ -6,12 +6,12 @@ import static java.util.EnumSet.noneOf;
 import java.util.EnumSet;
 import java.util.Set;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
 
 /**
  * @author ThomasB

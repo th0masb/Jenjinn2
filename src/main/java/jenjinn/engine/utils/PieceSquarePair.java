@@ -1,9 +1,9 @@
 /**
  *
  */
-package jenjinn.engine.misc;
+package jenjinn.engine.utils;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

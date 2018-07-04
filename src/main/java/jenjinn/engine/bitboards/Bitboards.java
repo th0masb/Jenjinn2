@@ -1,6 +1,6 @@
 package jenjinn.engine.bitboards;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.pieces.ChessPiece;
 
 /**

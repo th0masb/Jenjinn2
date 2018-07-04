@@ -4,10 +4,10 @@
 package jenjinn.engine.moves;
 
 import static java.util.Collections.unmodifiableSet;
-import static jenjinn.engine.enums.CastleZone.BLACK_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.BLACK_QUEENSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_KINGSIDE;
-import static jenjinn.engine.enums.CastleZone.WHITE_QUEENSIDE;
+import static jenjinn.engine.base.CastleZone.BLACK_KINGSIDE;
+import static jenjinn.engine.base.CastleZone.BLACK_QUEENSIDE;
+import static jenjinn.engine.base.CastleZone.WHITE_KINGSIDE;
+import static jenjinn.engine.base.CastleZone.WHITE_QUEENSIDE;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
 
 /**
  * @author ThomasB

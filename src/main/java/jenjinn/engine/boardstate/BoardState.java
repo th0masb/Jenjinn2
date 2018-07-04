@@ -6,10 +6,10 @@ package jenjinn.engine.boardstate;
 import java.util.EnumSet;
 import java.util.Set;
 
-import jenjinn.engine.enums.BoardHasher;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.DevelopmentPiece;
+import jenjinn.engine.base.Side;
+import jenjinn.engine.utils.BoardHasher;
 
 /**
  * @author ThomasB

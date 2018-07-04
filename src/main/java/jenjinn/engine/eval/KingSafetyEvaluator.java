@@ -5,9 +5,9 @@ package jenjinn.engine.eval;
 
 import static java.lang.Long.bitCount;
 
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
-import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.collections.FlowList;

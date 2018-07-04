@@ -5,9 +5,9 @@ package jenjinn.engine.boardstate;
 
 import java.util.EnumSet;
 
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
 import jenjinn.engine.utils.VisualGridGenerator;
 

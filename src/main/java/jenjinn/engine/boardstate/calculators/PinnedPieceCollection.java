@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.misc;
+package jenjinn.engine.boardstate.calculators;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.function.Function.identity;
@@ -9,7 +9,7 @@ import static java.util.function.Function.identity;
 import java.util.Map;
 import java.util.Set;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.iterables.FlowIterable;

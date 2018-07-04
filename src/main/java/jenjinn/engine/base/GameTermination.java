@@ -1,9 +1,9 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.base;
 
-import jenjinn.engine.misc.IntConstants;
+import jenjinn.engine.utils.IntConstants;
 
 /**
  * @author TB

@@ -12,7 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
-import jenjinn.engine.enums.Side;
+import jenjinn.engine.base.Side;
 import xawd.jflow.utilities.Optionals;
 
 /**

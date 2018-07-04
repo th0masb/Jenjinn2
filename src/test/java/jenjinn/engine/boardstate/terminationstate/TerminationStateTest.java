@@ -10,9 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import jenjinn.engine.base.GameTermination;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.TerminationState;
-import jenjinn.engine.enums.GameTermination;
 import xawd.jflow.iterators.Flow;
 
 /**

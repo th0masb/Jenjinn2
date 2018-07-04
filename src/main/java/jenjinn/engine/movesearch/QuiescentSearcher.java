@@ -7,15 +7,15 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
 import java.util.Optional;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.GameTermination;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.MoveReversalData;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.boardstate.calculators.TerminationState;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.GameTermination;
-import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.PieceValues;
 import jenjinn.engine.eval.StateEvaluator;
 import jenjinn.engine.eval.StaticExchangeEvaluator;

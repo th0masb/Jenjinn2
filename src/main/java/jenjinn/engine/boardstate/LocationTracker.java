@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.bitboards.BitboardIterator;
-import jenjinn.engine.enums.BoardSquare;
 import xawd.jflow.iterators.AbstractFlow;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.utilities.Optionals;

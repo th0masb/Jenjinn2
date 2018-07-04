@@ -1,4 +1,4 @@
-package jenjinn.engine.enums;
+package jenjinn.engine.base;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;

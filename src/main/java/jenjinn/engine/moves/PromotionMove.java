@@ -5,12 +5,12 @@ package jenjinn.engine.moves;
 
 import java.util.Set;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.DevelopmentPiece;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
-import jenjinn.engine.enums.DevelopmentPiece;
-import jenjinn.engine.enums.Side;
 import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;

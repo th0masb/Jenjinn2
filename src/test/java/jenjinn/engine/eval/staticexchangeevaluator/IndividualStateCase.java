@@ -8,7 +8,7 @@ import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.Strings.findFirstMatch;
 import static xawd.jflow.utilities.Strings.getAllMatches;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.collections.FlowList;
 

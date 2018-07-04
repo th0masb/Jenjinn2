@@ -1,9 +1,9 @@
 package jenjinn.engine.parseutils;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.enums.BoardSquare.A1;
-import static jenjinn.engine.enums.BoardSquare.A2;
-import static jenjinn.engine.enums.BoardSquare.A3;
+import static jenjinn.engine.base.BoardSquare.A1;
+import static jenjinn.engine.base.BoardSquare.A2;
+import static jenjinn.engine.base.BoardSquare.A3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,7 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import jenjinn.engine.enums.CastleZone;
+import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;

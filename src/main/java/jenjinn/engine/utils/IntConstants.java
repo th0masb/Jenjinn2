@@ -1,4 +1,4 @@
-package jenjinn.engine.misc;
+package jenjinn.engine.utils;
 
 /**
  * Constant values which can be negated without numerical overflow

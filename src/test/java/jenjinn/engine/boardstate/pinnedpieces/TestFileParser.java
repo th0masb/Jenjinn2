@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.junit.jupiter.params.provider.Arguments;
 
-import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.parseutils.AbstractTestFileParser;
 import jenjinn.engine.parseutils.BoardParser;
 import jenjinn.engine.pgn.CommonRegex;

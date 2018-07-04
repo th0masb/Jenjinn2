@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.misc.IntConstants;
 import jenjinn.engine.movesearch.QuiescentSearcher;
+import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
 

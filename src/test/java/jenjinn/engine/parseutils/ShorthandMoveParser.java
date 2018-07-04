@@ -11,8 +11,8 @@ import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.List;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;

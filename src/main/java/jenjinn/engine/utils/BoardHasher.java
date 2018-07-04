@@ -1,11 +1,14 @@
 /**
  *
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.utils;
 
 import java.util.List;
 import java.util.Random;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.boardstate.CastlingStatus;
 import jenjinn.engine.boardstate.LocationTracker;
 import jenjinn.engine.pieces.ChessPiece;

@@ -4,9 +4,9 @@
 package jenjinn.engine.pieces;
 
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.Side;
 import jenjinn.engine.bitboards.Bitboards;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.Side;
 
 
 /**

@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.misc.PieceLocations;
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.utils.BasicPieceLocations;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**
@@ -47,13 +47,13 @@ public final class IntegrationTestDataWriter
 	{
 		final Random random = new Random(0x110894L);
 
-		final Set<PieceLocations> createdLocations = new HashSet<>(locationCount);
+		final Set<BasicPieceLocations> createdLocations = new HashSet<>(locationCount);
 
 		IterRange.to(locationCount).forEach(i ->
 		{
 			final int oldSize = createdLocations.size();
 			while (createdLocations.size() == oldSize) {
-				final PieceLocations newLocations = generateRandomBoard(random, sidePieceCount);
+				final BasicPieceLocations newLocations = generateRandomBoard(random, sidePieceCount);
 				if (!createdLocations.contains(newLocations)) {
 					createdLocations.add(newLocations);
 				}
@@ -62,12 +62,12 @@ public final class IntegrationTestDataWriter
 
 		return createdLocations
 				.stream()
-				.map(PieceLocations::toString)
+				.map(BasicPieceLocations::toString)
 				.sorted()
 				.collect(toList());
 	}
 
-	static PieceLocations generateRandomBoard(Random numberGenerator, int sidePieceCount)
+	static BasicPieceLocations generateRandomBoard(Random numberGenerator, int sidePieceCount)
 	{
 		if (sidePieceCount > 32 || sidePieceCount < 0) {
 			throw new IllegalArgumentException();
@@ -78,7 +78,7 @@ public final class IntegrationTestDataWriter
 		IterRange.to(sidePieceCount).forEach(i -> whiteLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
 		IterRange.to(sidePieceCount).forEach(i -> blackLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
 
-		return new PieceLocations(bitwiseOr(whiteLocs), bitwiseOr(blackLocs));
+		return new BasicPieceLocations(bitwiseOr(whiteLocs), bitwiseOr(blackLocs));
 	}
 
 	//	/**

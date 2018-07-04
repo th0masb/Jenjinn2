@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.engine.enums;
+package jenjinn.engine.movesearch;
 
 /**
  * @author t

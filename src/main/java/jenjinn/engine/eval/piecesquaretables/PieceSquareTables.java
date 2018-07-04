@@ -5,8 +5,8 @@ package jenjinn.engine.eval.piecesquaretables;
 
 import java.util.List;
 
+import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.boardstate.LocationTracker;
-import jenjinn.engine.enums.BoardSquare;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.IterRange;

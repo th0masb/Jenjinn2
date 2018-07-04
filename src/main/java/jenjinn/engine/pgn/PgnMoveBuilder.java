@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.DetailedPieceLocations;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
-import jenjinn.engine.enums.BoardSquare;
-import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.moves.CastleMove;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.PromotionMove;

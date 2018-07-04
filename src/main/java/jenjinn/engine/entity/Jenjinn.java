@@ -35,7 +35,7 @@ public final class Jenjinn
 		openingFiles = files.flow().toList();
 	}
 
-	public Optional<ChessMove> calculateBestMove(BoardState state)
+	public Optional<ChessMove> calculateBestMove(BoardState state, long timeLimit)
 	{
 		if (openingCount++ < 5) {
 			final Optional<ChessMove> openingSearch = findMoveInOpeningdatabase(state);
@@ -44,7 +44,7 @@ public final class Jenjinn
 				return openingSearch;
 			}
 		}
-		return treeSearcher.getBestMoveFrom(state);
+		return treeSearcher.getBestMoveFrom(state, timeLimit);
 	}
 
 	private Optional<ChessMove> findMoveInOpeningdatabase(BoardState state)

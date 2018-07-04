@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jenjinn.engine.misc.RankFileCoordinate;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -43,9 +42,8 @@ public enum BoardSquare
 
 	public BoardSquare getNextSquareInDirection(final Direction direction)
 	{
-		final RankFileCoordinate startSq = this.asRankFileCoord();
-		final int newRank = startSq.rankIndex + direction.rankIndexChange;
-		final int newFile = startSq.fileIndex + direction.fileIndexChange;
+		final int newRank = rank() + direction.rankIndexChange;
+		final int newFile = file() + direction.fileIndexChange;
 
 		if (0 <= newRank && newRank < 8 && 0 <= newFile && newFile < 8) {
 			return fromRankAndFileIndices(newRank, newFile);
@@ -77,12 +75,6 @@ public enum BoardSquare
 		return getAllSquaresInDirections(asList(direction), maxSquares);
 	}
 
-	public RankFileCoordinate asRankFileCoord()
-	{
-		final int index = ordinal();
-		return new RankFileCoordinate(index / 8, index % 8);
-	}
-
 	public long asBitboard()
 	{
 		return 1L << ordinal();
@@ -97,13 +89,6 @@ public enum BoardSquare
 	{
 		return ordinal() % 8;
 	}
-
-	//	public boolean isLightSquare()
-	//	{
-	//		final RankFileCoordinate asPoint = asRankFileCoord();
-	//		final boolean rankStartsWithLightSquare = (asPoint.fileIndex % 2) == 0;
-	//		return (asPoint.rankIndex % 2) == (rankStartsWithLightSquare ? 0 : 1);
-	//	}
 
 	public static BoardSquare of(final int index)
 	{

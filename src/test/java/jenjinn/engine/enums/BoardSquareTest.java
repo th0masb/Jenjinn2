@@ -4,56 +4,7 @@
 package jenjinn.engine.enums;
 
 import static java.util.Arrays.asList;
-import static jenjinn.engine.enums.BoardSquare.A1;
-import static jenjinn.engine.enums.BoardSquare.A2;
-import static jenjinn.engine.enums.BoardSquare.A3;
-import static jenjinn.engine.enums.BoardSquare.A4;
-import static jenjinn.engine.enums.BoardSquare.A5;
-import static jenjinn.engine.enums.BoardSquare.A6;
-import static jenjinn.engine.enums.BoardSquare.A7;
-import static jenjinn.engine.enums.BoardSquare.A8;
-import static jenjinn.engine.enums.BoardSquare.B1;
-import static jenjinn.engine.enums.BoardSquare.B2;
-import static jenjinn.engine.enums.BoardSquare.B3;
-import static jenjinn.engine.enums.BoardSquare.B5;
-import static jenjinn.engine.enums.BoardSquare.B8;
-import static jenjinn.engine.enums.BoardSquare.C1;
-import static jenjinn.engine.enums.BoardSquare.C2;
-import static jenjinn.engine.enums.BoardSquare.C3;
-import static jenjinn.engine.enums.BoardSquare.C4;
-import static jenjinn.engine.enums.BoardSquare.C5;
-import static jenjinn.engine.enums.BoardSquare.C6;
-import static jenjinn.engine.enums.BoardSquare.C7;
-import static jenjinn.engine.enums.BoardSquare.D1;
-import static jenjinn.engine.enums.BoardSquare.D3;
-import static jenjinn.engine.enums.BoardSquare.D4;
-import static jenjinn.engine.enums.BoardSquare.D5;
-import static jenjinn.engine.enums.BoardSquare.D6;
-import static jenjinn.engine.enums.BoardSquare.D7;
-import static jenjinn.engine.enums.BoardSquare.E1;
-import static jenjinn.engine.enums.BoardSquare.E2;
-import static jenjinn.engine.enums.BoardSquare.E3;
-import static jenjinn.engine.enums.BoardSquare.E4;
-import static jenjinn.engine.enums.BoardSquare.E5;
-import static jenjinn.engine.enums.BoardSquare.E6;
-import static jenjinn.engine.enums.BoardSquare.E7;
-import static jenjinn.engine.enums.BoardSquare.E8;
-import static jenjinn.engine.enums.BoardSquare.F1;
-import static jenjinn.engine.enums.BoardSquare.F3;
-import static jenjinn.engine.enums.BoardSquare.F4;
-import static jenjinn.engine.enums.BoardSquare.F5;
-import static jenjinn.engine.enums.BoardSquare.F6;
-import static jenjinn.engine.enums.BoardSquare.F7;
-import static jenjinn.engine.enums.BoardSquare.G1;
-import static jenjinn.engine.enums.BoardSquare.G3;
-import static jenjinn.engine.enums.BoardSquare.G4;
-import static jenjinn.engine.enums.BoardSquare.G5;
-import static jenjinn.engine.enums.BoardSquare.G6;
-import static jenjinn.engine.enums.BoardSquare.G7;
-import static jenjinn.engine.enums.BoardSquare.H1;
-import static jenjinn.engine.enums.BoardSquare.H2;
-import static jenjinn.engine.enums.BoardSquare.H5;
-import static jenjinn.engine.enums.BoardSquare.H8;
+import static jenjinn.engine.enums.BoardSquare.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -74,7 +25,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import jenjinn.engine.misc.RankFileCoordinate;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.PredicatePartition;
@@ -88,8 +38,10 @@ class BoardSquareTest
 	void testGetNumberOfSquaresLeftInDirection()
 	{
 		final BoardSquare a1 = BoardSquare.A1;
-		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
-		partitioned.getAccepted().forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
+		final PredicatePartition<Direction> partitioned = Direction.iterateAll()
+				.partition(dir -> dir.name().matches(".*[SsWw].*"));
+		partitioned.getAccepted()
+				.forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeftInDirection(dir), dir.name()));
 		partitioned.getRejected().forEach(dir -> assertTrue(a1.getNumberOfSquaresLeftInDirection(dir) > 0));
 
 		final BoardSquare d4 = BoardSquare.D4;
@@ -105,7 +57,8 @@ class BoardSquareTest
 	void testGetNextSquareInDirection()
 	{
 		final BoardSquare a1 = BoardSquare.A1;
-		final PredicatePartition<Direction> partitioned = Direction.iterateAll().partition(dir -> dir.name().matches(".*[SsWw].*"));
+		final PredicatePartition<Direction> partitioned = Direction.iterateAll()
+				.partition(dir -> dir.name().matches(".*[SsWw].*"));
 		partitioned.getAccepted().forEach(dir -> assertNull(a1.getNextSquareInDirection(dir)));
 		partitioned.getRejected().forEach(dir -> assertNotNull(a1.getNextSquareInDirection(dir)));
 
@@ -120,18 +73,20 @@ class BoardSquareTest
 
 	@ParameterizedTest
 	@MethodSource
-	void testGetAllSquaresInDirection(final BoardSquare startSquare, final Map<Direction, List<BoardSquare>> expectedSquaresInEachDirection)
+	void testGetAllSquaresInDirection(final BoardSquare startSquare,
+			final Map<Direction, List<BoardSquare>> expectedSquaresInEachDirection)
 	{
 		for (int i = 0; i < 9; i++) {
 			// Test that we get every direction individually correct
 			final int j = i;
-			Direction.iterateAll().forEach(dir ->
-			assertEquals(take(j, expectedSquaresInEachDirection.get(dir)), startSquare.getAllSquaresInDirections(dir, j)));
+			Direction.iterateAll().forEach(dir -> assertEquals(take(j, expectedSquaresInEachDirection.get(dir)),
+					startSquare.getAllSquaresInDirections(dir, j)));
 
 			// Test that combining two directions works
-			for (final List<Direction> pair : asList(asList(Direction.N, Direction.E), asList(Direction.S, Direction.SE)))
-			{
-				final Set<BoardSquare> expected = Iterate.over(expectedSquaresInEachDirection.get(head(pair))).take(j).toCollection(HashSet::new);
+			for (final List<Direction> pair : asList(asList(Direction.N, Direction.E),
+					asList(Direction.S, Direction.SE))) {
+				final Set<BoardSquare> expected = Iterate.over(expectedSquaresInEachDirection.get(head(pair))).take(j)
+						.toCollection(HashSet::new);
 				expected.addAll(take(j, expectedSquaresInEachDirection.get(tail(pair))));
 
 				assertEquals(expected, new HashSet<>(startSquare.getAllSquaresInDirections(pair, j)));
@@ -188,16 +143,6 @@ class BoardSquareTest
 		expectedResults.put(Direction.NNW, asList(D7));
 
 		return Arguments.of(E5, expectedResults);
-	}
-
-	@Test
-	void testAsRankFileCoord()
-	{
-		assertEquals(new RankFileCoordinate(3, 5), BoardSquare.C4.asRankFileCoord());
-		assertEquals(new RankFileCoordinate(7, 2), BoardSquare.F8.asRankFileCoord());
-		assertEquals(new RankFileCoordinate(1, 4), BoardSquare.D2.asRankFileCoord());
-		assertEquals(new RankFileCoordinate(6, 6), BoardSquare.B7.asRankFileCoord());
-		assertEquals(new RankFileCoordinate(7, 7), BoardSquare.A8.asRankFileCoord());
 	}
 
 	@Test

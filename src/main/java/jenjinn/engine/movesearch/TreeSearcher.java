@@ -34,15 +34,19 @@ public final class TreeSearcher
 	/**
 	 * Given some root state this method heuristically calculates the 'best' move
 	 * that the active side in the root state could take to improve their position.
-	 * Note that in order for the computation to complete in a reasonable amount of
-	 * time the thread running it must be manually interrupted.
+	 * It is assumed that any calls to this method will be made on some dedicated
+	 * 'calculation thread'.
 	 *
 	 * @param root
 	 *            The state in which calculate the best move for the active side.
+	 * @param timeLimit
+	 *            The execution time limit (in milliseconds) for this method. When
+	 *            the time limit is reached the best move which has currently been
+	 *            calculated will be returned.
 	 * @return Nothing if there are no legal moves, otherwise the 'best' move
 	 *         available.
 	 */
-	public Optional<ChessMove> getBestMoveFrom(BoardState root)
+	public synchronized Optional<ChessMove> getBestMoveFrom(BoardState root, long timeLimit)
 	{
 		final Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).safeNext();
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
@@ -54,8 +58,10 @@ public final class TreeSearcher
 		try {
 			bestMove = getBestMoveFrom(root, 1);
 		} catch (final InterruptedException ex) {
-			throw new AssertionError("More time must be allocated for searching!");
+			throw new AssertionError("Interruption not possible here.");
 		}
+
+		createInterruptingTimerThread(timeLimit).start();
 
 		for (int targetDepth = 2; targetDepth <= maxDepth; targetDepth++) {
 			try {
@@ -67,6 +73,21 @@ public final class TreeSearcher
 			}
 		}
 		return Optional.of(bestMove);
+	}
+
+	private Thread createInterruptingTimerThread(long timeLimit)
+	{
+		Thread toInterrupt = Thread.currentThread();
+		return new Thread(() -> {
+			try {
+				Thread.sleep(timeLimit);
+				if (toInterrupt.isAlive()) {
+					toInterrupt.interrupt();
+				}
+			} catch (final InterruptedException e) {
+				throw new AssertionError("Interruption not possible here.");
+			}
+		});
 	}
 
 	private ChessMove getBestMoveFrom(BoardState root, int depth) throws InterruptedException

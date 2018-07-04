@@ -192,7 +192,7 @@ public final class ChessBoard
 		return Optionals.getOrError(BoardSquare.iterateAll().min(comparing(sq -> query.distance(squareLocations.get(sq)))));
 	}
 
-	public VisualBoard getBoard()
+	public VisualBoard getFxComponent()
 	{
 		return board;
 	}

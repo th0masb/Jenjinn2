@@ -11,8 +11,8 @@ import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
@@ -30,10 +30,10 @@ import xawd.jflow.utilities.Optionals;
  * @author ThomasB
  *
  */
-public final class ChessGame extends Region
+public final class ChessGame
 {
 //	private static final double MIN_MOVETIME = 2.0, MAX_MOVETIME = 10;
-	private final double moveTime = 5;
+	private final long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
 	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>();
@@ -51,12 +51,11 @@ public final class ChessGame extends Region
 		board = new ChessBoard(colors, stateOfPlay);
 		movesPlayed = new FlowArrayList<>();
 		squareSelection = Optional.empty();
-		getChildren().add(board.getBoard());
-		board.getBoard().setMouseClickInteractionProcedure(this::handleMouseClicks);
-		board.getBoard().setInteractionEnabled();
+		board.getFxComponent().setMouseClickInteractionProcedure(this::handleMouseClicks);
+		board.getFxComponent().setInteractionEnabled();
 
 		if (humanSide.isBlack()) {
-			board.getBoard().setInteractionDisabled();
+			board.getFxComponent().setInteractionDisabled();
 			performJenjinnMove();
 		}
 	}
@@ -82,7 +81,7 @@ public final class ChessGame extends Region
 
 	private void processHumanMove(ChessMove mv)
 	{
-		board.getBoard().setInteractionDisabled();
+		board.getFxComponent().setInteractionDisabled();
 		mv.makeMove(stateOfPlay);
 		sideToMove.setValue(stateOfPlay.getActiveSide());
 		movesPlayed.add(mv);
@@ -111,7 +110,7 @@ public final class ChessGame extends Region
 		final Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay).safeNext();
 		final GameTermination termState = TerminationState.of(stateOfPlay, mv.isPresent());
 		if (termState.isTerminal()) {
-			Platform.runLater(board.getBoard()::setInteractionDisabled);
+			Platform.runLater(board.getFxComponent()::setInteractionDisabled);
 			terminationState.setValue(termState);
 			return true;
 		}
@@ -122,29 +121,16 @@ public final class ChessGame extends Region
 
 	private void performJenjinnMove()
 	{
-		final Thread jenjinnCalculationThread = new Thread(() -> {
-			final ChessMove jenjinnChoice = Optionals.getOrError(jenjinn.calculateBestMove(stateOfPlay));
+		new Thread(() -> {
+			final ChessMove jenjinnChoice = Optionals.getOrError(jenjinn.calculateBestMove(stateOfPlay, moveTime));
 			jenjinnChoice.makeMove(stateOfPlay);
 			sideToMove.setValue(stateOfPlay.getActiveSide());
 			movesPlayed.add(jenjinnChoice);
 			Platform.runLater(board::redraw);
 			if (!terminalStateReached()) {
-				Platform.runLater(board.getBoard()::setInteractionEnabled);
+				Platform.runLater(board.getFxComponent()::setInteractionEnabled);
 			}
-		});
-		jenjinnCalculationThread.start();
-
-		final Thread timer = new Thread(() -> {
-			try {
-				Thread.sleep((long) (moveTime * 1000));
-				if (jenjinnCalculationThread.isAlive()) {
-					jenjinnCalculationThread.interrupt();
-				}
-			} catch (final InterruptedException e) {
-				throw new AssertionError();
-			}
-		});
-		timer.start();
+		}).start();
 	}
 
 	private long getActiveLocations()
@@ -152,9 +138,8 @@ public final class ChessGame extends Region
 		return stateOfPlay.getPieceLocations().getSideLocations(stateOfPlay.getActiveSide());
 	}
 
-	@Override
-	protected void layoutChildren()
+	public Node getFxComponent()
 	{
-		board.getBoard().resizeRelocate(0, 0, getWidth(), getHeight());
+		return board.getFxComponent();
 	}
 }

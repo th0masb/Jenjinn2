@@ -34,6 +34,7 @@ public final class PgnConverter implements Closeable
 	public static final String PGN_EXT = ".pgn";
 	private static final int POSITIONS_PER_LINE = 15;
 
+	private final String fileName;
 	private final BufferedReader src;
 	private final BufferedWriter out;
 	private final Set<Long> usedPositions = new HashSet<>();
@@ -46,6 +47,7 @@ public final class PgnConverter implements Closeable
 				|| !sourceFilePath.toString().endsWith(PGN_EXT)) {
 			throw new IllegalArgumentException();
 		}
+		fileName = sourceFilePath.getFileName().toString();
 		src = Files.newBufferedReader(sourceFilePath, Charset.forName("ISO-8859-1"));
 		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 	}
@@ -72,7 +74,8 @@ public final class PgnConverter implements Closeable
 
 		final String outputLog = new StringBuilder("We searched ").append(totalGamesSearched)
 				.append(" games and extracted ").append(usedPositions.size()).append(" moves. There were ")
-				.append(totalErrorsInGames).append(" pgns which caused an error.").toString();
+				.append(totalErrorsInGames).append(" pgns which caused an error in the file ").append(fileName)
+				.toString();
 
 		System.out.println(outputLog);
 	}

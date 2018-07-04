@@ -48,11 +48,13 @@ public final class GameWrapper extends Region
 		chooseWhite.setAlignment(Pos.CENTER);
 		chooseWhite.setFont(Font.font(14));
 		chooseWhite.setPadding(new Insets(5));
+		chooseWhite.setOnAction(evt -> initGame(Side.WHITE));
 
 		chooseBlack = new Button("Black");
 		chooseBlack.setAlignment(Pos.CENTER);
 		chooseBlack.setFont(Font.font(14));
 		chooseBlack.setPadding(new Insets(5));
+		chooseBlack.setOnAction(evt -> initGame(Side.BLACK));
 
 		playAgain = new Button("Play again");
 		playAgain.setAlignment(Pos.CENTER);
@@ -62,9 +64,6 @@ public final class GameWrapper extends Region
 		playAgain.setOnAction(evt -> reset());
 
 		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack, playAgain);
-
-		chooseWhite.setOnAction(evt -> initGame(Side.WHITE));
-		chooseBlack.setOnAction(evt -> initGame(Side.BLACK));
 	}
 
 	private void reset()

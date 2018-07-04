@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
+import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.Lists;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -46,17 +48,32 @@ public class PgnFileConversion
 
 	public static void main(String[] args) throws IOException
 	{
-		final Path source = Paths.get("/home", "t", "chesspgns", "classicalkings");
-		final Path outFolder = Paths.get("/home", "t", "chesspgns", "convertedclassicalkings");
+		final FlowList<String> folderNames = Lists.build("modernkings", "classicalqueens", "modernqueens", "flankandunorthodox");
+		folderNames.filter(name -> !Files.isDirectory(Paths.get("/home", "t", "chesspgns", name))).safeNext().ifPresent(x -> {throw new RuntimeException();});
+
+		for (final String folderName : folderNames) {
+			System.out.println("---------------------------------------------------------------------");
+			System.out.println("Converting files in " + folderName);
+
+			final Path source = Paths.get("/home", "t", "chesspgns", folderName);
+			final Path outFolder = Paths.get("/home", "t", "chesspgns", "converted" + folderName);
+
+			executeConversion(source, outFolder, t -> {
+				try {
+					t.writeUniquePositions(12);
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
+
+			System.out.println("Finished.");
+			System.out.println("---------------------------------------------------------------------");
+		}
+
+
 
 		// write game lines
-		executeConversion(source, outFolder, t -> {
-			try {
-				t.writeUniquePositions(12);
-			} catch (final IOException e) {
-				throw new RuntimeException(e);
-			}
-		});
+
 
 		//		// Write opening db
 		//		executeConversion(source, outFolder, t -> {

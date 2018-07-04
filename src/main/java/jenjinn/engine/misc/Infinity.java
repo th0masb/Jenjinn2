@@ -12,7 +12,7 @@ public final class Infinity
 	public static final long LONG_INFINITY = Long.MAX_VALUE - 1;
 	public static final short SHORT_INFINITY = Short.MAX_VALUE - 1;
 
-	public static final int INITIAL_ALPHA = -INT_INFINITY, INITIAL_BETA = INT_INFINITY;
+	public static final int INITIAL_ALPHA = -2 * (INT_INFINITY / 3), INITIAL_BETA = 2 * (INT_INFINITY / 3);
 
 	private Infinity()
 	{

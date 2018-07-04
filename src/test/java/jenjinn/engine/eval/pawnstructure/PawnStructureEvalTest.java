@@ -68,6 +68,7 @@ class PawnStructureEvalTest
 
 	static Stream<Arguments> test()
 	{
-		return Stream.of("case001", "case002").map(TestFileParser::parse);
+		TestFileParser parser = new TestFileParser();
+		return Stream.of("case001", "case002").map(parser::parse);
 	}
 }

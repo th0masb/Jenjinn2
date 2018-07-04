@@ -28,6 +28,7 @@ class KingSafetyEvaluationTest
 
 	static Flow<Arguments> test()
 	{
-		return Iterate.over("case001").map(TestFileParser::parse);
+		TestFileParser parser = new TestFileParser();
+		return Iterate.over("case001").map(parser::parse);
 	}
 }

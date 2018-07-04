@@ -3,9 +3,6 @@
  */
 package jenjinn.engine.eval.kingsafety;
 
-import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.parseutils.BoardParseUtils.parseBoard;
-import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
@@ -17,6 +14,8 @@ import java.util.List;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.eval.KingSafetyTable;
+import jenjinn.engine.parseutils.AbstractTestFileParser;
+import jenjinn.engine.parseutils.BoardParser;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.misc.Pair;
@@ -24,21 +23,15 @@ import xawd.jflow.iterators.misc.Pair;
 /**
  * @author ThomasB
  */
-final class TestFileParser
+final class TestFileParser extends AbstractTestFileParser
 {
-	private TestFileParser()
+	public Arguments parse(String fileName)
 	{
+		final List<String> lines = loadFile(fileName);
+		return Arguments.of(BoardParser.parse(take(9, lines)), parseConstraintEvaluation(drop(9, lines)));
 	}
 
-	public static Arguments parse(String fileName)
-	{
-		final List<String> lines = loadResourceFromPackageOf(TestFileParser.class, fileName).map(String::trim)
-				.filter(s -> !s.isEmpty() && !s.startsWith("//")).collect(toList());
-
-		return Arguments.of(parseBoard(take(9, lines)), parseConstraintEvaluation(drop(9, lines)));
-	}
-
-	private static Integer parseConstraintEvaluation(List<String> attackerInfo)
+	private Integer parseConstraintEvaluation(List<String> attackerInfo)
 	{
 		if (attackerInfo.size() != 12) {
 			throw new IllegalArgumentException(attackerInfo.toString());

@@ -51,7 +51,7 @@ public final class QuiescentSearcher
 		if (Thread.currentThread().isInterrupted()) {
 			throw new InterruptedException();
 		}
-
+		
 		Flow<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
 		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
@@ -88,6 +88,9 @@ public final class QuiescentSearcher
 				return Math.max(alpha, standPat);
 			}
 
+			/*
+			 * /!\ Watch numeric overflow here
+			 */
 			if (standPat < alpha - bigDelta) {
 				/*
 				 * We return here if there is no way we can raise alpha by taking enemy

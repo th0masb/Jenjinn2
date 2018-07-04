@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.integrationtests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -44,6 +44,6 @@ class MoveSearchIntegrationTest
 	static Stream<Arguments> test()
 	{
 		Class<?> cls = MoveSearchIntegrationTest.class;
-		return FileUtils.loadResourceFromPackageOf(cls, "SemiSlavMeran").limit(10).map(Arguments::of);
+		return FileUtils.loadResourceFromPackageOf(cls, "SemiSlavMeran").limit(1).map(Arguments::of);
 	}
 }

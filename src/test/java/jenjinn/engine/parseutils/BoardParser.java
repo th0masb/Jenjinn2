@@ -38,18 +38,18 @@ import xawd.jflow.utilities.Strings;
  *
  * @author t
  */
-public final class BoardParseUtils
+public final class BoardParser
 {
 	private static final int DEFAULT_MOVE_COUNT = 20;
 
-	private BoardParseUtils() {}
+	private BoardParser() {}
 
-	public static BoardState parseBoard(final List<String> attributes)
+	public static BoardState parse(final List<String> attributes)
 	{
-		return parseBoard(attributes, DEFAULT_MOVE_COUNT);
+		return parse(attributes, DEFAULT_MOVE_COUNT);
 	}
 
-	public static BoardState parseBoard(final List<String> attributes, final int totalMoveCount)
+	public static BoardState parse(final List<String> attributes, final int totalMoveCount)
 	{
 		if (attributes.size() != 9) {
 			throw new IllegalArgumentException();

@@ -3,9 +3,6 @@
  */
 package jenjinn.engine.boardstate.squarecontrol;
 
-import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.parseutils.BoardParseUtils.parseBoard;
-import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.take;
@@ -20,6 +17,8 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.bitboards.BitboardUtils;
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.parseutils.AbstractTestFileParser;
+import jenjinn.engine.parseutils.BoardParser;
 import jenjinn.engine.parseutils.CordParser;
 import jenjinn.engine.pgn.CommonRegex;
 import jenjinn.engine.pieces.ChessPiece;
@@ -31,23 +30,15 @@ import xawd.jflow.iterators.misc.Pair;
 /**
  * @author ThomasB
  */
-final class TestFileParser
+final class TestFileParser extends AbstractTestFileParser
 {
-	private TestFileParser()
+	public Arguments parse(final String fileName)
 	{
+		final List<String> lines = loadFile(fileName);
+		return Arguments.of(BoardParser.parse(take(9, lines)), parseSquaresOfControl(drop(9, lines)));
 	}
 
-	public static Arguments parse(final String fileName)
-	{
-		final List<String> lines = loadResourceFromPackageOf(TestFileParser.class, fileName)
-				.map(String::trim)
-				.filter(s -> !s.isEmpty() && !s.startsWith("//"))
-				.collect(toList());
-
-		return Arguments.of(parseBoard(take(9, lines)), parseSquaresOfControl(drop(9, lines)));
-	}
-
-	private static Map<ChessPiece, Long> parseSquaresOfControl(final List<String> squaresOfControl)
+	private Map<ChessPiece, Long> parseSquaresOfControl(final List<String> squaresOfControl)
 	{
 		if (sizeOf(squaresOfControl) != 12) {
 			throw new IllegalArgumentException(
@@ -58,7 +49,7 @@ final class TestFileParser
 				.toMap(Pair::first, p -> parseSinglePieceSquaresOfControl(p.second()));
 	}
 
-	private static Long parseSinglePieceSquaresOfControl(final String encoded)
+	private Long parseSinglePieceSquaresOfControl(final String encoded)
 	{
 		final String ec = encoded.trim() + " ";
 		final String sqrx = CommonRegex.SINGLE_SQUARE, cordrx = CommonRegex.CORD;

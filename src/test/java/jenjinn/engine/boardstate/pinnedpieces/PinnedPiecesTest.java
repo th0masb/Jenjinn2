@@ -28,6 +28,7 @@ class PinnedPiecesTest
 
 	static Flow<Arguments> test()
 	{
-		return Iterate.over(TestFileParser.parse("case001"), TestFileParser.parse("case002"));
+		TestFileParser parser = new TestFileParser();
+		return Iterate.over(parser.parse("case001"), parser.parse("case002"));
 	}
 }

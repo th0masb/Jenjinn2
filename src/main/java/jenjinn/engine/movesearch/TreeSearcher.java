@@ -102,12 +102,14 @@ public final class TreeSearcher
 			final MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
 			final int bestReply = -negamax(root, -Infinity.INITIAL_BETA, -alpha, depth - 1);
+			System.out.println(bestReply);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
 				alpha = bestReply;
 				bestFirstMoveIndex = index;
 			}
 		}
+//		System.out.println(alpha);
 		return legalMoves.get(bestFirstMoveIndex);
 	}
 
@@ -122,7 +124,9 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			return quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+			int qsearch = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+//			System.out.println(qsearch);
+			return qsearch;
 		}
 
 		final long rootHash = root.calculateHash();

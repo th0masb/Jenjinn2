@@ -4,7 +4,6 @@
 package jenjinn.engine.boardstate.terminationstate;
 
 import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.parseutils.BoardParseUtils.parseBoard;
 import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
@@ -15,6 +14,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.enums.GameTermination;
+import jenjinn.engine.parseutils.BoardParser;
 
 /**
  * @author ThomasB
@@ -34,7 +34,7 @@ final class TestFileParser
 				.collect(toList());
 
 		if (lines.size() == 11) {
-			final BoardState state = parseBoard(take(9, lines));
+			final BoardState state = BoardParser.parse(take(9, lines));
 			final boolean hasLegalMoves = Boolean.parseBoolean(lines.get(9).toLowerCase().trim());
 			final GameTermination expectedTermination = GameTermination.valueOf(tail(lines).toUpperCase().trim());
 			return Arguments.of(state, hasLegalMoves, expectedTermination);

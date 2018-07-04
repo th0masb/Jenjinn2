@@ -50,6 +50,7 @@ class SquareControlTest
 
 	static Flow<Arguments> test()
 	{
-		return Iterate.over(TestFileParser.parse("case001"));
+		TestFileParser parser = new TestFileParser();
+		return Iterate.over(parser.parse("case001"));
 	}
 }

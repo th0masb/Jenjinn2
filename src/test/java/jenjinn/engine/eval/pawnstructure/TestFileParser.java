@@ -3,7 +3,6 @@
  */
 package jenjinn.engine.eval.pawnstructure;
 
-import static java.util.stream.Collectors.toList;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 
@@ -12,8 +11,8 @@ import java.util.List;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.enums.BoardSquare;
+import jenjinn.engine.parseutils.AbstractTestFileParser;
 import jenjinn.engine.pgn.CommonRegex;
-import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.misc.IntPair;
 import xawd.jflow.utilities.Strings;
@@ -21,19 +20,11 @@ import xawd.jflow.utilities.Strings;
 /**
  * @author ThomasB
  */
-public final class TestFileParser
+final class TestFileParser extends AbstractTestFileParser
 {
-	private TestFileParser()
+	public Arguments parse(String filename)
 	{
-	}
-
-	public static Arguments parse(String filename)
-	{
-		final Class<?> cls = TestFileParser.class;
-		final List<String> lines = FileUtils.loadResourceFromPackageOf(cls, filename)
-				.map(String::trim)
-				.filter(s -> !(s.isEmpty() || s.startsWith("//")))
-				.collect(toList());
+		final List<String> lines = loadFile(filename);
 
 		if (lines.size() == 9) {
 			final String encodedWhiteLocs = head(lines), encodedBlackLocs = lines.get(1);
@@ -64,7 +55,7 @@ public final class TestFileParser
 		}
 	}
 
-	private static FlowList<Integer> decodeIntegerSequence(String encodedSequence)
+	private FlowList<Integer> decodeIntegerSequence(String encodedSequence)
 	{
 		final String num = "([0-9]+)";
 		if (!encodedSequence.matches("^" + num + "( " + num + ")+$")) {
@@ -75,7 +66,7 @@ public final class TestFileParser
 				.toList();
 	}
 
-	private static IntPair decodeIntegerPair(String encodedPair)
+	private IntPair decodeIntegerPair(String encodedPair)
 	{
 		final String num = "([0-9]+)";
 		if (!encodedPair.matches("^" + num + " +" + num + "$")) {
@@ -88,7 +79,7 @@ public final class TestFileParser
 		return IntPair.of(head(decoded), tail(decoded));
 	}
 
-	private static Long decodeLocations(String encodedLocs)
+	private Long decodeLocations(String encodedLocs)
 	{
 		final String sq = CommonRegex.SINGLE_SQUARE;
 		if (!encodedLocs.matches("^" + sq + "( " + sq + ")*$")) {

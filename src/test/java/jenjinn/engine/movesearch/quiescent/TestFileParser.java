@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
 
-import jenjinn.engine.parseutils.BoardParseUtils;
+import jenjinn.engine.parseutils.BoardParser;
 import jenjinn.engine.utils.FileUtils;
 
 /**
@@ -33,7 +33,7 @@ class TestFileParser
 				.collect(toList());
 
 		if (lines.size() == 10) {
-			return Arguments.of(BoardParseUtils.parseBoard(take(9, lines)), parseResultLine(tail(lines)));
+			return Arguments.of(BoardParser.parse(take(9, lines)), parseResultLine(tail(lines)));
 		}
 		else {
 			throw new IllegalArgumentException(string(lines.size()));

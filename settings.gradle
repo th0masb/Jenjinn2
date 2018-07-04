@@ -1,1 +1,21 @@
-includeFlat 'JFlowOpen'
+println "Checking for JFlow project in the parent directory of $rootDir .."
+
+def parentDir = new File("$rootDir").getParentFile()
+/*
+ * Search the parent directory for the JFlow project.
+ * If it there include it as a project dependency.
+ */
+def jflowProject = Arrays.asList(parentDir.listFiles())
+.stream()
+.filter({ it.isDirectory() })
+.map({ it.getName() })
+.filter({ it.startsWith("JFlow") })
+.findFirst()
+
+if (jflowProject.isPresent()) {
+	includeFlat jflowProject.get()
+	println "Found JFlow source, adding it as a project dependency."
+}
+else {
+	println "Could not find JFlow source, adding it as a binary dependency."
+}

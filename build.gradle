@@ -1,12 +1,11 @@
 apply plugin: 'java'
-
+apply plugin: 'eclipse'
 sourceCompatibility = 1.8
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'Jenjinn',
-                   'Implementation-Version': '1.0',
-                   'Main-class': 'jenjinn.ui.launchers.FirstGameLauncher.class'
+                   'Implementation-Version': '1.0'
     }
 }
 
@@ -19,9 +18,15 @@ repositories {
 }
 
 dependencies {
-	//compile project(':JFlowOpen')
-	compile name: 'JFlowOpen-0.3'
-
+	if (subprojects.isEmpty()) {
+		compile name: 'JFlowOpen-0.3'
+	}
+	else {
+		def asList = new ArrayList<>(subprojects)
+		compile project(asList.get(0).name)
+	}
+	
+	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.1.1'
@@ -34,6 +39,5 @@ task wrapper(type: Wrapper) {
 }
 
 test {
-    // This is necessary for JUnit5 tests to actually run!
     useJUnitPlatform()
 }

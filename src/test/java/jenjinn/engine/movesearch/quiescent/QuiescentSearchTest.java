@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.misc.Infinity;
+import jenjinn.engine.misc.IntConstants;
 import jenjinn.engine.movesearch.QuiescentSearcher;
 import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
@@ -34,7 +34,7 @@ class QuiescentSearchTest
 		int expectedSignum = result.equals("POSITIVE")? 1 : -1;
 		int actualResult = -1;
 		try {
-			actualResult = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+			actualResult = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 		catch (final Throwable t) {
 			t.printStackTrace();

@@ -11,7 +11,7 @@ import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.enums.GameTermination;
 import jenjinn.engine.enums.TreeNodeType;
-import jenjinn.engine.misc.Infinity;
+import jenjinn.engine.misc.IntConstants;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TranspositionTable.Entry;
 import xawd.jflow.collections.FlowList;
@@ -96,12 +96,12 @@ public final class TreeSearcher
 		final int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 
-		int alpha = Infinity.INITIAL_ALPHA;
+		int alpha = IntConstants.INITIAL_ALPHA;
 		for (final int index : indices) {
 			final ChessMove mv = legalMoves.get(index);
 			final MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
-			final int bestReply = -negamax(root, -Infinity.INITIAL_BETA, -alpha, depth - 1);
+			final int bestReply = -negamax(root, -IntConstants.INITIAL_BETA, -alpha, depth - 1);
 			System.out.println(bestReply);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
@@ -124,7 +124,7 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			int qsearch = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+			int qsearch = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
 //			System.out.println(qsearch);
 			return qsearch;
 		}
@@ -155,7 +155,7 @@ public final class TreeSearcher
 		final int[] moveIndices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(moveIndices, recommendedFirstMoveIndex);
 
-		int bestValue = -Infinity.INT_INFINITY;
+		int bestValue = -IntConstants.MAX_NEGATABLE_VALUE;
 		int bestMoveIndex = -1, refutationMoveIndex = -1;
 		for (final int i : moveIndices) {
 			final ChessMove mv = legalMoves.get(i);

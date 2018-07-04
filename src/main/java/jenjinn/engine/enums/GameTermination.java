@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.enums;
 
-import jenjinn.engine.misc.Infinity;
+import jenjinn.engine.misc.IntConstants;
 
 /**
  * @author TB
@@ -11,7 +11,7 @@ import jenjinn.engine.misc.Infinity;
  */
 public enum GameTermination
 {
-	WHITE_WIN(Infinity.INT_INFINITY / 2), BLACK_WIN(-Infinity.INT_INFINITY / 2), DRAW(0), NOT_TERMINAL(0);
+	WHITE_WIN(IntConstants.WIN_VALUE), BLACK_WIN(-IntConstants.WIN_VALUE), DRAW(0), NOT_TERMINAL(0);
 
 	public int value;
 

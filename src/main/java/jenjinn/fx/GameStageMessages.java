@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 /**
  * @author ThomasB

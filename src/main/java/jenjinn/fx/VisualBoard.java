@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -31,7 +31,6 @@ public final class VisualBoard extends Region
 	{
 		getChildren().add(backingCanvas);
 		getChildren().addAll(boardCanvasStack);
-		getChildren().add(interactionLayer);
 	}
 
 	@Override
@@ -90,11 +89,11 @@ public final class VisualBoard extends Region
 
 	public void setInteractionEnabled()
 	{
-		interactionLayer.toBack();
+		interactionLayer.toFront();
 	}
 
 	public void setInteractionDisabled()
 	{
-		interactionLayer.toFront();
+		interactionLayer.toBack();
 	}
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

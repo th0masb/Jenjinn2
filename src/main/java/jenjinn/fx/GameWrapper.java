@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import java.util.Optional;
 
@@ -31,6 +31,7 @@ public final class GameWrapper extends Region
 		setStyle(CSS_STLYE);
 		setMinSize(MIN_WIDTH, MIN_HEIGHT);
 		setPadding(new Insets(5));
+		setSnapToPixel(true);
 
 		gameInfoLabel = new Label("Waiting for game start.");
 		gameInfoLabel.setAlignment(Pos.CENTER_LEFT);
@@ -53,7 +54,7 @@ public final class GameWrapper extends Region
 		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack);
 
 		chooseWhite.setOnAction(evt -> initGame(Side.WHITE));
-		chooseWhite.setOnAction(evt -> initGame(Side.BLACK));
+		chooseBlack.setOnAction(evt -> initGame(Side.BLACK));
 	}
 	
 	private void initGame(Side humanSide)
@@ -64,6 +65,7 @@ public final class GameWrapper extends Region
 		chessGame = Optional.of(newGame);
 		hideSideSelectors();
 		addPropertyListeners(newGame);
+		newGame.forceRedraw();
 	}
 
 	private void hideSideSelectors()
@@ -113,10 +115,10 @@ public final class GameWrapper extends Region
 		chooseBlack.relocate(w / 2 + 5, buttonY);
 
 		if (chessGame.isPresent()) {
-			double gameY = gameInfoLabel.getLayoutBounds().getMaxY() + 5;
-			double gameX = pad.getLeft();
-			double gameWidth = w - pad.getLeft() - pad.getRight();
-			double gameHeight = h - pad.getTop() - gameY;
+			double gameY = snapSize(gameInfoLabel.getLayoutBounds().getMaxY() + 5);
+			double gameX = snapSize(pad.getLeft());
+			double gameWidth = snapSize(w - pad.getLeft() - pad.getRight());
+			double gameHeight = snapSize(h - pad.getTop() - gameY);
 			chessGame.get().getFxComponent().resizeRelocate(gameX, gameY, gameWidth, gameHeight);
 		}
 	}

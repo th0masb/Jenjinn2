@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +33,6 @@ public final class BoardSquareLocations
 
 	private void put(BoardSquare square, Point2D point)
 	{
-		if (squareToPoint.containsKey(square) || pointToSquare.containsKey(point)) {
-			throw new IllegalStateException();
-		}
 		squareToPoint.put(square, point);
 		pointToSquare.put(point, square);
 	}

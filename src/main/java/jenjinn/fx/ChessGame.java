@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 
@@ -122,7 +122,8 @@ public final class ChessGame
 	private void performJenjinnMove()
 	{
 		new Thread(() -> {
-			final ChessMove jenjinnChoice = Optionals.getOrError(jenjinn.calculateBestMove(stateOfPlay, moveTime));
+			BoardState cpy = stateOfPlay.copy();
+			final ChessMove jenjinnChoice = Optionals.getOrError(jenjinn.calculateBestMove(cpy, moveTime));
 			jenjinnChoice.makeMove(stateOfPlay);
 			sideToMove.setValue(stateOfPlay.getActiveSide());
 			movesPlayed.add(jenjinnChoice);
@@ -151,5 +152,10 @@ public final class ChessGame
 	public Property<GameTermination> getTerminationStateProperty()
 	{
 		return terminationState;
+	}
+	
+	public void forceRedraw()
+	{
+		Platform.runLater(board::redraw);
 	}
 }

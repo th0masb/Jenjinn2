@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import java.util.function.Function;
 
@@ -25,7 +25,7 @@ public enum ImageCache
 	{
 		final Function<ChessPiece, String> nameMap = piece -> {
 			final String[] xs = piece.name().split("_");
-			final char[] chars = {xs[0].charAt(0), xs[1].charAt(0)};
+			final char[] chars = {xs[0].charAt(0), piece.isKnight()? 'N' : xs[1].charAt(0)};
 			return new String(chars) + "64.png";
 		};
 

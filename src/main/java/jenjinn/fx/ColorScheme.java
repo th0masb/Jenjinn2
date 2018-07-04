@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import javafx.scene.paint.Color;
 
@@ -25,9 +25,10 @@ public final class ColorScheme
 		this.attackMarker = attackMarker;
 		this.backingColor = backingColor;
 	}
-	
+
 	public static ColorScheme getDefault()
 	{
-		throw new RuntimeException();
+		return new ColorScheme(Color.web("#92db95", 0.8), Color.web("#f7fffb", 0.8), Color.BLUE, Color.CYAN,
+				Color.INDIANRED, Color.gray(0.5, 0.8));
 	}
 }

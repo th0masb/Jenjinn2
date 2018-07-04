@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx.utils;
+package jenjinn.fx;
 
 import static java.util.Comparator.comparing;
 import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
@@ -9,7 +9,6 @@ import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
 import java.util.Optional;
 
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,18 +42,13 @@ public final class ChessBoard
 	{
 		this.colors = colors;
 		this.state = stateToWatch;
-		board.widthProperty().addListener(this::sizeChangeAction);
-		board.heightProperty().addListener(this::sizeChangeAction);
-	}
-
-	private void sizeChangeAction(ObservableValue<? extends Number> obs, Number oldVal, Number newVal)
-	{
-		squareLocations = calculateBoardPoints(board.getBoardSize());
-		Platform.runLater(this::redraw);
+		board.widthProperty().addListener((x, y, z) -> redraw());
+		board.heightProperty().addListener((x, y, z) -> redraw());
 	}
 
 	public void redraw()
 	{
+		squareLocations = calculateBoardPoints(board.getBoardSize());
 		redrawBackground();
 		redrawSquares();
 		redrawMarkers();
@@ -63,7 +57,7 @@ public final class ChessBoard
 
 	public void redrawBackground()
 	{
-		final double size = board.getBoardSize();
+		final double size = board.getBackingSize();
 		final GraphicsContext gc = board.getBackingGC();
 		gc.clearRect(0, 0, size, size);
 		gc.setFill(colors.backingColor);
@@ -77,7 +71,7 @@ public final class ChessBoard
 		gc.clearRect(0, 0, size, size);
 		BoardSquare.iterateAll().forEach(square -> {
 			final Point2D c = squareLocations.get(square);
-			final boolean lightSquare = square.ordinal() % 2 == 0;
+			final boolean lightSquare = (square.ordinal() + square.rank()) % 2 == 0;
 			gc.setFill(lightSquare ? colors.lightSquares : colors.darkSquares);
 			gc.fillRect(c.getX() - sqSize / 2, c.getY() - sqSize / 2, sqSize, sqSize);
 		});

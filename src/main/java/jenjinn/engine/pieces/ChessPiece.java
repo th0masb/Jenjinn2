@@ -328,6 +328,11 @@ public enum ChessPiece implements Moveable
 	{
 		return ordinal() % 6 == 5;
 	}
+	
+	public boolean isKnight()
+	{
+		return ordinal() % 6 == 1;
+	}
 
 	public Side getSide()
 	{

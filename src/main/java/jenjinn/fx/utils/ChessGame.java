@@ -36,7 +36,7 @@ public final class ChessGame
 	private final long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
-	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>();
+	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>(GameTermination.NOT_TERMINAL);
 	private final Jenjinn jenjinn;
 	private final BoardState stateOfPlay;
 	private final ChessBoard board;
@@ -141,5 +141,15 @@ public final class ChessGame
 	public Node getFxComponent()
 	{
 		return board.getFxComponent();
+	}
+
+	public Property<Side> getSideToMoveProperty()
+	{
+		return sideToMove;
+	}
+
+	public Property<GameTermination> getTerminationStateProperty()
+	{
+		return terminationState;
 	}
 }

@@ -25,4 +25,9 @@ public final class ColorScheme
 		this.attackMarker = attackMarker;
 		this.backingColor = backingColor;
 	}
+	
+	public static ColorScheme getDefault()
+	{
+		throw new RuntimeException();
+	}
 }

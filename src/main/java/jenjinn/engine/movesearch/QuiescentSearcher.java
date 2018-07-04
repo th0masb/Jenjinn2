@@ -34,8 +34,7 @@ public final class QuiescentSearcher
 {
 	public static final int DEPTH_CAP = 20;
 
-	private final FlowList<MoveReversalData> moveReversers = IterRange.to(DEPTH_CAP)
-			.mapToObject(i -> new MoveReversalData()).toList();
+	private final FlowList<MoveReversalData> moveReversers;
 
 	private final int deltaPruneSafetyMargin = 200;
 	private final int bigDelta = calculateBigDelta();
@@ -44,6 +43,12 @@ public final class QuiescentSearcher
 
 	public QuiescentSearcher()
 	{
+		moveReversers = IterRange.to(DEPTH_CAP).mapToObject(i -> new MoveReversalData()).toList();
+	}
+
+	void resetMoveReversalData()
+	{
+		moveReversers.forEach(x -> x.reset());
 	}
 
 	public int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
@@ -51,7 +56,7 @@ public final class QuiescentSearcher
 		if (Thread.currentThread().isInterrupted()) {
 			throw new InterruptedException();
 		}
-		
+
 		Flow<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
 		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
 		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());

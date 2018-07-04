@@ -178,7 +178,7 @@ public final class ChessBoard
 	public void setSelectedSquare(Optional<BoardSquare> selectedSquare)
 	{
 		this.selectedSquare = selectedSquare;
-		Platform.runLater(this::redraw);
+		Platform.runLater(this::redrawMarkers);
 	}
 
 	public BoardSquare getClosestSquare(Point2D query)

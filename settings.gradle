@@ -1,12 +1,11 @@
-println "Checking for JFlow project in the parent directory of $rootDir .."
-
 def parentDir = new File("$rootDir").getParentFile()
+println "Checking for JFlow project in " + parentDir.toString()
+println "..\n..\n.."
 /*
  * Search the parent directory for the JFlow project.
  * If it there include it as a project dependency.
  */
-def jflowProject = Arrays.asList(parentDir.listFiles())
-.stream()
+def jflowProject = Arrays.stream(parentDir.listFiles())
 .filter({ it.isDirectory() })
 .map({ it.getName() })
 .filter({ it.startsWith("JFlow") })

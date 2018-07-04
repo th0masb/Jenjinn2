@@ -25,10 +25,13 @@ public final class TreeSearcher
 	private final TranspositionTable table = new TranspositionTable(15);
 	private final int maxDepth = 20;
 
-	private final FlowList<MoveReversalData> moveReversers = IterRange.to(maxDepth)
-			.mapToObject(i -> new MoveReversalData()).toList();
-
+	private final FlowList<MoveReversalData> moveReversers;
 	private int bestFirstMoveIndex = -1;
+
+	public TreeSearcher()
+	{
+		moveReversers = IterRange.to(maxDepth).mapToObject(i -> new MoveReversalData()).toList();
+	}
 
 	/**
 	 * Given some root state this method heuristically calculates the 'best' move
@@ -51,8 +54,8 @@ public final class TreeSearcher
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
 			return Optional.empty();
 		}
-
 		bestFirstMoveIndex = -1;
+
 		ChessMove bestMove;
 		try {
 			bestMove = getBestMoveFrom(root, 1);
@@ -68,6 +71,8 @@ public final class TreeSearcher
 				bestMove = newBestMove;
 			} catch (final InterruptedException e) {
 				Thread.interrupted();
+				moveReversers.forEach(x -> x.reset());
+				quiescent.resetMoveReversalData();
 				break;
 			}
 		}
@@ -76,7 +81,7 @@ public final class TreeSearcher
 
 	private Thread createInterruptingTimerThread(long timeLimit)
 	{
-		Thread toInterrupt = Thread.currentThread();
+		final Thread toInterrupt = Thread.currentThread();
 		return new Thread(() -> {
 			try {
 				Thread.sleep(timeLimit);
@@ -101,14 +106,13 @@ public final class TreeSearcher
 			final MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
 			final int bestReply = -negamax(root, -IntConstants.INITIAL_BETA, -alpha, depth - 1);
-			System.out.println(bestReply);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
 				alpha = bestReply;
 				bestFirstMoveIndex = index;
 			}
 		}
-//		System.out.println(alpha);
+		// System.out.println(alpha);
 		return legalMoves.get(bestFirstMoveIndex);
 	}
 
@@ -123,8 +127,9 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			int qsearch = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
-//			System.out.println(qsearch);
+			final int qsearch = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA,
+					QuiescentSearcher.DEPTH_CAP);
+			// System.out.println(qsearch);
 			return qsearch;
 		}
 

@@ -36,6 +36,17 @@ public class MoveReversalData {
 	public MoveReversalData() {
 	}
 
+	public void reset()
+	{
+		consumed = true;
+		discardedCastlingRights = EnumSet.noneOf(CastleZone.class);
+		pieceTaken = null;
+		pieceDeveloped = null;
+		discardedEnpassantSquare = null;
+		discardedHash = 0L;
+		discardedHalfMoveClock = -1;
+	}
+
 	public boolean isConsumed()
 	{
 		return consumed;

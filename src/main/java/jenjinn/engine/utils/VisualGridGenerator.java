@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.stringutils;
+package jenjinn.engine.utils;
 
 import static java.util.Arrays.asList;
 

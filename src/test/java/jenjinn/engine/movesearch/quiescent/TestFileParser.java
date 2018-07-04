@@ -42,6 +42,12 @@ class TestFileParser
 
 	private static String parseResultLine(String tail)
 	{
-		return "";
+		String trimmed = tail.trim().toUpperCase();
+		if (trimmed.equals("POSITIVE") || trimmed.equals("NEGATIVE")) {
+			return trimmed;
+		}
+		else {
+			throw new IllegalArgumentException(tail);
+		}
 	}
 }

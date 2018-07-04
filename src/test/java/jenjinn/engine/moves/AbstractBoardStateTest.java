@@ -6,7 +6,7 @@ package jenjinn.engine.moves;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.stringutils.VisualGridGenerator;
+import jenjinn.engine.utils.VisualGridGenerator;
 
 /**
  * @author t

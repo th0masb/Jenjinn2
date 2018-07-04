@@ -9,7 +9,7 @@ import jenjinn.engine.enums.CastleZone;
 import jenjinn.engine.enums.DevelopmentPiece;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.stringutils.VisualGridGenerator;
+import jenjinn.engine.utils.VisualGridGenerator;
 
 /**
  * @author ThomasB

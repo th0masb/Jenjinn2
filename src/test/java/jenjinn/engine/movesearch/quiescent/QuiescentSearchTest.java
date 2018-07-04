@@ -3,6 +3,7 @@
  */
 package jenjinn.engine.movesearch.quiescent;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.string;
@@ -23,22 +24,23 @@ import xawd.jflow.iterators.factories.IterRange;
  * @author ThomasB
  *
  */
-class QuiescentIntegrationTest
+class QuiescentSearchTest
 {
-
 	@ParameterizedTest
 	@MethodSource
 	void test(BoardState root, String result)
 	{
 		final QuiescentSearcher quiescent = new QuiescentSearcher();
+		int expectedSignum = result.equals("POSITIVE")? 1 : -1;
+		int actualResult = -1;
 		try {
-			@SuppressWarnings("unused")
-			final int res = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+			actualResult = quiescent.search(root, Infinity.INITIAL_ALPHA, Infinity.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
 		}
 		catch (final Throwable t) {
 			t.printStackTrace();
-			fail("Not yet implemented");
+			fail("Error thrown!");
 		}
+		assertEquals(expectedSignum, Math.signum(actualResult));
 	}
 
 	static Iterator<Arguments> test()

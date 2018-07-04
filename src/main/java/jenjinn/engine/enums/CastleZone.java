@@ -20,7 +20,7 @@ import static jenjinn.engine.enums.BoardSquare.H1;
 import static jenjinn.engine.enums.BoardSquare.H8;
 
 import jenjinn.engine.pgn.CommonRegex;
-import jenjinn.engine.stringutils.VisualGridGenerator;
+import jenjinn.engine.utils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 

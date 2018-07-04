@@ -67,16 +67,13 @@ public final class ChessGame extends Region
 		final BoardSquare correspondingSquare = board.getClosestSquare(clickTarget);
 
 		if (bitboardsIntersect(correspondingSquare.asBitboard(), getActiveLocations())) {
-			squareSelection = Optionals.of(correspondingSquare);
-			board.setSelectedSquare(squareSelection);
+			setSelection(Optionals.of(correspondingSquare));
 		} else if (squareSelection.isPresent()) {
 			final BoardSquare src = squareSelection.get();
 			final Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay)
 					.filter(m -> m.getSource().equals(src) && m.getTarget().equals(correspondingSquare)).safeNext();
 
-			squareSelection = Optional.empty();
-			board.setSelectedSquare(squareSelection);
-
+			setSelection(Optional.empty());
 			if (mv.isPresent()) {
 				processHumanMove(mv.get());
 			}
@@ -94,6 +91,12 @@ public final class ChessGame extends Region
 		if (!terminalStateReached()) {
 			performJenjinnMove();
 		}
+	}
+	
+	private void setSelection(Optional<BoardSquare> selection)
+	{
+		squareSelection = selection;
+		board.setSelectedSquare(selection);
 	}
 
 	/**

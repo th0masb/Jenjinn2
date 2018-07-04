@@ -16,7 +16,7 @@ import jenjinn.engine.boardstate.calculators.SquareControl;
 import jenjinn.engine.enums.Side;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import jenjinn.engine.stringutils.VisualGridGenerator;
+import jenjinn.engine.utils.VisualGridGenerator;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.Iterate;
 

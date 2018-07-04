@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.engine.stringutils;
+package jenjinn.engine.utils;
 
 import jenjinn.engine.pieces.ChessPiece;
 

@@ -11,7 +11,7 @@ import java.util.List;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.moves.ChessMove;
-import jenjinn.engine.stringutils.VisualGridGenerator;
+import jenjinn.engine.utils.VisualGridGenerator;
 import xawd.jflow.utilities.Strings;
 
 /**

@@ -85,7 +85,6 @@ public final class GameWrapper extends Region
 		chessGame = Optional.of(newGame);
 		setSideSelectorVisibility(false);
 		addPropertyListeners(newGame);
-		newGame.forceRedraw();
 		Platform.runLater(this::layoutChildren);
 	}
 

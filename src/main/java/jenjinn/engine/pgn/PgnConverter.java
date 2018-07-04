@@ -32,7 +32,7 @@ import jenjinn.engine.moves.ChessMove;
 public final class PgnConverter implements Closeable
 {
 	public static final String PGN_EXT = ".pgn";
-	private static final int POSITIONS_PER_LINE = 15, GAME_DEPTH_CAP = 12;
+	private static final int POSITIONS_PER_LINE = 15;
 
 	private final BufferedReader src;
 	private final BufferedWriter out;
@@ -59,13 +59,13 @@ public final class PgnConverter implements Closeable
 		}
 	}
 
-	public void writeUniquePositions() throws IOException
+	public void writeUniquePositions(int gameDepthCap) throws IOException
 	{
 		final List<PositionalInstruction> writeBuffer = new ArrayList<>(POSITIONS_PER_LINE);
 		Optional<String> game = readGame();
 		while (game.isPresent()) {
 			totalGamesSearched++;
-			writeUniquePositions(game.get(), writeBuffer);
+			writeUniquePositions(game.get(), writeBuffer, gameDepthCap);
 			game = readGame();
 		}
 		flushBuffer(writeBuffer);
@@ -77,13 +77,13 @@ public final class PgnConverter implements Closeable
 		System.out.println(outputLog);
 	}
 
-	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer)
-			throws IOException
+	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer,
+			int gameDepthCap) throws IOException
 	{
 		try {
 			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
 			final BoardState state = StartStateGenerator.createStartBoard();
-			for (int i = 0; i < min(GAME_DEPTH_CAP, moves.size()); i++) {
+			for (int i = 0; i < min(gameDepthCap, moves.size()); i++) {
 				final ChessMove ithMove = moves.get(i);
 				final long stateHash = state.calculateHash();
 				if (!usedPositions.contains(stateHash)) {
@@ -101,8 +101,8 @@ public final class PgnConverter implements Closeable
 		}
 	}
 
-	private void addPositionToBuffer(final PositionalInstruction instructionToAdd,
-			final List<PositionalInstruction> buffer) throws IOException
+	private void addPositionToBuffer(PositionalInstruction instructionToAdd, List<PositionalInstruction> buffer)
+			throws IOException
 	{
 		if (buffer.size() == POSITIONS_PER_LINE) {
 			flushBuffer(buffer);

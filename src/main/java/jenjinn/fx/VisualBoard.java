@@ -52,6 +52,16 @@ public final class VisualBoard extends Region
 		}
 	}
 
+	@Override
+	public void resize(double width, double height)
+	{
+		super.resize(width, height);
+		final double sideLength = Math.min(width, height);
+		final double boardSideLength = 19.0 / 20 * sideLength;
+		backingCanvas.resize( sideLength, sideLength);
+		boardCanvasStack.forEach(canvas -> canvas.resize(boardSideLength, boardSideLength));
+	}
+
 	public double getBoardSize()
 	{
 		return boardCanvas.getWidth();

@@ -3,6 +3,10 @@
  */
 package jenjinn.engine.movesearch;
 
+import static jenjinn.engine.movesearch.QuiescentSearcher.DEPTH_CAP;
+import static jenjinn.engine.utils.IntConstants.INITIAL_ALPHA;
+import static jenjinn.engine.utils.IntConstants.INITIAL_BETA;
+
 import java.util.Optional;
 
 import jenjinn.engine.base.GameTermination;
@@ -100,12 +104,12 @@ public final class TreeSearcher
 		final int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 
-		int alpha = IntConstants.INITIAL_ALPHA;
+		int alpha = INITIAL_ALPHA;
 		for (final int index : indices) {
 			final ChessMove mv = legalMoves.get(index);
 			final MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
-			final int bestReply = -negamax(root, -IntConstants.INITIAL_BETA, -alpha, depth - 1);
+			final int bestReply = -negamax(root, -INITIAL_BETA, -alpha, depth - 1);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
 				alpha = bestReply;
@@ -127,9 +131,7 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			final int qsearch = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA,
-					QuiescentSearcher.DEPTH_CAP);
-			// System.out.println(qsearch);
+			final int qsearch = quiescent.search(root, INITIAL_ALPHA, INITIAL_BETA, DEPTH_CAP);
 			return qsearch;
 		}
 

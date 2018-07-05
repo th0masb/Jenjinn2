@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
@@ -23,10 +24,11 @@ import xawd.jflow.utilities.Optionals;
 public final class GameWrapper extends Region
 {
 	private static final String CSS_STYLE = "-fx-background-color: #aeb5c1;";
-	private static final int MIN_WIDTH = 90, MIN_HEIGHT = 100;
+	private static final int MIN_WIDTH = 20, MIN_HEIGHT = 20;
 
-	private final Label gameInfoLabel, chooseYourSide;
+	private final Label gameInfoLabel, chooseYourSide, timeLabel;
 	private final Button chooseWhite, chooseBlack, playAgain;
+	private final Slider timeSlider;
 	private Optional<ChessGame> chessGame = Optional.empty();
 
 	public GameWrapper()
@@ -36,15 +38,23 @@ public final class GameWrapper extends Region
 		setPadding(new Insets(5));
 		setSnapToPixel(true);
 
+		timeSlider = createSlider();
+
 		gameInfoLabel = new Label(GameStageMessages.WAITING_FOR_GAME_START);
 		gameInfoLabel.setAlignment(Pos.CENTER_LEFT);
-		gameInfoLabel.setFont(Font.font(12));
+		gameInfoLabel.setFont(Font.font(16));
 		gameInfoLabel.setPadding(new Insets(2));
 
 		chooseYourSide = new Label("Choose your side");
 		chooseYourSide.setAlignment(Pos.CENTER);
-		chooseYourSide.setFont(Font.font(14));
+		chooseYourSide.setFont(Font.font(16));
 		chooseYourSide.setPadding(new Insets(2));
+
+		timeLabel = new Label(formatTime(timeSlider.valueProperty().get()));
+		timeLabel.setAlignment(Pos.CENTER_LEFT);
+		timeLabel.setFont(Font.font(16));
+		timeLabel.setPadding(new Insets(2));
+		timeLabel.setVisible(false);
 
 		chooseWhite = createSideSelectionButton(Side.WHITE);
 		chooseBlack = createSideSelectionButton(Side.BLACK);
@@ -56,13 +66,35 @@ public final class GameWrapper extends Region
 		playAgain.setVisible(false);
 		playAgain.setOnAction(evt -> reset());
 
-		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack, playAgain);
+		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack, playAgain, timeSlider, timeLabel);
 	}
-	
+
+	private String formatTime(double time)
+	{
+		final long ms = (long) (1000 * time);
+		return Long.toString(ms) + " ms";
+	}
+
+	private Slider createSlider()
+	{
+		final double minTime = ChessGame.MIN_MOVETIME / 1000.0;
+		final double maxTime = ChessGame.MAX_MOVETIME / 1000.0;
+		final double start = (minTime + maxTime) / 2;
+		final Slider slider = new Slider(minTime, maxTime, start);
+		slider.valueProperty()
+		.addListener((x, y, newVal) -> {
+			chessGame.ifPresent(z -> z.setMoveTime(newVal.doubleValue()));
+			timeLabel.setText(formatTime(newVal.doubleValue()));
+			layoutChildren();
+		});
+		slider.setVisible(false);
+		return slider;
+	}
+
 	private Button createSideSelectionButton(Side side)
 	{
-		ChessPiece toDisplay = side.isWhite()? ChessPiece.WHITE_QUEEN: ChessPiece.BLACK_QUEEN;
-		Button button = new Button();
+		final ChessPiece toDisplay = side.isWhite() ? ChessPiece.WHITE_QUEEN : ChessPiece.BLACK_QUEEN;
+		final Button button = new Button();
 		button.setStyle(CSS_STYLE);
 		button.setGraphic(new ImageView(ImageCache.INSTANCE.getImageOf(toDisplay)));
 		button.setAlignment(Pos.CENTER);
@@ -89,6 +121,8 @@ public final class GameWrapper extends Region
 		gameInfoLabel.setText(GameStageMessages.WHITE_TO_MOVE);
 		chessGame = Optional.of(newGame);
 		setSideSelectorVisibility(false);
+		timeSlider.setVisible(true);
+		timeLabel.setVisible(true);
 		addPropertyListeners(newGame);
 		Platform.runLater(this::layoutChildren);
 	}
@@ -104,7 +138,8 @@ public final class GameWrapper extends Region
 	{
 		game.getSideToMoveProperty().addListener((x, oldSide, newSide) -> {
 			Platform.runLater(() -> {
-				final String message = newSide.isWhite() ? GameStageMessages.WHITE_TO_MOVE : GameStageMessages.BLACK_TO_MOVE;
+				final String message = newSide.isWhite() ? GameStageMessages.WHITE_TO_MOVE
+						: GameStageMessages.BLACK_TO_MOVE;
 				gameInfoLabel.setText(message);
 			});
 		});
@@ -134,21 +169,31 @@ public final class GameWrapper extends Region
 	{
 		getChildren().stream().forEach(x -> x.autosize());
 		final Insets pad = getPadding();
+		final double lpad = pad.getLeft(), tpad = pad.getTop(), rpad = pad.getRight(), bpad = pad.getBottom();
 		final double w = getWidth(), h = getHeight();
-		gameInfoLabel.relocate(pad.getLeft(), pad.getTop());
-		playAgain.relocate(w - pad.getRight() - playAgain.getWidth(), pad.getTop());
+		gameInfoLabel.relocate(lpad, tpad);
+		playAgain.relocate(w - rpad - playAgain.getWidth(), tpad);
 		chooseYourSide.relocate((w - chooseYourSide.getWidth()) / 2, h / 3);
 		final double buttonY = chooseYourSide.getLayoutY() + chooseYourSide.getHeight() + 5;
 		chooseWhite.relocate(w / 2 - 5 - chooseWhite.getWidth(), buttonY);
 		chooseBlack.relocate(w / 2 + 5, buttonY);
 
 		if (chessGame.isPresent()) {
+			final double gameWidth = snapSize(w - lpad - rpad);
 			final double y1 = gameInfoLabel.getLayoutBounds().getMaxY();
 			final double y2 = playAgain.getLayoutBounds().getMaxY();
 			final double gameY = snapSize(Math.max(y1, y2) + 5);
-			final double gameX = snapSize(pad.getLeft());
-			final double gameWidth = snapSize(w - pad.getLeft() - pad.getRight());
-			final double gameHeight = snapSize(h - pad.getTop() - gameY);
+			final double gameX = snapSize(lpad);
+
+			final double timeLabelWidth = timeLabel.getWidth(), timeLabelHeight = timeLabel.getHeight();
+			final double sliderWidth = Math.max(30, gameWidth - timeLabelWidth - 5);
+			final double sliderHeight = Math.max(timeLabel.getHeight(), 0.1*h);
+
+			timeSlider.resize(sliderWidth, sliderHeight);
+			timeSlider.relocate(lpad, h - bpad - sliderHeight);
+			timeLabel.relocate(lpad + timeSlider.getWidth() + 5, h - bpad - 0.5 * (sliderHeight + timeLabelHeight));
+
+			final double gameHeight = snapSize(h - tpad - gameY - timeSlider.getHeight() - 5);
 			chessGame.get().getFxComponent().resizeRelocate(gameX, gameY, gameWidth, gameHeight);
 		}
 	}

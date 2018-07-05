@@ -31,7 +31,7 @@ import xawd.jflow.utilities.Optionals;
  */
 public final class ChessGame
 {
-	private static final double MIN_MOVETIME = 500, MAX_MOVETIME = 10000;
+	static final double MIN_MOVETIME = 500, MAX_MOVETIME = 10000;
 	private long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
@@ -158,10 +158,15 @@ public final class ChessGame
 	{
 		Platform.runLater(board::redraw);
 	}
-	
+
 	void interpolateMoveTime(double fraction)
 	{
-		double interpolated = (1 - fraction) * MIN_MOVETIME + fraction * MAX_MOVETIME;
+		final double interpolated = (1 - fraction) * MIN_MOVETIME + fraction * MAX_MOVETIME;
 		moveTime = (long) Math.min(MAX_MOVETIME, Math.max(MIN_MOVETIME, interpolated));
+	}
+
+	void setMoveTime(double moveTimeInSeconds)
+	{
+		moveTime = (long) (1000 * moveTimeInSeconds);
 	}
 }

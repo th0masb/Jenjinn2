@@ -44,6 +44,6 @@ class MoveSearchIntegrationTest
 	static Stream<Arguments> test()
 	{
 		Class<?> cls = MoveSearchIntegrationTest.class;
-		return FileUtils.loadResourceFromPackageOf(cls, "SemiSlavMeran").limit(1).map(Arguments::of);
+		return FileUtils.loadResourceFromPackageOf(cls, "BishopsOpening").limit(1).map(Arguments::of);
 	}
 }

@@ -27,7 +27,7 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 {
-	private static final int N_GAMES_PER_FILE = 100;
+	private static final int N_GAMES_PER_FILE = 50;
 
 	@Test
 	void test()

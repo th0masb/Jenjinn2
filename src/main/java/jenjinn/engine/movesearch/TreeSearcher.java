@@ -3,7 +3,6 @@
  */
 package jenjinn.engine.movesearch;
 
-import static jenjinn.engine.movesearch.QuiescentSearcher.DEPTH_CAP;
 import static jenjinn.engine.utils.IntConstants.INITIAL_ALPHA;
 import static jenjinn.engine.utils.IntConstants.INITIAL_BETA;
 
@@ -131,8 +130,7 @@ public final class TreeSearcher
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
-			final int qsearch = quiescent.search(root, INITIAL_ALPHA, INITIAL_BETA, DEPTH_CAP);
-			return qsearch;
+			return quiescent.search(root);
 		}
 
 		final long rootHash = root.calculateHash();
@@ -233,5 +231,10 @@ public final class TreeSearcher
 			indices[0] = indices[recommendedMoveIndex];
 			indices[recommendedMoveIndex] = tmp;
 		}
+	}
+
+	public QuiescentSearcher getQuiescent()
+	{
+		return quiescent;
 	}
 }

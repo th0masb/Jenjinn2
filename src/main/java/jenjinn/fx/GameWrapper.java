@@ -10,9 +10,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import jenjinn.engine.base.Side;
+import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.utilities.Optionals;
 
 /**
@@ -20,7 +22,7 @@ import xawd.jflow.utilities.Optionals;
  */
 public final class GameWrapper extends Region
 {
-	private static final String CSS_STLYE = "-fx-background-color: #92db95;";
+	private static final String CSS_STYLE = "-fx-background-color: #aeb5c1;";
 	private static final int MIN_WIDTH = 90, MIN_HEIGHT = 100;
 
 	private final Label gameInfoLabel, chooseYourSide;
@@ -29,7 +31,7 @@ public final class GameWrapper extends Region
 
 	public GameWrapper()
 	{
-		setStyle(CSS_STLYE);
+		setStyle(CSS_STYLE);
 		setMinSize(MIN_WIDTH, MIN_HEIGHT);
 		setPadding(new Insets(5));
 		setSnapToPixel(true);
@@ -44,17 +46,8 @@ public final class GameWrapper extends Region
 		chooseYourSide.setFont(Font.font(14));
 		chooseYourSide.setPadding(new Insets(2));
 
-		chooseWhite = new Button("White");
-		chooseWhite.setAlignment(Pos.CENTER);
-		chooseWhite.setFont(Font.font(14));
-		chooseWhite.setPadding(new Insets(5));
-		chooseWhite.setOnAction(evt -> initGame(Side.WHITE));
-
-		chooseBlack = new Button("Black");
-		chooseBlack.setAlignment(Pos.CENTER);
-		chooseBlack.setFont(Font.font(14));
-		chooseBlack.setPadding(new Insets(5));
-		chooseBlack.setOnAction(evt -> initGame(Side.BLACK));
+		chooseWhite = createSideSelectionButton(Side.WHITE);
+		chooseBlack = createSideSelectionButton(Side.BLACK);
 
 		playAgain = new Button("Play again");
 		playAgain.setAlignment(Pos.CENTER);
@@ -64,6 +57,19 @@ public final class GameWrapper extends Region
 		playAgain.setOnAction(evt -> reset());
 
 		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack, playAgain);
+	}
+	
+	private Button createSideSelectionButton(Side side)
+	{
+		ChessPiece toDisplay = side.isWhite()? ChessPiece.WHITE_QUEEN: ChessPiece.BLACK_QUEEN;
+		Button button = new Button();
+		button.setStyle(CSS_STYLE);
+		button.setGraphic(new ImageView(ImageCache.INSTANCE.getImageOf(toDisplay)));
+		button.setAlignment(Pos.CENTER);
+		button.setFont(Font.font(14));
+		button.setPadding(new Insets(5));
+		button.setOnAction(evt -> initGame(side));
+		return button;
 	}
 
 	private void reset()
@@ -144,6 +150,13 @@ public final class GameWrapper extends Region
 			final double gameWidth = snapSize(w - pad.getLeft() - pad.getRight());
 			final double gameHeight = snapSize(h - pad.getTop() - gameY);
 			chessGame.get().getFxComponent().resizeRelocate(gameX, gameY, gameWidth, gameHeight);
+		}
+	}
+
+	public void interpolateTimeLimit(double fraction)
+	{
+		if (chessGame.isPresent()) {
+			chessGame.get().interpolateMoveTime(fraction);
 		}
 	}
 }

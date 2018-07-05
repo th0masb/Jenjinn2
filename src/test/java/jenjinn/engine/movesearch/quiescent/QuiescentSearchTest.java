@@ -10,13 +10,13 @@ import static xawd.jflow.utilities.CollectionUtil.string;
 
 import java.util.Iterator;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.movesearch.QuiescentSearcher;
-import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
 
@@ -26,6 +26,7 @@ import xawd.jflow.iterators.factories.IterRange;
  */
 class QuiescentSearchTest
 {
+	@Disabled
 	@ParameterizedTest
 	@MethodSource
 	void test(BoardState root, String result)
@@ -34,7 +35,7 @@ class QuiescentSearchTest
 		int expectedSignum = result.equals("POSITIVE")? 1 : -1;
 		int actualResult = -1;
 		try {
-			actualResult = quiescent.search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, QuiescentSearcher.DEPTH_CAP);
+			actualResult = quiescent.search(root);
 		}
 		catch (final Throwable t) {
 			t.printStackTrace();

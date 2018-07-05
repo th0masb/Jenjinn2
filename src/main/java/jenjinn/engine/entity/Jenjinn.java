@@ -41,7 +41,21 @@ public final class Jenjinn
 			final Optional<ChessMove> openingSearch = findMoveInOpeningdatabase(state);
 			if (openingSearch.isPresent()) {
 				openingCount = 0;
-				return openingSearch;
+				// Lets check that the opening move is ok...
+				BoardState cpy = state.copy();
+				openingSearch.get().makeMove(cpy);
+				try {
+					int qsearch = treeSearcher.getQuiescent().search(cpy);
+					if (qsearch > 300) {
+						System.out.println("Potential hash collision? Aborting opening db and switching to calculation.");
+						openingCount = 5;
+					}
+					else {
+						return openingSearch;
+					}
+				} catch (InterruptedException e) {
+					throw new RuntimeException();
+				}
 			}
 		}
 		return treeSearcher.getBestMoveFrom(state, timeLimit);

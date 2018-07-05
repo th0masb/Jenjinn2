@@ -31,8 +31,8 @@ import xawd.jflow.utilities.Optionals;
  */
 public final class ChessGame
 {
-	//	private static final double MIN_MOVETIME = 2.0, MAX_MOVETIME = 10;
-	private final long moveTime = 5000;
+	private static final double MIN_MOVETIME = 500, MAX_MOVETIME = 10000;
+	private long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
 	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>(GameTermination.NOT_TERMINAL);
@@ -54,6 +54,7 @@ public final class ChessGame
 		board.getFxComponent().setInteractionEnabled();
 
 		if (humanSide.isBlack()) {
+			board.setPerspective(Side.BLACK);
 			board.getFxComponent().setInteractionDisabled();
 			performJenjinnMove();
 		}
@@ -156,5 +157,11 @@ public final class ChessGame
 	public void forceRedraw()
 	{
 		Platform.runLater(board::redraw);
+	}
+	
+	void interpolateMoveTime(double fraction)
+	{
+		double interpolated = (1 - fraction) * MIN_MOVETIME + fraction * MAX_MOVETIME;
+		moveTime = (long) Math.min(MAX_MOVETIME, Math.max(MIN_MOVETIME, interpolated));
 	}
 }

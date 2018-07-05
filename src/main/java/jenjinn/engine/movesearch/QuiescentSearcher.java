@@ -23,6 +23,7 @@ import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
+import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.IterRange;
@@ -50,8 +51,13 @@ public final class QuiescentSearcher
 	{
 		moveReversers.forEach(x -> x.reset());
 	}
+	
+	public int search(BoardState root) throws InterruptedException
+	{
+		return search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, DEPTH_CAP);
+	}
 
-	public int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
+	private int search(BoardState root, int alpha, int beta, int depth) throws InterruptedException
 	{
 		if (Thread.currentThread().isInterrupted()) {
 			throw new InterruptedException();

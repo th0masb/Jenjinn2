@@ -42,8 +42,8 @@ public final class ChessBoard
 	{
 		this.colors = colors;
 		this.state = stateToWatch;
-		board.widthProperty().addListener((x, y, z) -> redraw());
-		board.heightProperty().addListener((x, y, z) -> redraw());
+		board.widthProperty().addListener((x, y, z) -> Platform.runLater(this::redraw));
+		board.heightProperty().addListener((x, y, z) -> Platform.runLater(this::redraw));
 	}
 
 	public void redraw()

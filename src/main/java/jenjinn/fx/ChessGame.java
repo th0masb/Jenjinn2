@@ -28,11 +28,10 @@ import xawd.jflow.utilities.Optionals;
 
 /**
  * @author ThomasB
- *
  */
 public final class ChessGame
 {
-//	private static final double MIN_MOVETIME = 2.0, MAX_MOVETIME = 10;
+	//	private static final double MIN_MOVETIME = 2.0, MAX_MOVETIME = 10;
 	private final long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
@@ -91,7 +90,7 @@ public final class ChessGame
 			performJenjinnMove();
 		}
 	}
-	
+
 	private void setSelection(Optional<BoardSquare> selection)
 	{
 		squareSelection = selection;
@@ -122,7 +121,7 @@ public final class ChessGame
 	private void performJenjinnMove()
 	{
 		new Thread(() -> {
-			BoardState cpy = stateOfPlay.copy();
+			final BoardState cpy = stateOfPlay.copy();
 			final ChessMove jenjinnChoice = Optionals.getOrError(jenjinn.calculateBestMove(cpy, moveTime));
 			jenjinnChoice.makeMove(stateOfPlay);
 			sideToMove.setValue(stateOfPlay.getActiveSide());
@@ -153,7 +152,7 @@ public final class ChessGame
 	{
 		return terminationState;
 	}
-	
+
 	public void forceRedraw()
 	{
 		Platform.runLater(board::redraw);

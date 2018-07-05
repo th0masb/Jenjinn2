@@ -12,6 +12,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.base.GameTermination;
@@ -62,19 +63,24 @@ public final class ChessGame
 
 	private void handleMouseClicks(MouseEvent evt)
 	{
-		final Point2D clickTarget = new Point2D(evt.getX(), evt.getY());
-		final BoardSquare correspondingSquare = board.getClosestSquare(clickTarget);
+		if (evt.getButton() == MouseButton.SECONDARY) {
+			board.switchPerspective();
+		}
+		else if (evt.getButton() == MouseButton.PRIMARY) {
+			final Point2D clickTarget = new Point2D(evt.getX(), evt.getY());
+			final BoardSquare correspondingSquare = board.getClosestSquare(clickTarget);
 
-		if (bitboardsIntersect(correspondingSquare.asBitboard(), getActiveLocations())) {
-			setSelection(Optionals.of(correspondingSquare));
-		} else if (squareSelection.isPresent()) {
-			final BoardSquare src = squareSelection.get();
-			final Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay)
-					.filter(m -> m.getSource().equals(src) && m.getTarget().equals(correspondingSquare)).safeNext();
+			if (bitboardsIntersect(correspondingSquare.asBitboard(), getActiveLocations())) {
+				setSelection(Optionals.of(correspondingSquare));
+			} else if (squareSelection.isPresent()) {
+				final BoardSquare src = squareSelection.get();
+				final Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay)
+						.filter(m -> m.getSource().equals(src) && m.getTarget().equals(correspondingSquare)).safeNext();
 
-			setSelection(Optional.empty());
-			if (mv.isPresent()) {
-				processHumanMove(mv.get());
+				setSelection(Optional.empty());
+				if (mv.isPresent()) {
+					processHumanMove(mv.get());
+				}
 			}
 		}
 	}

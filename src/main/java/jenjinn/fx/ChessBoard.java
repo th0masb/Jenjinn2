@@ -170,6 +170,11 @@ public final class ChessBoard
 		}
 	}
 
+	public void switchPerspective()
+	{
+		setPerspective(boardPerspective.otherSide());
+	}
+
 	public Optional<BoardSquare> getSelectedSquare()
 	{
 		return selectedSquare;

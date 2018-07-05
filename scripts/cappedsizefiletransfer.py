@@ -16,3 +16,5 @@ p = lambda x: (not os.path.isdir(x)) and os.path.getsize(x) < byteSizeCap
 for path in (x for x in contents if p(x)):
 	head, tail = os.path.split(path)
 	os.rename(path, os.path.join(dst, tail))
+
+

@@ -51,7 +51,7 @@ public final class QuiescentSearcher
 	{
 		moveReversers.forEach(x -> x.reset());
 	}
-	
+
 	public int search(BoardState root) throws InterruptedException
 	{
 		return search(root, IntConstants.INITIAL_ALPHA, IntConstants.INITIAL_BETA, DEPTH_CAP);
@@ -133,8 +133,7 @@ public final class QuiescentSearcher
 
 	private boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
 	{
-		if (move instanceof EnpassantMove
-				&& standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + deltaPruneSafetyMargin)) {
+		if (move instanceof EnpassantMove) {
 			return true;
 		} else {
 			final Side active = root.getActiveSide(), passive = active.otherSide();

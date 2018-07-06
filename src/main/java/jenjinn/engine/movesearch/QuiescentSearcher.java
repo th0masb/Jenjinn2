@@ -134,7 +134,7 @@ public final class QuiescentSearcher
 	private boolean filterMove(BoardState root, ChessMove move, int standPat, int alpha)
 	{
 		if (move instanceof EnpassantMove) {
-			return true;
+			return standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + deltaPruneSafetyMargin);
 		} else {
 			final Side active = root.getActiveSide(), passive = active.otherSide();
 			final BoardSquare source = move.getSource(), target = move.getTarget();

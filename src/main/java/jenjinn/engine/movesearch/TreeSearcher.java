@@ -3,8 +3,8 @@
  */
 package jenjinn.engine.movesearch;
 
-import static jenjinn.engine.utils.IntConstants.INITIAL_ALPHA;
-import static jenjinn.engine.utils.IntConstants.INITIAL_BETA;
+import static jenjinn.engine.movesearch.IntConstants.INITIAL_ALPHA;
+import static jenjinn.engine.movesearch.IntConstants.INITIAL_BETA;
 
 import java.util.Optional;
 
@@ -15,7 +15,6 @@ import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TranspositionTable.Entry;
-import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.factories.IterRange;
 

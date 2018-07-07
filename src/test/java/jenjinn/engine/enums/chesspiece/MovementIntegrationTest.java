@@ -11,9 +11,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import jenjinn.engine.base.BoardSquare;
+import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import jenjinn.engine.utils.FileUtils;
 import jenjinn.engine.utils.BasicPieceLocations;
 
 /**

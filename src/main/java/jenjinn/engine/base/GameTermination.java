@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.base;
 
-import jenjinn.engine.utils.IntConstants;
+import jenjinn.engine.movesearch.IntConstants;
 
 /**
  * @author TB

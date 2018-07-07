@@ -1,4 +1,4 @@
-package jenjinn.engine.utils;
+package jenjinn.engine.movesearch;
 
 /**
  * Constant values which can be negated without numerical overflow

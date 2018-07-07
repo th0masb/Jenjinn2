@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.integrationtests;
 
-import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
+import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;

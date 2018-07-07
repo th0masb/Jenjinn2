@@ -16,12 +16,12 @@ import java.util.Optional;
 
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.base.CastleZone;
+import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.MoveCache;
-import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.collections.FlowList;
 
 /**

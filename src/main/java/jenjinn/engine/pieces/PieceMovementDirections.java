@@ -1,4 +1,4 @@
-package jenjinn.engine.utils;
+package jenjinn.engine.pieces;
 
 import static java.util.Arrays.asList;
 

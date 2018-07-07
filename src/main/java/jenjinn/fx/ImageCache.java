@@ -6,9 +6,9 @@ package jenjinn.fx;
 import java.util.function.Function;
 
 import javafx.scene.image.Image;
+import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import jenjinn.engine.utils.FileUtils;
 import xawd.jflow.collections.FlowList;
 
 /**

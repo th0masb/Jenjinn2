@@ -4,7 +4,7 @@
 package jenjinn.engine.boardstate.terminationstate;
 
 import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
+import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
 

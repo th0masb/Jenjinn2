@@ -6,7 +6,7 @@ import java.util.List;
 
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.base.Direction;
-import jenjinn.engine.utils.PieceMovementDirections;
+import jenjinn.engine.pieces.PieceMovementDirections;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
 

@@ -4,7 +4,7 @@
 package jenjinn.engine.entity;
 
 import static java.util.stream.Collectors.toCollection;
-import static jenjinn.engine.utils.FileUtils.loadResourceFromPackageOf;
+import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
 
 import java.io.IOException;
 import java.util.Collections;

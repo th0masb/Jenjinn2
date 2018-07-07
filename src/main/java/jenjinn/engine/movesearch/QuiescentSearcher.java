@@ -23,7 +23,6 @@ import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import jenjinn.engine.utils.IntConstants;
 import xawd.jflow.collections.FlowList;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.IterRange;

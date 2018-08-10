@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.parseutils;
 
-import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.head;
 import static xawd.jflow.utilities.Strings.getAllMatches;
 
@@ -14,6 +12,7 @@ import java.util.Set;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.pgn.CommonRegex;
 import xawd.jflow.collections.FlowList;
@@ -47,8 +46,7 @@ public abstract class AbstractTestFileParser
 	 */
 	public FlowList<String> loadFile(String fileName)
 	{
-		final List<String> lines = loadResourceFromPackageOf(getClass(), fileName).map(String::trim)
-				.filter(s -> !s.isEmpty() && !s.startsWith("//")).collect(toList());
+		List<String> lines = FileUtils.cacheResource(getClass(), fileName, s -> !s.startsWith("//"));
 		return Lists.copy(lines);
 	}
 	

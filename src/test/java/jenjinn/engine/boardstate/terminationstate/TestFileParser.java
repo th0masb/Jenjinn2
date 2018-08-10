@@ -3,8 +3,6 @@
  */
 package jenjinn.engine.boardstate.terminationstate;
 
-import static java.util.stream.Collectors.toList;
-import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
 import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
@@ -14,24 +12,20 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.engine.base.GameTermination;
 import jenjinn.engine.boardstate.BoardState;
+import jenjinn.engine.parseutils.AbstractTestFileParser;
 import jenjinn.engine.parseutils.BoardParser;
 
 /**
  * @author ThomasB
  *
  */
-final class TestFileParser
+final class TestFileParser extends AbstractTestFileParser
 {
-	private TestFileParser()
-	{
-	}
 
-	public static Arguments parse(final String fileName)
+	@Override
+	public Arguments parse(final String fileName)
 	{
-		final List<String> lines = loadResourceFromPackageOf(TestFileParser.class, fileName)
-				.map(String::trim)
-				.filter(s -> !s.isEmpty() && !s.startsWith("//"))
-				.collect(toList());
+		List<String> lines = loadFile(fileName);
 
 		if (lines.size() == 11) {
 			final BoardState state = BoardParser.parse(take(9, lines));

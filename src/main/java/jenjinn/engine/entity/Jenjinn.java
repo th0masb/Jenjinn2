@@ -3,18 +3,16 @@
  */
 package jenjinn.engine.entity;
 
-import static java.util.stream.Collectors.toCollection;
-import static jenjinn.engine.base.FileUtils.loadResourceFromPackageOf;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
+import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TreeSearcher;
 import xawd.jflow.collections.FlowList;
-import xawd.jflow.collections.impl.FlowArrayList;
+import xawd.jflow.collections.Lists;
 
 /**
  * @author ThomasB
@@ -28,9 +26,7 @@ public final class Jenjinn
 
 	public Jenjinn()
 	{
-		final FlowList<String> files = loadResourceFromPackageOf(Jenjinn.class, "openingFileNames")
-				.collect(toCollection(FlowArrayList::new));
-
+		FlowList<String> files = Lists.copyMutable(FileUtils.cacheResource(Jenjinn.class, "openingFileNames"));
 		Collections.shuffle(files); // Different openings each time.
 		openingFiles = files.flow().toList();
 	}

@@ -43,7 +43,7 @@ class MovementIntegrationTest
 	{
 		piecesToTest.stream().forEach(piece ->
 		{
-			FileUtils.loadResourceFromPackageOf(getClass(), INPUT_FILE_NAME)
+			FileUtils.cacheResource(getClass(), INPUT_FILE_NAME)
 			.map(BasicPieceLocations::reconstructFrom)
 			.forEach(locations -> testMovesAreCorrect(piece, square, locations));
 		});

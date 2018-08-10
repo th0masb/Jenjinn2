@@ -3,7 +3,6 @@
  */
 package jenjinn.engine.eval.piecesquaretables;
 
-import static java.util.stream.Collectors.toList;
 import static xawd.jflow.utilities.MapUtil.intMap;
 import static xawd.jflow.utilities.Strings.getAllMatches;
 
@@ -42,9 +41,8 @@ public final class TableParser
 		final PieceValues pvalues = fle.endsWith("midgame") ? PieceValues.MIDGAME
 				: fle.endsWith("endgame") ? PieceValues.ENDGAME : PieceValues.TESTING;
 
-		final List<String> lines = FileUtils.loadResourceFromPackageOf(packageProvider, filename).map(String::trim)
-				.filter(line -> !line.isEmpty()).collect(toList());
-
+		final List<String> lines = FileUtils.cacheResource(packageProvider, filename);
+				
 		if (lines.size() == 8) {
 			final int[] locationValues = Iterate.reverseOver(lines).map(line -> getAllMatches(line, NUMBER_PATTERN))
 					.map(matches -> intMap(Integer::parseInt, matches)).flattenToInts(Iterate::reverseOverInts)

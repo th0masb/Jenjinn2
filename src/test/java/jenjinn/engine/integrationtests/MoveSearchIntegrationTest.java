@@ -5,12 +5,11 @@ package jenjinn.engine.integrationtests;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 
 import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.boardstate.BoardState;
@@ -26,24 +25,30 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 class MoveSearchIntegrationTest
 {
-	@ParameterizedTest
-	@MethodSource
-	void test(String pgn)
+	private final int  nGames        = 30;
+	private final long timePerSearch = 3000;
+	
+	@Test
+	void test()
 	{
 		TreeSearcher searcher = new TreeSearcher();
-		try {
-			List<ChessMove> mvs = PgnGameConverter.parse(pgn);
-			BoardState state = StartStateGenerator.createStartBoard();
-			Iterate.over(mvs).take(mvs.size()/2).forEach(mv -> mv.makeMove(state));
-			searcher.getBestMoveFrom(state, 3000);
-		} catch (BadPgnException e) {
-			fail("Error in parsing pgn: " + pgn);
+		
+		try (BufferedReader reader = FileUtils.loadResource(getClass(), "BishopsOpening")) {
+			reader.lines().limit(nGames).forEach(game -> 
+			{
+				try {
+					List<ChessMove> mvs = PgnGameConverter.parse(game);
+					BoardState state = StartStateGenerator.createStartBoard();
+					Iterate.over(mvs).take(mvs.size()/2).forEach(mv -> mv.makeMove(state));
+					searcher.getBestMoveFrom(state, timePerSearch);
+				} catch (BadPgnException e) {
+					fail("Error in parsing pgn: " + game);
+				}
+			});
+			
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			fail();
 		}
-	}
-
-	static Stream<Arguments> test()
-	{
-		Class<?> cls = MoveSearchIntegrationTest.class;
-		return FileUtils.loadResourceFromPackageOf(cls, "BishopsOpening").limit(1).map(Arguments::of);
 	}
 }

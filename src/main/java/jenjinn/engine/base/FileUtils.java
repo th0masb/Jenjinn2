@@ -45,6 +45,13 @@ public final class FileUtils
 		return "/" + pkg.getName().replace('.', '/') + "/" + relativeName;
 	}
 	
+	/**
+	 * Create a {@linkplain BufferedReader} pointing at a resource file.
+	 * 
+	 * @param cls          A class which lies in the same package as the file.
+	 * @param relativeName The name of the resource file relative to it's parent
+	 *                     package.
+	 */
 	public static BufferedReader loadResource(Class<?> cls, String relativeName)
 	{
 		String absoluteLoc = absoluteName(cls, relativeName);
@@ -57,8 +64,14 @@ public final class FileUtils
 		}
 	}
 	
-	/*
-	 * Get non empty lines satisfying the given filters
+	/**
+	 * Loads and caches the lines of a resource which satisfy all of the given
+	 * predicates.
+	 * 
+	 * @param cls          A class which lies in the same package as the file.
+	 * @param relativeName The name of the resource file relative to it's parent
+	 *                     package.
+	 * @param filters      A collection of predicates each line must satisfy.
 	 */
 	@SafeVarargs
 	public static FlowList<String> cacheResource(Class<?> cls, String relativeName, Predicate<? super String>... filters)
@@ -66,6 +79,15 @@ public final class FileUtils
 		return cacheResource(cls, relativeName, Arrays.asList(filters));
 	}
 	
+	/**
+	 * Loads and caches the lines of a resource which satisfy all of the given
+	 * predicates.
+	 * 
+	 * @param cls          A class which lies in the same package as the file.
+	 * @param relativeName The name of the resource file relative to it's parent
+	 *                     package.
+	 * @param filters      A collection of predicates each line must satisfy.
+	 */
 	public static FlowList<String> cacheResource(Class<?> cls, String relativeName, Collection<Predicate<? super String>> filters)
 	{
 		try (BufferedReader reader = loadResource(cls, relativeName)) {
@@ -78,28 +100,4 @@ public final class FileUtils
 			throw new RuntimeException(e);
 		}
 	}
-
-//	/**
-//	 * @param cls - A {@link Class} object residing in the same package as the resource is to be loaded from
-//	 * @param relativeResourceName - The name of the resource file to load.
-//	 * @return - A {@link Stream} of the lines contained in the file.
-//	 */
-//	public static Stream<String> loadResourceFromPackageOf(Class<?> cls, String relativeResourceName)
-//	{
-//		String absoluteLoc = absoluteName(cls, relativeResourceName);
-//		InputStream is = cls.getResourceAsStream(absoluteLoc);
-//		
-//		if (Objects.isNull(is)) {
-//			throw new NullPointerException("Class: " + cls.getSimpleName() + ", Resource: " + absoluteLoc);
-//		}
-//		
-//		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-//		return reader.lines().onClose(() -> {
-//			try {
-//				reader.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		});
-//	}
 }

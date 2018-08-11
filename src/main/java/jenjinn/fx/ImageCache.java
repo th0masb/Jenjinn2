@@ -13,7 +13,6 @@ import xawd.jflow.collections.FlowList;
 
 /**
  * @author ThomasB
- *
  */
 public enum ImageCache
 {

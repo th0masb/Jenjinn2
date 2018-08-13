@@ -30,9 +30,9 @@ public class PieceLocationEvaluator implements EvaluationComponent
 	@Override
 	public int evaluate(BoardState state)
 	{
-		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final int gamePhase = calculateGamePhase(pieceLocs);
-		final int midgameEval = pieceLocs.getMidgameEval(), endgameEval = pieceLocs.getEndgameEval();
+		DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		int gamePhase = calculateGamePhase(pieceLocs);
+		int midgameEval = pieceLocs.getMidgameEval(), endgameEval = pieceLocs.getEndgameEval();
 		return ((midgameEval * (256 - gamePhase)) + endgameEval * gamePhase) / 256;
 	}
 
@@ -40,8 +40,8 @@ public class PieceLocationEvaluator implements EvaluationComponent
 	{
 		int piecePhase = 24;
 		for (int i = 1; i < 5; i++) {
-			final ChessPiece wp = ChessPieces.fromIndex(i), bp = ChessPieces.fromIndex(i + 6);
-			final int totalPieces = plocs.pieceCountOf(wp) + plocs.pieceCountOf(bp);
+			ChessPiece wp = ChessPieces.fromIndex(i), bp = ChessPieces.fromIndex(i + 6);
+			int totalPieces = plocs.pieceCountOf(wp) + plocs.pieceCountOf(bp);
 			piecePhase -= totalPieces * PIECE_PHASE_VALUES[i];
 		}
 		return (piecePhase * 256 + 12) / 24;

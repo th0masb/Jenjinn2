@@ -4,8 +4,8 @@
 package jenjinn.engine.moves;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.Strings.findLastMatch;
+import static xawd.jflow.utilities.CollectionUtil.last;
+import static xawd.jflow.utilities.Strings.lastMatch;
 
 import java.util.List;
 
@@ -13,7 +13,6 @@ import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
-import xawd.jflow.utilities.Optionals;
 import xawd.jflow.utilities.Strings;
 
 /**
@@ -39,7 +38,13 @@ public interface ChessMove
 	 */
 	void makeMove(BoardState state, MoveReversalData unmakeDataStore);
 
-	default void makeMove(final BoardState state)
+	/**
+	 * Mutate the state of the parameter board by performing this move without
+	 * saving the reversal data. That is this method is irreversible.
+	 * 
+	 * @param state
+	 */
+	default void makeMove(BoardState state)
 	{
 		makeMove(state, new MoveReversalData());
 	}
@@ -60,25 +65,25 @@ public interface ChessMove
 	 *            concrete subclasses of this interface.
 	 * @return the decoded move.
 	 */
-	static ChessMove decode(final String repr)
+	static ChessMove decode(String repr)
 	{
-		final String explicitStandardEnpassantRx = "([SE][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\])";
-		final String compactStandardEnpassantRx = "([SE]([a-h][1-8]){2})";
-		final String standardEnpassantRx = "^" + explicitStandardEnpassantRx + "|" + compactStandardEnpassantRx + "$";
+		String explicitStandardEnpassantRx = "([SE][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\])";
+		String compactStandardEnpassantRx = "([SE]([a-h][1-8]){2})";
+		String standardEnpassantRx = "^" + explicitStandardEnpassantRx + "|" + compactStandardEnpassantRx + "$";
 
-		final String explicitCastleRx = "(CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\])";
-		final String compactCastleRx = "((wk)|(wq)|(bk)|(bq))";
-		final String castleMoveRx = "^" + explicitCastleRx + "|" + compactCastleRx + "$";
+		String explicitCastleRx = "(CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\])";
+		String compactCastleRx = "((wk)|(wq)|(bk)|(bq))";
+		String castleMoveRx = "^" + explicitCastleRx + "|" + compactCastleRx + "$";
 
-		final String explicitPromotionRx = "(PromotionMove\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\|result=[NBRQ]\\])";
-		final String compactPromotionRx = "(P([a-h][1-8]){2}[NBRQ])";
-		final String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
+		String explicitPromotionRx = "(PromotionMove\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\|result=[NBRQ]\\])";
+		String compactPromotionRx = "(P([a-h][1-8]){2}[NBRQ])";
+		String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
 
 		if (repr.matches(standardEnpassantRx)) {
-			final List<String> squares = Strings.getAllMatches(repr, "[a-h][1-8]");
-			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
-			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
-			final char firstChar = repr.charAt(0);
+			List<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toList();
+			BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
+			BoardSquare target = BoardSquare.valueOf(last(squares).toUpperCase());
+			char firstChar = repr.charAt(0);
 			switch (firstChar) {
 			case 'S':
 				return new StandardMove(source, target);
@@ -88,13 +93,13 @@ public interface ChessMove
 				throw new RuntimeException();
 			}
 		} else if (repr.matches(promotionRx)) {
-			final List<String> squares = Strings.getAllMatches(repr, "[a-h][1-8]");
-			final BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
-			final BoardSquare target = BoardSquare.valueOf(tail(squares).toUpperCase());
-			final PromotionResult result = PromotionResult.valueOf(Optionals.getOrError(findLastMatch(repr, "[NBRQ]")));
+			List<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toList();
+			BoardSquare source = BoardSquare.valueOf(head(squares).toUpperCase());
+			BoardSquare target = BoardSquare.valueOf(last(squares).toUpperCase());
+			PromotionResult result = PromotionResult.valueOf(lastMatch(repr, "[NBRQ]").get());
 			return new PromotionMove(source, target, result);
 		} else if (repr.matches(castleMoveRx)) {
-			final String zoneId = Strings.findFirstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();
+			String zoneId = Strings.firstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();
 			return new CastleMove(CastleZone.fromSimpleIdentifier(zoneId));
 		} else {
 			throw new IllegalArgumentException(repr);

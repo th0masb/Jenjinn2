@@ -22,7 +22,7 @@ public final class PieceSquareTables
 
 	public PieceSquareTables(final List<PieceSquareTable> whiteTables)
 	{
-		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i).get()) {
+		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i)) {
 			throw new IllegalArgumentException();
 		}
 		this.tables = Iterate.over(whiteTables)
@@ -42,7 +42,7 @@ public final class PieceSquareTables
 		}
 		int eval = 0;
 		for (int i = 0; i < pieceLocations.size(); i++) {
-			final PieceSquareTable pieceTable = tables.get(i);
+			PieceSquareTable pieceTable = tables.get(i);
 			eval += pieceLocations.get(i).iterator()
 					.mapToInt(loc -> pieceTable.getValueAt(loc))
 					.fold(0, (a, b) -> a + b);

@@ -19,7 +19,7 @@ public final class PieceSquareTable
 	private final ChessPiece associatedPiece;
 	private final int[] locationValues;
 
-	public PieceSquareTable(final ChessPiece associatedPiece, int pieceValue, final int[] locationValues)
+	public PieceSquareTable(ChessPiece associatedPiece, int pieceValue, int[] locationValues)
 	{
 		if (associatedPiece == null || locationValues.length != 64) {
 			throw new IllegalArgumentException();
@@ -33,7 +33,7 @@ public final class PieceSquareTable
 		return associatedPiece;
 	}
 
-	public int getValueAt(final BoardSquare location)
+	public int getValueAt(BoardSquare location)
 	{
 		return locationValues[location.ordinal()];
 	}
@@ -49,7 +49,7 @@ public final class PieceSquareTable
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((associatedPiece == null) ? 0 : associatedPiece.hashCode());
 		result = prime * result + Arrays.hashCode(locationValues);
@@ -57,14 +57,14 @@ public final class PieceSquareTable
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final PieceSquareTable other = (PieceSquareTable) obj;
+		PieceSquareTable other = (PieceSquareTable) obj;
 		if (associatedPiece != other.associatedPiece)
 			return false;
 		if (!Arrays.equals(locationValues, other.locationValues))

@@ -8,7 +8,7 @@ import static jenjinn.engine.bitboards.Bitboards.emptyBoardAttackset;
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.bitboards.BitboardIterator;
 import jenjinn.engine.pieces.ChessPiece;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 
 /**
  * @author ThomasB
@@ -42,17 +42,11 @@ public final class KingSafetyArea
 		return all;
 	}
 
-	private static final FlowList<KingSafetyArea> CACHE =
+	private static final FList<KingSafetyArea> CACHE =
 			BoardSquare.iterateAll().map(KingSafetyArea::new).toList();
 
 	public static KingSafetyArea get(BoardSquare src)
 	{
 		return CACHE.get(src.ordinal());
 	}
-
-//	public static void main(String[] args)
-//	{
-//		final KingSafetyArea a = get(BoardSquare.G1);
-//		System.out.println(VisualGridGenerator.from(a.outer, a.inner, a.all));
-//	}
 }

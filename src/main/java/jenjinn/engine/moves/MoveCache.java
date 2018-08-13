@@ -24,9 +24,9 @@ public final class MoveCache {
 
 	static List<StandardMove[]> createStandardMoveCache()
 	{
-		final List<StandardMove[]> moveCache = BoardSquare.iterateAll().map(i -> new StandardMove[64]).toList();
+		List<StandardMove[]> moveCache = BoardSquare.iterateAll().map(i -> new StandardMove[64]).toList();
 
-		for (final ChessPiece piece : asList(ChessPiece.WHITE_KNIGHT, ChessPiece.WHITE_QUEEN)) {
+		for (ChessPiece piece : asList(ChessPiece.WHITE_KNIGHT, ChessPiece.WHITE_QUEEN)) {
 			BoardSquare.iterateAll().forEach(square ->
 			{
 				BitboardIterator.from(piece.getSquaresOfControl(square, 0L, 0L))
@@ -36,13 +36,13 @@ public final class MoveCache {
 		return moveCache;
 	}
 
-	public static StandardMove getMove(final BoardSquare source, final BoardSquare target)
+	public static StandardMove getMove(BoardSquare source, BoardSquare target)
 	{
 		assert STANDARD_MOVE_CACHE.get(source.ordinal())[target.ordinal()] != null : "Requested impossible move or my logic is wrong.";
 		return STANDARD_MOVE_CACHE.get(source.ordinal())[target.ordinal()];
 	}
 
-	public static CastleMove getMove(final CastleZone zone)
+	public static CastleMove getMove(CastleZone zone)
 	{
 		return CASTLE_MOVE_CACHE.get(zone.ordinal());
 	}

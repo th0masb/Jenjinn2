@@ -23,18 +23,18 @@ public final class EnpassantMove extends AbstractChessMove
 {
 	private final BoardSquare enPassantSquare;
 
-	public EnpassantMove(final BoardSquare start, final BoardSquare target)
+	public EnpassantMove(BoardSquare start, BoardSquare target)
 	{
 		super(start, target);
 		enPassantSquare = target.getNextSquareInDirection(start.ordinal() - target.ordinal() > 0? Direction.N : Direction.S);
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
+	void updatePieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
-		final Side activeSide = state.getActiveSide();
-		final ChessPiece activePawn = ChessPieces.pawn(activeSide);
-		final ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
+		Side activeSide = state.getActiveSide();
+		ChessPiece activePawn = ChessPieces.pawn(activeSide);
+		ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
 
 		state.getPieceLocations().removePieceAt(getSource(), activePawn);
 		state.getPieceLocations().addPieceAt(getTarget(), activePawn);
@@ -48,20 +48,20 @@ public final class EnpassantMove extends AbstractChessMove
 	}
 
 	@Override
-	void updateDevelopedPieces(final BoardState state, final MoveReversalData unmakeDataStore)
+	void updateDevelopedPieces(BoardState state, MoveReversalData unmakeDataStore)
 	{
 		unmakeDataStore.setPieceDeveloped(null);
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
+	void resetPieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
-		final Side activeSide = state.getActiveSide();
-		final ChessPiece activePawn = ChessPieces.pawn(activeSide);
+		Side activeSide = state.getActiveSide();
+		ChessPiece activePawn = ChessPieces.pawn(activeSide);
 		state.getPieceLocations().removePieceAt(getTarget(), activePawn);
 		state.getPieceLocations().addPieceAt(getSource(), activePawn);
 
-		final ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
+		ChessPiece passivePawn = ChessPieces.pawn(activeSide.otherSide());
 		state.getPieceLocations().addPieceAt(enPassantSquare, passivePawn);
 	}
 

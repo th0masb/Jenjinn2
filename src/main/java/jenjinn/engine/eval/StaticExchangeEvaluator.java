@@ -24,18 +24,18 @@ public class StaticExchangeEvaluator
 {
 	private long target, source, attadef, xrays;
 
-	public boolean isGoodExchange(final BoardSquare sourceSquare, final BoardSquare targetSquare, final BoardState state)
+	public boolean isGoodExchange(BoardSquare sourceSquare, BoardSquare targetSquare, BoardState state)
 	{
 		// Make sure all instance variables set correctly first
-		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		DetailedPieceLocations pieceLocs = state.getPieceLocations();
 		source = sourceSquare.asBitboard();
 		target = targetSquare.asBitboard();
 		generateAttackDefenseInfo(pieceLocs);
-		final long knightLocs = pieceLocs.locationsOf(ChessPiece.WHITE_KNIGHT)
+		long knightLocs = pieceLocs.locationsOf(ChessPiece.WHITE_KNIGHT)
 				| pieceLocs.locationsOf(ChessPiece.BLACK_KNIGHT);
 
 		int d = 0;
-		final int[] gain = new int[32];
+		int[] gain = new int[32];
 		gain[d] = PieceValues.MIDGAME.valueOf(pieceLocs.getPieceAt(targetSquare));
 		ChessPiece attPiece = pieceLocs.getPieceAt(source);
 
@@ -63,16 +63,16 @@ public class StaticExchangeEvaluator
 		return gain[0]>= 0;
 	}
 
-	private void updateXrays(final DetailedPieceLocations pieceLocs)
+	private void updateXrays(DetailedPieceLocations pieceLocs)
 	{
 		if (xrays != 0) {
-			final Flow<BoardSquare> xrayLocs = BitboardIterator.from(xrays);
-			final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
+			Flow<BoardSquare> xrayLocs = BitboardIterator.from(xrays);
+			long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
 			while (xrayLocs.hasNext()) {
-				final BoardSquare loc = xrayLocs.next();
-				final ChessPiece p = pieceLocs.getPieceAt(loc);
+				BoardSquare loc = xrayLocs.next();
+				ChessPiece p = pieceLocs.getPieceAt(loc);
 				if (bitboardsIntersect(p.getSquaresOfControl(loc, white, black), target)) {
-					final long locBitboard = loc.asBitboard();
+					long locBitboard = loc.asBitboard();
 					xrays ^= locBitboard;
 					attadef ^= locBitboard;
 				}
@@ -80,18 +80,18 @@ public class StaticExchangeEvaluator
 		}
 	}
 
-	private void generateAttackDefenseInfo(final DetailedPieceLocations locationProvider)
+	private void generateAttackDefenseInfo(DetailedPieceLocations locationProvider)
 	{
 		attadef = 0L;
 		xrays = 0L;
-		final long white = locationProvider.getWhiteLocations();
-		final long black = locationProvider.getBlackLocations();
+		long white = locationProvider.getWhiteLocations();
+		long black = locationProvider.getBlackLocations();
 
-		for (final ChessPiece p : ChessPieces.all()) {
-			final Flow<BoardSquare> locations = locationProvider.iterateLocs(p);
+		for (ChessPiece p : ChessPieces.all()) {
+			Flow<BoardSquare> locations = locationProvider.iterateLocs(p);
 			while (locations.hasNext()) {
-				final BoardSquare loc = locations.next();
-				final long control = p.getSquaresOfControl(loc, white, black);
+				BoardSquare loc = locations.next();
+				long control = p.getSquaresOfControl(loc, white, black);
 				if (bitboardsIntersect(control, target)) {
 					attadef |= loc.asBitboard();
 				}
@@ -102,10 +102,10 @@ public class StaticExchangeEvaluator
 		}
 	}
 
-	private long getLeastValuablePiece(final DetailedPieceLocations locationProvider, final Side fromSide)
+	private long getLeastValuablePiece(DetailedPieceLocations locationProvider, Side fromSide)
 	{
-		for (final ChessPiece p : ChessPieces.ofSide(fromSide)) {
-			final long intersection = attadef & locationProvider.locationsOf(p);
+		for (ChessPiece p : ChessPieces.ofSide(fromSide)) {
+			long intersection = attadef & locationProvider.locationsOf(p);
 			if (intersection != 0) {
 				return (intersection & -intersection);
 			}

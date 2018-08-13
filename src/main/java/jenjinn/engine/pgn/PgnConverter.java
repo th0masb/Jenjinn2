@@ -41,7 +41,7 @@ public final class PgnConverter implements Closeable
 
 	private int totalGamesSearched = 0, totalErrorsInGames = 0;
 
-	public PgnConverter(final Path sourceFilePath, final Path outFilePath) throws IOException
+	public PgnConverter(Path sourceFilePath, Path outFilePath) throws IOException
 	{
 		if (!Files.exists(sourceFilePath) || Files.exists(outFilePath)
 				|| !sourceFilePath.toString().endsWith(PGN_EXT)) {
@@ -63,7 +63,7 @@ public final class PgnConverter implements Closeable
 
 	public void writeUniquePositions(int gameDepthCap) throws IOException
 	{
-		final List<PositionalInstruction> writeBuffer = new ArrayList<>(POSITIONS_PER_LINE);
+		List<PositionalInstruction> writeBuffer = new ArrayList<>(POSITIONS_PER_LINE);
 		Optional<String> game = readGame();
 		while (game.isPresent()) {
 			totalGamesSearched++;
@@ -72,7 +72,7 @@ public final class PgnConverter implements Closeable
 		}
 		flushBuffer(writeBuffer);
 
-		final String outputLog = new StringBuilder("We searched ").append(totalGamesSearched)
+		String outputLog = new StringBuilder("We searched ").append(totalGamesSearched)
 				.append(" games and extracted ").append(usedPositions.size()).append(" moves. There were ")
 				.append(totalErrorsInGames).append(" pgns which caused an error in the file ").append(fileName)
 				.toString();
@@ -80,24 +80,24 @@ public final class PgnConverter implements Closeable
 		System.out.println(outputLog);
 	}
 
-	private void writeUniquePositions(final String gameString, final List<PositionalInstruction> writeBuffer,
+	private void writeUniquePositions(String gameString, List<PositionalInstruction> writeBuffer,
 			int gameDepthCap) throws IOException
 	{
 		try {
-			final List<ChessMove> moves = PgnGameConverter.parse(gameString);
-			final BoardState state = StartStateGenerator.createStartBoard();
+			List<ChessMove> moves = PgnGameConverter.parse(gameString);
+			BoardState state = StartStateGenerator.createStartBoard();
 			for (int i = 0; i < min(gameDepthCap, moves.size()); i++) {
-				final ChessMove ithMove = moves.get(i);
-				final long stateHash = state.calculateHash();
+				ChessMove ithMove = moves.get(i);
+				long stateHash = state.calculateHash();
 				if (!usedPositions.contains(stateHash)) {
 					usedPositions.add(stateHash);
-					final PositionalInstruction newInstruction = new PositionalInstruction(stateHash,
+					PositionalInstruction newInstruction = new PositionalInstruction(stateHash,
 							ithMove.toCompactString());
 					addPositionToBuffer(newInstruction, writeBuffer);
 				}
 				ithMove.makeMove(state);
 			}
-		} catch (final BadPgnException e) {
+		} catch (BadPgnException e) {
 			System.err.println("Error in game: " + gameString);
 			totalErrorsInGames++;
 			return;
@@ -113,10 +113,10 @@ public final class PgnConverter implements Closeable
 		buffer.add(instructionToAdd);
 	}
 
-	private void flushBuffer(final List<PositionalInstruction> buffer) throws IOException
+	private void flushBuffer(List<PositionalInstruction> buffer) throws IOException
 	{
 		if (!buffer.isEmpty()) {
-			final int bufsze = buffer.size();
+			int bufsze = buffer.size();
 			for (int i = 0; i < bufsze; i++) {
 				out.write(buffer.get(i).toString());
 			}
@@ -131,14 +131,14 @@ public final class PgnConverter implements Closeable
 		if (nextLine == null) {
 			return Optional.empty();
 		} else {
-			final String gameStart = PgnGameConverter.GAME_START, gameEnd = PgnGameConverter.GAME_TERMINATION;
+			String gameStart = PgnGameConverter.GAME_START, gameEnd = PgnGameConverter.GAME_TERMINATION;
 			while (!matchesAnywhere(nextLine, gameStart)) {
 				nextLine = src.readLine();
 				if (nextLine == null) {
 					return Optional.empty();
 				}
 			}
-			final StringBuilder game = new StringBuilder(nextLine).append(" ");
+			StringBuilder game = new StringBuilder(nextLine).append(" ");
 			while (!matchesAnywhere(nextLine, gameEnd)) {
 				nextLine = src.readLine();
 				if (nextLine == null) {
@@ -163,7 +163,7 @@ public final class PgnConverter implements Closeable
 		private final long positionHash;
 		private final String compactMoveString;
 
-		public PositionalInstruction(final long positionHash, final String compactMoveString)
+		public PositionalInstruction(long positionHash, String compactMoveString)
 		{
 			this.positionHash = positionHash;
 			this.compactMoveString = compactMoveString;

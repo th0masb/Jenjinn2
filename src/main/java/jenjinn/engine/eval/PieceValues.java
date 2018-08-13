@@ -18,7 +18,7 @@ public enum PieceValues
 
 	private PieceValues(int[] values)
 	{
-		Iterate.overInts(values).allMatch(i -> i >= 0).throwIfFalse(AssertionError::new);
+		Iterate.overInts(values).allMatch2(i -> i >= 0).throwIfFalse(AssertionError::new);
 		this.values = Iterate.overInts(values).map(i -> (int) 3.5 * i).toArray();
 	}
 

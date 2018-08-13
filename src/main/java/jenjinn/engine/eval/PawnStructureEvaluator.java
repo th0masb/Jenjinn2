@@ -41,14 +41,14 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 	@Override
 	public int evaluate(BoardState state)
 	{
-		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final long wpawns = pieceLocs.locationsOf(ChessPiece.WHITE_PAWN);
-		final long bpawns = pieceLocs.locationsOf(ChessPiece.BLACK_PAWN);
-		final long pawnHash = calculatePawnPositionHash(wpawns, bpawns);
+		DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		long wpawns = pieceLocs.locationsOf(ChessPiece.WHITE_PAWN);
+		long bpawns = pieceLocs.locationsOf(ChessPiece.BLACK_PAWN);
+		long pawnHash = calculatePawnPositionHash(wpawns, bpawns);
 
-		final PawnTable.Entry cached = cachedEvaluations.get(pawnHash);
+		PawnTable.Entry cached = cachedEvaluations.get(pawnHash);
 		if (cached == null) {
-			final Entry newEntry = new PawnTable.Entry(pawnHash, calculateOverallScore(wpawns, bpawns));
+			Entry newEntry = new PawnTable.Entry(pawnHash, calculateOverallScore(wpawns, bpawns));
 			cachedEvaluations.set(newEntry);
 			return newEntry.eval;
 		}
@@ -76,13 +76,13 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 
 	private long calculatePawnPositionHash(long wpawns, long bpawns)
 	{
-		final ChessPiece wp = ChessPiece.WHITE_PAWN, bp = ChessPiece.BLACK_PAWN;
+		ChessPiece wp = ChessPiece.WHITE_PAWN, bp = ChessPiece.BLACK_PAWN;
 
-		final long whash = BitboardIterator.from(wpawns)
+		long whash = BitboardIterator.from(wpawns)
 				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, wp))
 				.fold(0L, (a, b) -> a ^ b);
 
-		final long bhash = BitboardIterator.from(bpawns)
+		long bhash = BitboardIterator.from(bpawns)
 				.mapToLong(sq -> BoardHasher.INSTANCE.getSquarePieceFeature(sq, bp))
 				.fold(0L, (a, b) -> a ^ b);
 
@@ -91,10 +91,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 
 	public static int evaluatePawnChains(long wpawns, long bpawns)
 	{
-		final long hfile = fileBitboard(0), afile = fileBitboard(7);
+		long hfile = fileBitboard(0), afile = fileBitboard(7);
 
-		final long wpawnLeft = (wpawns & ~afile) << 9, wpawnRight = (wpawns & ~hfile) << 7;
-		final long bpawnLeft = (bpawns & ~afile) >>> 7, bpawnRight = (bpawns & ~hfile) >>> 9;
+		long wpawnLeft = (wpawns & ~afile) << 9, wpawnRight = (wpawns & ~hfile) << 7;
+		long bpawnLeft = (bpawns & ~afile) >>> 7, bpawnRight = (bpawns & ~hfile) >>> 9;
 
 		return CHAIN_BONUS *(bitCount(wpawnLeft & wpawns)
 				+ bitCount(wpawnRight & wpawns)
@@ -106,11 +106,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 	{
 		int score = 0;
 		for (int i = 0; i < 8; i++) {
-			final long pawnsOnIthRank = rankBitboard(i) & pawns;
+			long pawnsOnIthRank = rankBitboard(i) & pawns;
 			if (bitCount(pawnsOnIthRank) > 1) {
 				int phalanxCount = 0;
 				for (int j = 0; j < 8; j++) {
-					final long file = fileBitboard(j);
+					long file = fileBitboard(j);
 					if (bitboardsIntersect(file, pawnsOnIthRank)) {
 						phalanxCount++;
 					}
@@ -130,11 +130,11 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		int score = 0;
 
 		for (int i = 0; i < 8; i++) {
-			final long file = fileBitboard(i);
-			final long wfile = wpawns & file, bfile = bpawns & file;
+			long file = fileBitboard(i);
+			long wfile = wpawns & file, bfile = bpawns & file;
 			int wFoundIndex = -1, bFoundIndex = -1;
 			for (int j = 0; j < 8; j++) {
-				final long rank = rankBitboard(j);
+				long rank = rankBitboard(j);
 				if (bitboardsIntersect(rank, wfile)) {
 					if (wFoundIndex > -1 && j - wFoundIndex < 3) {
 						score -= DOUBLED_PENALTY;
@@ -171,13 +171,13 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		int score = 0;
 
 		for (int i = 0; i < 8; i++) {
-			final long file = fileBitboard(i);
-			final long adjacentFiles = getAdjacentFiles(i);
+			long file = fileBitboard(i);
+			long adjacentFiles = getAdjacentFiles(i);
 
-			final long wfile = wpawns & file, wadj = wpawns & adjacentFiles;
+			long wfile = wpawns & file, wadj = wpawns & adjacentFiles;
 			if (bitCount(wfile) > 0) {
 				for (int j = 1; j < 7; j++) {
-					final long rank = rankBitboard(j);
+					long rank = rankBitboard(j);
 					if (bitboardsIntersect(rank, wadj)) {
 						break;
 					}
@@ -186,10 +186,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 					}
 				}
 			}
-			final long bfile = bpawns & file, badj = bpawns & adjacentFiles;
+			long bfile = bpawns & file, badj = bpawns & adjacentFiles;
 			if (bitCount(bfile) > 0) {
 				for (int j = 6; j > 0; j--) {
-					final long rank = rankBitboard(j);
+					long rank = rankBitboard(j);
 					if (bitboardsIntersect(rank, badj)) {
 						break;
 					}
@@ -208,18 +208,18 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		int score = 0;
 
 		for (int i = 0; i < 8; i++) {
-			final long file = fileBitboard(i);
-			final long adjacentFiles = getAdjacentFiles(i) | file;
+			long file = fileBitboard(i);
+			long adjacentFiles = getAdjacentFiles(i) | file;
 
-			final long wfile = wpawns & file, badj = bpawns & adjacentFiles;
-			final int wFileCount = bitCount(wfile), bAdjCount = bitCount(badj);
+			long wfile = wpawns & file, badj = bpawns & adjacentFiles;
+			int wFileCount = bitCount(wfile), bAdjCount = bitCount(badj);
 			if (wFileCount > 0) {
 				if (bAdjCount == 0) {
 					score += wFileCount * PASSED_BONUS;
 				}
 				else {
 					for (int rankIndex = 7; rankIndex > 1; rankIndex--) {
-						final long workingRank = rankBitboard(rankIndex);
+						long workingRank = rankBitboard(rankIndex);
 						if (bitboardsIntersect(workingRank, wfile)) {
 							score += PASSED_BONUS;
 						}
@@ -229,15 +229,15 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 					}
 				}
 			}
-			final long bfile = bpawns & file, wadj = wpawns & adjacentFiles;
-			final int bFileCount = bitCount(bfile), wAdjCount = bitCount(wadj);
+			long bfile = bpawns & file, wadj = wpawns & adjacentFiles;
+			int bFileCount = bitCount(bfile), wAdjCount = bitCount(wadj);
 			if (bFileCount > 0) {
 				if (wAdjCount == 0) {
 					score -= bFileCount * PASSED_BONUS;
 				}
 				else {
 					for (int rankIndex = 1; rankIndex < 7; rankIndex++) {
-						final long workingRank = rankBitboard(rankIndex);
+						long workingRank = rankBitboard(rankIndex);
 						if (bitboardsIntersect(workingRank, bfile)) {
 							score -= PASSED_BONUS;
 						}
@@ -261,7 +261,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		int wIsolatedLeft = 0b10000000, bIsolatedLeft = 0b10000000;
 
 		for (int i = 0; i < 7; i++) {
-			final long fileFromRight = fileBitboard(i), fileFromLeft = fileBitboard(7 - i);
+			long fileFromRight = fileBitboard(i), fileFromLeft = fileBitboard(7 - i);
 			if (!bitboardsIntersect(fileFromRight, wpawns)) {
 				wIsolatedRight |= 1 << (i + 1);
 			}
@@ -276,18 +276,18 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 			}
 		}
 
-		final int wIsolated = wIsolatedRight & wIsolatedLeft;
-		final int bIsolated = bIsolatedRight & bIsolatedLeft;
+		int wIsolated = wIsolatedRight & wIsolatedLeft;
+		int bIsolated = bIsolatedRight & bIsolatedLeft;
 
 		int score = 0;
 		for (int i = 0; i < 8; i++) {
-			final long file = fileBitboard(i);
+			long file = fileBitboard(i);
 			if (bitboardsIntersect(wIsolated, 1L << i)) {
-				final boolean semiOpen = !bitboardsIntersect(file, bpawns);
+				boolean semiOpen = !bitboardsIntersect(file, bpawns);
 				score -= bitCount(wpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
 			if (bitboardsIntersect(bIsolated, 1L << i)) {
-				final boolean semiOpen = !bitboardsIntersect(file, wpawns);
+				boolean semiOpen = !bitboardsIntersect(file, wpawns);
 				score += bitCount(bpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
 		}

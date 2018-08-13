@@ -3,8 +3,7 @@
  */
 package jenjinn.engine.eval.piecesquaretables;
 
-import static xawd.jflow.utilities.MapUtil.intMap;
-import static xawd.jflow.utilities.Strings.getAllMatches;
+import static xawd.jflow.utilities.Strings.allMatches;
 
 import java.util.List;
 
@@ -12,6 +11,7 @@ import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.eval.PieceValues;
 import jenjinn.engine.pieces.ChessPiece;
 import xawd.jflow.iterators.factories.Iterate;
+import xawd.jflow.utilities.MapUtil;
 
 /**
  * @author ThomasB
@@ -25,38 +25,33 @@ public final class TableParser
 	{
 	}
 
-	public static PieceSquareTable parseFile(final ChessPiece piece, final String filename)
+	public static PieceSquareTable parseFile(ChessPiece piece, String filename)
 	{
 		return parseFile(piece, TableParser.class, filename);
 	}
 
-	public static PieceSquareTable parseFile(final ChessPiece piece, final Class<?> packageProvider,
-			final String filename)
+	public static PieceSquareTable parseFile(ChessPiece piece, Class<?> packageProvider, String filename)
 	{
-		final String fle = filename;
+		String fle = filename;
 		if (!piece.isWhite() || !(fle.endsWith("midgame") || fle.endsWith("endgame") || fle.endsWith("testing"))) {
 			throw new IllegalArgumentException();
 		}
 
-		final PieceValues pvalues = fle.endsWith("midgame") ? PieceValues.MIDGAME
+		PieceValues pvalues = fle.endsWith("midgame") ? PieceValues.MIDGAME
 				: fle.endsWith("endgame") ? PieceValues.ENDGAME : PieceValues.TESTING;
 
-		final List<String> lines = FileUtils.cacheResource(packageProvider, filename);
-				
+		List<String> lines = FileUtils.cacheResource(packageProvider, filename);
+
 		if (lines.size() == 8) {
-			final int[] locationValues = Iterate.reverseOver(lines).map(line -> getAllMatches(line, NUMBER_PATTERN))
-					.map(matches -> intMap(Integer::parseInt, matches)).flattenToInts(Iterate::reverseOverInts)
+			int[] locationValues = Iterate.overReversed(lines)
+					.map(line -> allMatches(line, NUMBER_PATTERN).toList())
+					.map(matches -> MapUtil.intMap(Integer::parseInt, matches))
+					.flattenToInts(Iterate::overReversedInts)
 					.toArray();
 
 			return new PieceSquareTable(piece, pvalues.valueOf(piece), locationValues);
 		} else {
 			throw new IllegalStateException(lines.toString());
 		}
-	}
-
-	public static void main(final String[] args)
-	{
-		System.out.println("table-testing".endsWith("testing"));
-//		System.out.println(FileUtils.loadResourceFromPackageOf(TableParser.class, "bishop-midgame").collect(toList()));
 	}
 }

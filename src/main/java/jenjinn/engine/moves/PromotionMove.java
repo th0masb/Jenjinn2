@@ -23,13 +23,13 @@ public final class PromotionMove extends AbstractChessMove
 {
 	private final PromotionResult promotionResult;
 
-	public PromotionMove(final BoardSquare start, final BoardSquare target, PromotionResult promotionResult)
+	public PromotionMove(BoardSquare start, BoardSquare target, PromotionResult promotionResult)
 	{
 		super(start, target);
 		this.promotionResult = promotionResult;
 	}
 
-	public static Flow<ChessMove> generateAllPossibilities(final BoardSquare start, final BoardSquare target)
+	public static Flow<ChessMove> generateAllPossibilities(BoardSquare start, BoardSquare target)
 	{
 		return Iterate.over(PromotionResult.values()).map(res -> new PromotionMove(start, target, res));
 	}
@@ -40,13 +40,13 @@ public final class PromotionMove extends AbstractChessMove
 	}
 
 	@Override
-	void updatePieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
+	void updatePieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
-		final Side activeSide = state.getActiveSide();
+		Side activeSide = state.getActiveSide();
 		state.getPieceLocations().removePieceAt(getSource(), activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN);
 		state.getPieceLocations().addPieceAt(getTarget(), promotionResult.toPiece(activeSide));
 
-		final ChessPiece removedPiece = state.getPieceLocations().getPieceAt(getTarget(), activeSide.otherSide());
+		ChessPiece removedPiece = state.getPieceLocations().getPieceAt(getTarget(), activeSide.otherSide());
 		if (removedPiece != null) {
 			state.getPieceLocations().removePieceAt(getTarget(), removedPiece);
 			unmakeDataStore.setPieceTaken(removedPiece);
@@ -62,13 +62,13 @@ public final class PromotionMove extends AbstractChessMove
 	}
 
 	@Override
-	void resetPieceLocations(final BoardState state, final MoveReversalData unmakeDataStore)
+	void resetPieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
-		final Side activeSide = state.getActiveSide();
+		Side activeSide = state.getActiveSide();
 		state.getPieceLocations().removePieceAt(getTarget(), promotionResult.toPiece(activeSide));
 		state.getPieceLocations().addPieceAt(getSource(), activeSide.isWhite() ? ChessPiece.WHITE_PAWN : ChessPiece.BLACK_PAWN);
 
-		final ChessPiece pieceToReplace = unmakeDataStore.getPieceTaken();
+		ChessPiece pieceToReplace = unmakeDataStore.getPieceTaken();
 		if (pieceToReplace != null) {
 			state.getPieceLocations().addPieceAt(getTarget(), pieceToReplace);
 		}
@@ -114,7 +114,7 @@ public final class PromotionMove extends AbstractChessMove
 	public boolean equals(Object obj)
 	{
 		if (super.equals(obj)) {
-			final PromotionMove other = (PromotionMove) obj;
+			PromotionMove other = (PromotionMove) obj;
 			return promotionResult.equals(other.promotionResult);
 		}
 		else {

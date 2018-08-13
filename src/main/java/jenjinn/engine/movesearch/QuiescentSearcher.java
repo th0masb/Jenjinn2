@@ -23,7 +23,7 @@ import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.iterators.Flow;
 import xawd.jflow.iterators.factories.IterRange;
 
@@ -34,11 +34,11 @@ public final class QuiescentSearcher
 {
 	public static final int DEPTH_CAP = 20;
 
-	private final FlowList<MoveReversalData> moveReversers;
+	private final FList<MoveReversalData> moveReversers;
 
-	private final int deltaPruneSafetyMargin = 200;
-	private final int bigDelta = calculateBigDelta();
-	private final StateEvaluator evaluator = new StateEvaluator(10);
+	private final int deltaPruneSafetyMargin  = 200;
+	private final int bigDelta                = calculateBigDelta();
+	private final StateEvaluator evaluator    = new StateEvaluator(10);
 	private final StaticExchangeEvaluator see = new StaticExchangeEvaluator();
 
 	public QuiescentSearcher()
@@ -63,17 +63,17 @@ public final class QuiescentSearcher
 		}
 
 		Flow<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
-		final Optional<ChessMove> firstMove = movesToProbe.safeNext();
-		final GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
+		Optional<ChessMove> firstMove = movesToProbe.safeNext();
+		GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
 
 		if (terminalState.isTerminal()) {
 			return -Math.abs(terminalState.value);
 		}
-		final Side active = root.getActiveSide(), passive = active.otherSide();
-		final DetailedPieceLocations pieceLocs = root.getPieceLocations();
-		final long passiveControl = SquareControl.calculate(root, passive);
+		Side active = root.getActiveSide(), passive = active.otherSide();
+		DetailedPieceLocations pieceLocs = root.getPieceLocations();
+		long passiveControl = SquareControl.calculate(root, passive);
 
-		final boolean inCheck = bitboardsIntersect(pieceLocs.locationsOf(ChessPieces.king(active)),
+		boolean inCheck = bitboardsIntersect(pieceLocs.locationsOf(ChessPieces.king(active)),
 				passiveControl);
 
 		if (inCheck) {
@@ -86,7 +86,7 @@ public final class QuiescentSearcher
 			}
 			movesToProbe = movesToProbe.insert(firstMove.get());
 		} else {
-			final int standPat = evaluator.evaluate(root);
+			int standPat = evaluator.evaluate(root);
 
 			if (standPat >= beta) {
 				return beta;
@@ -110,15 +110,15 @@ public final class QuiescentSearcher
 			}
 
 			alpha = Math.max(alpha, standPat);
-			final int finalizedAlpha = alpha;
+			int finalizedAlpha = alpha;
 			movesToProbe = LegalMoves.getAttacks(root).filter(mv -> filterMove(root, mv, standPat, finalizedAlpha));
 		}
 
 		while (movesToProbe.hasNext()) {
-			final ChessMove nextMove = movesToProbe.next();
-			final MoveReversalData reversingdata = moveReversers.get(depth - 1);
+			ChessMove nextMove = movesToProbe.next();
+			MoveReversalData reversingdata = moveReversers.get(depth - 1);
 			nextMove.makeMove(root, reversingdata);
-			final int score = -search(root, -beta, -alpha, depth - 1);
+			int score = -search(root, -beta, -alpha, depth - 1);
 			nextMove.reverseMove(root, reversingdata);
 
 			if (score >= beta) {
@@ -135,17 +135,17 @@ public final class QuiescentSearcher
 		if (move instanceof EnpassantMove) {
 			return standPat >= alpha - (PieceValues.MIDGAME.valueOfPawn() + deltaPruneSafetyMargin);
 		} else {
-			final Side active = root.getActiveSide(), passive = active.otherSide();
-			final BoardSquare source = move.getSource(), target = move.getTarget();
-			final int targVal = PieceValues.MIDGAME.valueOf(root.getPieceLocations().getPieceAt(target, passive));
+			Side active = root.getActiveSide(), passive = active.otherSide();
+			BoardSquare source = move.getSource(), target = move.getTarget();
+			int targVal = PieceValues.MIDGAME.valueOf(root.getPieceLocations().getPieceAt(target, passive));
 			return standPat >= alpha - (targVal + deltaPruneSafetyMargin) && see.isGoodExchange(source, target, root);
 		}
 	}
 
 	private int calculateBigDelta()
 	{
-		final int leastValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_PAWN);
-		final int mostValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_QUEEN);
+		int leastValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_PAWN);
+		int mostValuable = PieceValues.MIDGAME.valueOf(ChessPiece.WHITE_QUEEN);
 		return 2 * mostValuable - leastValuable;
 	}
 }

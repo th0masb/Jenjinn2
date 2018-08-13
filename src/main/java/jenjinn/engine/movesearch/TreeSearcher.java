@@ -15,7 +15,7 @@ import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.boardstate.calculators.TerminationState;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TranspositionTable.Entry;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.iterators.factories.IterRange;
 
 /**
@@ -27,7 +27,7 @@ public final class TreeSearcher
 	private final TranspositionTable table = new TranspositionTable(15);
 	private final int maxDepth = 20;
 
-	private final FlowList<MoveReversalData> moveReversers;
+	private final FList<MoveReversalData> moveReversers;
 	private int bestFirstMoveIndex = -1;
 
 	public TreeSearcher()
@@ -52,7 +52,7 @@ public final class TreeSearcher
 	 */
 	public synchronized Optional<ChessMove> getBestMoveFrom(BoardState root, long timeLimit)
 	{
-		final Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).safeNext();
+		Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).safeNext();
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
 			return Optional.empty();
 		}
@@ -61,7 +61,7 @@ public final class TreeSearcher
 		ChessMove bestMove;
 		try {
 			bestMove = getBestMoveFrom(root, 1);
-		} catch (final InterruptedException ex) {
+		} catch (InterruptedException ex) {
 			throw new AssertionError("Interruption not possible here.");
 		}
 
@@ -69,9 +69,9 @@ public final class TreeSearcher
 
 		for (int targetDepth = 2; targetDepth <= maxDepth; targetDepth++) {
 			try {
-				final ChessMove newBestMove = getBestMoveFrom(root, targetDepth);
+				ChessMove newBestMove = getBestMoveFrom(root, targetDepth);
 				bestMove = newBestMove;
-			} catch (final InterruptedException e) {
+			} catch (InterruptedException e) {
 				Thread.interrupted();
 				moveReversers.forEach(x -> x.reset());
 				quiescent.resetMoveReversalData();
@@ -83,14 +83,14 @@ public final class TreeSearcher
 
 	private Thread createInterruptingTimerThread(long timeLimit)
 	{
-		final Thread toInterrupt = Thread.currentThread();
+		Thread toInterrupt = Thread.currentThread();
 		return new Thread(() -> {
 			try {
 				Thread.sleep(timeLimit);
 				if (toInterrupt.isAlive()) {
 					toInterrupt.interrupt();
 				}
-			} catch (final InterruptedException e) {
+			} catch (InterruptedException e) {
 				throw new AssertionError("Interruption not possible here.");
 			}
 		});
@@ -98,16 +98,16 @@ public final class TreeSearcher
 
 	private ChessMove getBestMoveFrom(BoardState root, int depth) throws InterruptedException
 	{
-		final FlowList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
-		final int[] indices = IterRange.to(legalMoves.size()).toArray();
+		FList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
+		int[] indices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(indices, bestFirstMoveIndex);
 
 		int alpha = INITIAL_ALPHA;
-		for (final int index : indices) {
-			final ChessMove mv = legalMoves.get(index);
-			final MoveReversalData reversalData = moveReversers.get(depth);
+		for (int index : indices) {
+			ChessMove mv = legalMoves.get(index);
+			MoveReversalData reversalData = moveReversers.get(depth);
 			mv.makeMove(root, reversalData);
-			final int bestReply = -negamax(root, -INITIAL_BETA, -alpha, depth - 1);
+			int bestReply = -negamax(root, -INITIAL_BETA, -alpha, depth - 1);
 			mv.reverseMove(root, reversalData);
 			if (bestReply > alpha) {
 				alpha = bestReply;
@@ -124,16 +124,16 @@ public final class TreeSearcher
 			throw new InterruptedException();
 		}
 
-		final Optional<ChessMove> firstMove = LegalMoves.getAllMoves(root).safeNext();
-		final GameTermination termination = TerminationState.of(root, firstMove.isPresent());
+		Optional<ChessMove> firstMove = LegalMoves.getAllMoves(root).safeNext();
+		GameTermination termination = TerminationState.of(root, firstMove.isPresent());
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);
 		} else if (depth == 0) {
 			return quiescent.search(root);
 		}
 
-		final long rootHash = root.calculateHash();
-		final Entry tableEntry = table.get(rootHash);
+		long rootHash = root.calculateHash();
+		Entry tableEntry = table.get(rootHash);
 		int recommendedFirstMoveIndex = -1;
 		if (tableEntry != null && tableEntry.matches(rootHash)) {
 			if (tableEntry.depthSearched >= depth) {
@@ -154,17 +154,17 @@ public final class TreeSearcher
 			recommendedFirstMoveIndex = tableEntry.notableMoveIndex;
 		}
 
-		final FlowList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
-		final int[] moveIndices = IterRange.to(legalMoves.size()).toArray();
+		FList<ChessMove> legalMoves = LegalMoves.getAllMoves(root).toList();
+		int[] moveIndices = IterRange.to(legalMoves.size()).toArray();
 		changeFirstIndex(moveIndices, recommendedFirstMoveIndex);
 
 		int bestValue = -IntConstants.MAX_NEGATABLE_VALUE;
 		int bestMoveIndex = -1, refutationMoveIndex = -1;
-		for (final int i : moveIndices) {
-			final ChessMove mv = legalMoves.get(i);
-			final MoveReversalData reverser = moveReversers.get(depth);
+		for (int i : moveIndices) {
+			ChessMove mv = legalMoves.get(i);
+			MoveReversalData reverser = moveReversers.get(depth);
 			mv.makeMove(root, reverser);
-			final int bestReply = -negamax(root, -beta, -alpha, depth - 1);
+			int bestReply = -negamax(root, -beta, -alpha, depth - 1);
 			mv.reverseMove(root, reverser);
 			bestMoveIndex = bestReply > alpha ? i : bestMoveIndex;
 			alpha = Math.max(alpha, bestReply);
@@ -223,10 +223,10 @@ public final class TreeSearcher
 		currentEntry.type = TreeNodeType.PRINCIPLE_VALUE;
 	}
 
-	private void changeFirstIndex(final int[] indices, final int recommendedMoveIndex)
+	private void changeFirstIndex(int[] indices, int recommendedMoveIndex)
 	{
 		if (recommendedMoveIndex > -1) {
-			final int tmp = indices[0];
+			int tmp = indices[0];
 			indices[0] = indices[recommendedMoveIndex];
 			indices[recommendedMoveIndex] = tmp;
 		}

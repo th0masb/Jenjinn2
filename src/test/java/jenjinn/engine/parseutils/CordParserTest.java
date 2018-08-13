@@ -20,9 +20,9 @@ class CordParserTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void test(final String encodedCord, final int[] expectedSquareIndices)
+	void test(String encodedCord, int[] expectedSquareIndices)
 	{
-		final List<BoardSquare> squares = Iterate.overInts(expectedSquareIndices).mapToObject(BoardSquare::of).toList();
+		List<BoardSquare> squares = Iterate.overInts(expectedSquareIndices).mapToObject(BoardSquare::of).toList();
 		assertEquals(squares, CordParser.parse(encodedCord));
 	}
 

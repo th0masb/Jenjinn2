@@ -35,26 +35,27 @@ final class TestFileParser extends AbstractTestFileParser
 	 * @return arguments consisting of (move to test, start board, expected
 	 *         resulting board)
 	 */
-	public Arguments parse(final String fileName)
+	@Override
+	public Arguments parse(String fileName)
 	{
-		final List<String> lines = loadFile(fileName);
+		List<String> lines = loadFile(fileName);
 
 		if (lines.size() != 19) {
 			throw new IllegalArgumentException();
 		}
 
-		final ChessMove reconstructedMove = ChessMove.decode(head(lines));
-		final BoardState startState = BoardParser.parse(lines.subList(1, 10), STARTING_MOVE_COUNT);
-		final long expectedOldHash = startState.calculateHash();
-		final BoardState expectedEvolutionResult = BoardParser.parse(lines.subList(10, 19), STARTING_MOVE_COUNT + 1);
-		final BoardState updatedExpected = insertPreviousHash(expectedEvolutionResult, expectedOldHash);
+		ChessMove reconstructedMove = ChessMove.decode(head(lines));
+		BoardState startState = BoardParser.parse(lines.subList(1, 10), STARTING_MOVE_COUNT);
+		long expectedOldHash = startState.calculateHash();
+		BoardState expectedEvolutionResult = BoardParser.parse(lines.subList(10, 19), STARTING_MOVE_COUNT + 1);
+		BoardState updatedExpected = insertPreviousHash(expectedEvolutionResult, expectedOldHash);
 		return Arguments.of(reconstructedMove, startState, updatedExpected);
 	}
 
 	private BoardState insertPreviousHash(BoardState expectedEvolutionResult, long expectedOldHash)
 	{
-		final long[] currentCache = expectedEvolutionResult.getHashCache().getCacheCopy();
-		final int halfMoveCount = expectedEvolutionResult.getHashCache().getHalfMoveCount();
+		long[] currentCache = expectedEvolutionResult.getHashCache().getCacheCopy();
+		int halfMoveCount = expectedEvolutionResult.getHashCache().getHalfMoveCount();
 		assertTrue(halfMoveCount > 0);
 		currentCache[(halfMoveCount - 1) % currentCache.length] = expectedOldHash;
 		return new BoardState(new HashCache(currentCache, halfMoveCount), expectedEvolutionResult.getPieceLocations(),

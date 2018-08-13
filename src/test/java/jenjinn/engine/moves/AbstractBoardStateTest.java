@@ -14,7 +14,7 @@ import jenjinn.engine.utils.VisualGridGenerator;
  */
 public abstract class AbstractBoardStateTest
 {
-	public void assertBoardStatesAreEqual(final BoardState constraint, final BoardState toTest)
+	public void assertBoardStatesAreEqual(BoardState constraint, BoardState toTest)
 	{
 		assertEquals(constraint.getActiveSide(), toTest.getActiveSide());
 		assertEquals(constraint.getEnPassantSquare(), toTest.getEnPassantSquare());
@@ -25,7 +25,7 @@ public abstract class AbstractBoardStateTest
 		assertEquals(constraint.getHashCache(), toTest.getHashCache());
 	}
 
-	private String formatPieceLocationsErrorOutput(final BoardState constraint, final BoardState toTest)
+	private String formatPieceLocationsErrorOutput(BoardState constraint, BoardState toTest)
 	{
 		return new StringBuilder(System.lineSeparator())
 				.append("Expected:")

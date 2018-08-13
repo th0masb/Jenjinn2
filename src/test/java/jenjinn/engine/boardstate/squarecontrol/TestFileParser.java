@@ -6,7 +6,6 @@ package jenjinn.engine.boardstate.squarecontrol;
 import static xawd.jflow.utilities.CollectionUtil.drop;
 import static xawd.jflow.utilities.CollectionUtil.sizeOf;
 import static xawd.jflow.utilities.CollectionUtil.take;
-import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +24,7 @@ import jenjinn.engine.pieces.ChessPiece;
 import jenjinn.engine.pieces.ChessPieces;
 import xawd.jflow.iterators.factories.Iterate;
 import xawd.jflow.iterators.misc.Pair;
+import xawd.jflow.utilities.Strings;
 
 
 /**
@@ -32,13 +32,14 @@ import xawd.jflow.iterators.misc.Pair;
  */
 final class TestFileParser extends AbstractTestFileParser
 {
-	public Arguments parse(final String fileName)
+	@Override
+	public Arguments parse(String fileName)
 	{
-		final List<String> lines = loadFile(fileName);
+		List<String> lines = loadFile(fileName);
 		return Arguments.of(BoardParser.parse(take(9, lines)), parseSquaresOfControl(drop(9, lines)));
 	}
 
-	private Map<ChessPiece, Long> parseSquaresOfControl(final List<String> squaresOfControl)
+	private Map<ChessPiece, Long> parseSquaresOfControl(List<String> squaresOfControl)
 	{
 		if (sizeOf(squaresOfControl) != 12) {
 			throw new IllegalArgumentException(
@@ -49,21 +50,21 @@ final class TestFileParser extends AbstractTestFileParser
 				.toMap(Pair::first, p -> parseSinglePieceSquaresOfControl(p.second()));
 	}
 
-	private Long parseSinglePieceSquaresOfControl(final String encoded)
+	private Long parseSinglePieceSquaresOfControl(String encoded)
 	{
-		final String ec = encoded.trim() + " ";
-		final String sqrx = CommonRegex.SINGLE_SQUARE, cordrx = CommonRegex.CORD;
+		String ec = encoded.trim() + " ";
+		String sqrx = CommonRegex.SINGLE_SQUARE, cordrx = CommonRegex.CORD;
 
 		if (ec.matches("none ")) {
 			return 0L;
 		}
 		else if (ec.matches("((" + sqrx +"|" + cordrx + ") +)+")) {
-			final Set<BoardSquare> squares = Iterate.over(getAllMatches(ec, sqrx))
+			Set<BoardSquare> squares = Strings.allMatches(ec, sqrx)
 			.map(String::toUpperCase)
 			.map(BoardSquare::valueOf)
 			.toCollection(HashSet::new);
 
-			Iterate.over(getAllMatches(ec, cordrx))
+			Strings.allMatches(ec, cordrx)
 			.map(CordParser::parse)
 			.flatten(Iterate::over)
 			.forEach(squares::add);

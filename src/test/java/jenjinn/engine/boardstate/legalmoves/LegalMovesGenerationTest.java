@@ -20,9 +20,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.calculators.LegalMoves;
 import jenjinn.engine.moves.ChessMove;
-import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
 import xawd.jflow.iterators.factories.Iterate;
+import xawd.jflow.iterators.factories.Repeatedly;
 
 /**
  * @author ThomasB
@@ -70,7 +70,7 @@ class LegalMovesGenerationTest
 
 	static String pad(final int caseNumber) {
 		final String caseString = string(caseNumber);
-		return CycledIteration.of("0")
+		return Repeatedly.cycle("0")
 				.take(3 - sizeOf(caseString))
 				.append(caseString)
 				.fold("", (a, b) -> a + b);

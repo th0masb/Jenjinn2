@@ -4,13 +4,13 @@
 package jenjinn.engine.eval.staticexchangeevaluator;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.Strings.findFirstMatch;
-import static xawd.jflow.utilities.Strings.getAllMatches;
+import static xawd.jflow.utilities.CollectionUtil.last;
+import static xawd.jflow.utilities.Strings.allMatches;
+import static xawd.jflow.utilities.Strings.firstMatch;
 
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.pgn.CommonRegex;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 
 /**
  * @author ThomasB
@@ -31,13 +31,13 @@ final class IndividualStateCase
 
 	public static IndividualStateCase from(String encoded)
 	{
-		final String sq = CommonRegex.SINGLE_SQUARE, doubleSq = CommonRegex.DOUBLE_SQUARE;
+		String sq = CommonRegex.SINGLE_SQUARE, doubleSq = CommonRegex.DOUBLE_SQUARE;
 		if (encoded.matches("^" + doubleSq + " +(GOOD|BAD)$")) {
-			final FlowList<BoardSquare> sqs = getAllMatches(encoded, sq)
+			FList<BoardSquare> sqs = allMatches(encoded, sq)
 					.map(String::toUpperCase)
 					.map(BoardSquare::valueOf)
 					.toList();
-			return new IndividualStateCase(head(sqs), tail(sqs), findFirstMatch(encoded, "GOOD").isPresent());
+			return new IndividualStateCase(head(sqs), last(sqs), firstMatch(encoded, "GOOD").isPresent());
 		}
 		else {
 			throw new IllegalArgumentException(encoded);

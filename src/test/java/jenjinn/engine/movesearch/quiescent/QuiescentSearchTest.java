@@ -17,8 +17,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.movesearch.QuiescentSearcher;
-import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Repeatedly;
 
 /**
  * @author ThomasB
@@ -31,13 +31,12 @@ class QuiescentSearchTest
 	@MethodSource
 	void test(BoardState root, String result)
 	{
-		final QuiescentSearcher quiescent = new QuiescentSearcher();
-		int expectedSignum = result.equals("POSITIVE")? 1 : -1;
+		QuiescentSearcher quiescent = new QuiescentSearcher();
+		int expectedSignum = result.equals("POSITIVE") ? 1 : -1;
 		int actualResult = -1;
 		try {
 			actualResult = quiescent.search(root);
-		}
-		catch (final Throwable t) {
+		} catch (final Throwable t) {
 			t.printStackTrace();
 			fail("Error thrown!");
 		}
@@ -50,9 +49,10 @@ class QuiescentSearchTest
 		return IterRange.between(1, 6).mapToObject(i -> "case" + pad(i)).map(parser::parse);
 	}
 
-	static String pad(final int caseNumber) {
-		final String caseString = string(caseNumber);
-		return CycledIteration.of("0")
+	static String pad(int caseNumber)
+	{
+		String caseString = string(caseNumber);
+		return Repeatedly.cycle("0")
 				.take(3 - sizeOf(caseString))
 				.append(caseString)
 				.fold("", (a, b) -> a + b);

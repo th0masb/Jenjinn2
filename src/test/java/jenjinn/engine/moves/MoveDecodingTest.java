@@ -22,7 +22,7 @@ class MoveDecodingTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void test(final String explicitEncoding, final String compactEncoding, final ChessMove expectedMove)
+	void test(String explicitEncoding, String compactEncoding, ChessMove expectedMove)
 	{
 		assertEquals(expectedMove, ChessMove.decode(explicitEncoding));
 		assertEquals(expectedMove, ChessMove.decode(compactEncoding));

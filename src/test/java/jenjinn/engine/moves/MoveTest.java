@@ -14,8 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.boardstate.MoveReversalData;
-import xawd.jflow.iterators.factories.CycledIteration;
 import xawd.jflow.iterators.factories.IterRange;
+import xawd.jflow.iterators.factories.Repeatedly;
 
 /**
  * @author ThomasB
@@ -25,10 +25,10 @@ class MoveTest extends AbstractBoardStateTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void test(final ChessMove moveToTest, final BoardState startState, final BoardState expected)
+	void test(ChessMove moveToTest, BoardState startState, BoardState expected)
 	{
-		final BoardState startCopy = startState.copy();
-		final MoveReversalData reversalData = new MoveReversalData();
+		BoardState startCopy = startState.copy();
+		MoveReversalData reversalData = new MoveReversalData();
 
 		moveToTest.makeMove(startState, reversalData);
 		assertBoardStatesAreEqual(expected, startState);
@@ -42,9 +42,9 @@ class MoveTest extends AbstractBoardStateTest
 		return IterRange.to(40).mapToObject(i -> "case" + pad(i)).map(parser::parse);
 	}
 
-	static String pad(final int caseNumber) {
-		final String caseString = string(caseNumber);
-		return CycledIteration.of("0")
+	static String pad(int caseNumber) {
+		String caseString = string(caseNumber);
+		return Repeatedly.cycle("0")
 				.take(3 - sizeOf(caseString))
 				.append(caseString)
 				.fold("", (a, b) -> a + b);

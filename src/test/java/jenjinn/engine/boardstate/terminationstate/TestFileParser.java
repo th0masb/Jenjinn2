@@ -3,7 +3,7 @@
  */
 package jenjinn.engine.boardstate.terminationstate;
 
-import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.last;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
 import java.util.List;
@@ -23,14 +23,14 @@ final class TestFileParser extends AbstractTestFileParser
 {
 
 	@Override
-	public Arguments parse(final String fileName)
+	public Arguments parse(String fileName)
 	{
 		List<String> lines = loadFile(fileName);
 
 		if (lines.size() == 11) {
-			final BoardState state = BoardParser.parse(take(9, lines));
-			final boolean hasLegalMoves = Boolean.parseBoolean(lines.get(9).toLowerCase().trim());
-			final GameTermination expectedTermination = GameTermination.valueOf(tail(lines).toUpperCase().trim());
+			BoardState state = BoardParser.parse(take(9, lines));
+			boolean hasLegalMoves = Boolean.parseBoolean(lines.get(9).toLowerCase().trim());
+			GameTermination expectedTermination = GameTermination.valueOf(last(lines).toUpperCase().trim());
 			return Arguments.of(state, hasLegalMoves, expectedTermination);
 		}
 		else {

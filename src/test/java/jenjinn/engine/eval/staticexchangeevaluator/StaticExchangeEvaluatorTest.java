@@ -26,8 +26,8 @@ class StaticExchangeEvaluatorTest
 	@MethodSource
 	void test(BoardState state, List<IndividualStateCase> testCases)
 	{
-		final StaticExchangeEvaluator see = new StaticExchangeEvaluator();
-		for (final IndividualStateCase testCase : testCases) {
+		StaticExchangeEvaluator see = new StaticExchangeEvaluator();
+		for (IndividualStateCase testCase : testCases) {
 			assertEquals(
 					testCase.isGoodExchange,
 					see.isGoodExchange(testCase.source, testCase.target, state),

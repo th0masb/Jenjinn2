@@ -4,7 +4,6 @@
 package jenjinn.engine.parseutils;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,9 +14,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.pgn.CommonRegex;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.collections.Lists;
 import xawd.jflow.iterators.factories.Iterate;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -44,13 +44,13 @@ public abstract class AbstractTestFileParser
 	 * @return A list of the lines of the required file with comments and white
 	 *         space ignored.
 	 */
-	public FlowList<String> loadFile(String fileName)
+	public FList<String> loadFile(String fileName)
 	{
 		List<String> lines = FileUtils.cacheResource(getClass(), fileName, s -> !s.startsWith("//"));
 		return Lists.copy(lines);
 	}
 	
-	public Set<ChessMove> parseMoves(final List<String> lines)
+	public Set<ChessMove> parseMoves(List<String> lines)
 	{
 		if (lines.isEmpty()) {
 			throw new IllegalArgumentException();
@@ -59,9 +59,9 @@ public abstract class AbstractTestFileParser
 			return Collections.emptySet();
 		}
 		else {
-			final String mv = CommonRegex.SHORTHAND_MOVE;
+			String mv = CommonRegex.SHORTHAND_MOVE;
 			return Iterate.over(lines)
-					.flatten(line -> Iterate.over(getAllMatches(line, mv)))
+					.flatten(line -> Strings.allMatches(line, mv))
 					.flatten(shortmv -> Iterate.over(ShorthandMoveParser.parse(shortmv)))
 					.toSet();
 		}

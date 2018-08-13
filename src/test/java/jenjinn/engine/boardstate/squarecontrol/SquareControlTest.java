@@ -27,21 +27,21 @@ class SquareControlTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void test(final BoardState state, final Map<ChessPiece, Long> expectedControl)
+	void test(BoardState state, Map<ChessPiece, Long> expectedControl)
 	{
-		for (final ChessPiece p : ChessPieces.all()) {
-			final long expected = expectedControl.get(p), actual = SquareControl.calculate(state, p);
+		for (ChessPiece p : ChessPieces.all()) {
+			long expected = expectedControl.get(p), actual = SquareControl.calculate(state, p);
 			assertEquals(expected, actual, p.name() + System.lineSeparator() + VisualGridGenerator.from(expected, actual));
 		}
 
 
-		final long expectedWhitecontrol = ChessPieces.iterate().take(6)
+		long expectedWhitecontrol = ChessPieces.iterate().take(6)
 				.mapToLong(expectedControl::get)
 				.fold(0L, (a, b) -> a | b);
 
 		assertEquals(expectedWhitecontrol, SquareControl.calculate(state, Side.WHITE));
 
-		final long expectedBlackcontrol = ChessPieces.iterate().drop(6)
+		long expectedBlackcontrol = ChessPieces.iterate().drop(6)
 				.mapToLong(expectedControl::get)
 				.fold(0L, (a, b) -> a | b);
 

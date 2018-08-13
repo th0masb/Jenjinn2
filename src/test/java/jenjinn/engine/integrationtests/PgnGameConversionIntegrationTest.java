@@ -21,7 +21,7 @@ import jenjinn.engine.moves.AbstractBoardStateTest;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.pgn.BadPgnException;
 import jenjinn.engine.pgn.PgnGameConverter;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.collections.Lists;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -41,20 +41,20 @@ class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 		List<String> files = Lists.copyMutable(FileUtils.cacheResource(getClass(), "integrationtestpgns"));
 		Collections.sort(files);
 
-		for (final String filename : files) {
+		for (String filename : files) {
 			String resourceLoc = FileUtils.absoluteName(getClass(), filename);
 			assertNotNull(getClass().getResourceAsStream(resourceLoc), "filename");
 			
 			try (BufferedReader reader = FileUtils.loadResource(getClass(), filename)) {
 				reader.lines().limit(nGames).forEach(pgn -> {
 					try {
-						final List<ChessMove> mvs = PgnGameConverter.parse(pgn.trim());
-						final BoardState state = StartStateGenerator.createStartBoard();
-						final FlowList<MoveReversalData> reversalData = Iterate.over(mvs).map(x -> new MoveReversalData()).toList();
+						List<ChessMove> mvs = PgnGameConverter.parse(pgn.trim());
+						BoardState state = StartStateGenerator.createStartBoard();
+						FList<MoveReversalData> reversalData = Iterate.over(mvs).map(x -> new MoveReversalData()).toList();
 						reversalData.flow().zipWith(mvs).forEach(p -> p.second().makeMove(state, p.first()));
-						reversalData.rflow().zipWith(Iterate.reverseOver(mvs)).forEach(p -> p.second().reverseMove(state, p.first()));
+						reversalData.rflow().zipWith(Iterate.overReversed(mvs)).forEach(p -> p.second().reverseMove(state, p.first()));
 						assertBoardStatesAreEqual(StartStateGenerator.createStartBoard(), state);
-					} catch (final BadPgnException e) {
+					} catch (BadPgnException e) {
 						e.printStackTrace();
 						fail("Pgn: " + pgn + "\n" + filename);
 					}

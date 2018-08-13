@@ -20,9 +20,10 @@ import xawd.jflow.iterators.factories.Iterate;
  */
 final class TestFileParser extends AbstractTestFileParser
 {
+	@Override
 	public Arguments parse(String fileName)
 	{
-		final List<String> lines = loadFile(fileName);
+		List<String> lines = loadFile(fileName);
 		return Arguments.of(BoardParser.parse(take(9, lines)), parseIndividualCases(drop(9, lines)));
 	}
 

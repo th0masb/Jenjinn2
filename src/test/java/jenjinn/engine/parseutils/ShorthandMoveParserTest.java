@@ -32,9 +32,9 @@ class ShorthandMoveParserTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void testMoveConstruction(final String encodedMove, final List<StandardMove> expectedMoves)
+	void testMoveConstruction(String encodedMove, List<StandardMove> expectedMoves)
 	{
-		final Set<ChessMove> upcast = Iterate.over(expectedMoves).filterAndCastTo(ChessMove.class).toSet();
+		Set<ChessMove> upcast = Iterate.over(expectedMoves).filterAndCastTo(ChessMove.class).toSet();
 		assertEquals(upcast, new HashSet<>(ShorthandMoveParser.parse(encodedMove)));
 	}
 
@@ -57,7 +57,7 @@ class ShorthandMoveParserTest
 
 	@ParameterizedTest
 	@MethodSource
-	void testMoveConstructionFailure(final String encoded)
+	void testMoveConstructionFailure(String encoded)
 	{
 		assertThrows(IllegalArgumentException.class, () -> ShorthandMoveParser.parse(encoded));
 	}

@@ -23,7 +23,7 @@ class TerminationStateTest
 	@Disabled
 	@ParameterizedTest
 	@MethodSource
-	void test(final BoardState state, final Boolean hasLegalMoves, final GameTermination expectedTerminationState)
+	void test(BoardState state, Boolean hasLegalMoves, GameTermination expectedTerminationState)
 	{
 		assertEquals(expectedTerminationState, TerminationState.of(state, hasLegalMoves));
 	}

@@ -3,8 +3,8 @@
  */
 package jenjinn.engine.movesearch.quiescent;
 
+import static xawd.jflow.utilities.CollectionUtil.last;
 import static xawd.jflow.utilities.CollectionUtil.string;
-import static xawd.jflow.utilities.CollectionUtil.tail;
 import static xawd.jflow.utilities.CollectionUtil.take;
 
 import java.util.List;
@@ -19,12 +19,13 @@ import jenjinn.engine.parseutils.BoardParser;
  */
 final class TestFileParser extends AbstractTestFileParser
 {
+	@Override
 	public Arguments parse(String fileName)
 	{
-		final List<String> lines = loadFile(fileName);
+		List<String> lines = loadFile(fileName);
 
 		if (lines.size() == 10) {
-			return Arguments.of(BoardParser.parse(take(9, lines)), parseResultLine(tail(lines)));
+			return Arguments.of(BoardParser.parse(take(9, lines)), parseResultLine(last(lines)));
 		}
 		else {
 			throw new IllegalArgumentException(string(lines.size()));

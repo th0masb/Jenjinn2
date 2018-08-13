@@ -3,9 +3,8 @@
  */
 package jenjinn.engine.boardstate.pinnedpieces;
 
-import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.last;
 import static xawd.jflow.utilities.CollectionUtil.take;
-import static xawd.jflow.utilities.Strings.getAllMatches;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,27 +16,28 @@ import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.parseutils.AbstractTestFileParser;
 import jenjinn.engine.parseutils.BoardParser;
 import jenjinn.engine.pgn.CommonRegex;
-import xawd.jflow.iterators.factories.Iterate;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
  */
 final class TestFileParser extends AbstractTestFileParser
 {
-	public Arguments parse(final String fileName)
+	@Override
+	public Arguments parse(String fileName)
 	{
-		final List<String> lines = loadFile(fileName);
-		return Arguments.of(BoardParser.parse(take(9, lines)), parseSquareSequence(tail(lines)));
+		List<String> lines = loadFile(fileName);
+		return Arguments.of(BoardParser.parse(take(9, lines)), parseSquareSequence(last(lines)));
 	}
 
-	private Set<BoardSquare> parseSquareSequence(final String encodedSequence)
+	private Set<BoardSquare> parseSquareSequence(String encodedSequence)
 	{
-		final String ec = encodedSequence.trim() + " ", sq = CommonRegex.SINGLE_SQUARE;
+		String ec = encodedSequence.trim() + " ", sq = CommonRegex.SINGLE_SQUARE;
 		if (ec.matches("none ")) {
 			return Collections.emptySet();
 		}
 		else if (ec.matches("(" + sq + " +)+")) {
-			return Iterate.over(getAllMatches(ec, sq))
+			return Strings.allMatches(ec, sq)
 					.map(String::toUpperCase)
 					.map(BoardSquare::valueOf)
 					.toSet();

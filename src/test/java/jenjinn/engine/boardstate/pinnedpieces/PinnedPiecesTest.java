@@ -21,7 +21,7 @@ class PinnedPiecesTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void test(final BoardState state, final Set<BoardSquare> expectedPinnedPieces)
+	void test(final BoardState state, Set<BoardSquare> expectedPinnedPieces)
 	{
 		assertEquals(expectedPinnedPieces, PinnedPieces.in(state).getLocations());
 	}

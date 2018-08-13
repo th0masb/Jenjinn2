@@ -22,7 +22,8 @@ public final class BitboardIterator extends AbstractFlow<BoardSquare>
 	private final long source;
 	private int cached = -1, elementsReturned = 0;
 
-	public BitboardIterator(final long source) {
+	public BitboardIterator(long source) 
+	{
 		super(Optionals.ofInt(bitCount(source)));
 		this.source = source;
 	}
@@ -37,7 +38,7 @@ public final class BitboardIterator extends AbstractFlow<BoardSquare>
 	public BoardSquare next()
 	{
 		if (hasNext()) {
-			final int loopStart = cached < 0 ? 0 : cached + 1;
+			int loopStart = cached < 0 ? 0 : cached + 1;
 			for (int i = loopStart; i < 64; i++) {
 				if (bitboardsIntersect(1L << i, source)) {
 					cached = i;
@@ -58,7 +59,7 @@ public final class BitboardIterator extends AbstractFlow<BoardSquare>
 		next();
 	}
 
-	public static Flow<BoardSquare> from(final long bitboard)
+	public static Flow<BoardSquare> from(long bitboard)
 	{
 		return new BitboardIterator(bitboard);
 	}

@@ -85,19 +85,19 @@ final class BitboardsInitialisationSection1
 
 	private static long[] generateWhitePawnMovementBitboards()
 	{
-		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.WHITE_PAWN_MOVE, 1);
+		long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.WHITE_PAWN_MOVE, 1);
 		IterRange.between(8, 16).forEach(i -> moves[i] |= singleOccupancyBitboard(i + 16));
 		return moves;
 	}
 
 	private static long[] generateBlackPawnMovementBitboards()
 	{
-		final long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.BLACK_PAWN_MOVE, 1);
+		long[] moves = generateEmptyBoardBitboards(PieceMovementDirections.BLACK_PAWN_MOVE, 1);
 		IterRange.between(48, 56).forEach(i -> moves[i] |= singleOccupancyBitboard(i - 16));
 		return moves;
 	}
 
-	private static long[] generateEmptyBoardBitboards(final List<Direction> moveDirections, final int lengthCap)
+	private static long[] generateEmptyBoardBitboards(List<Direction> moveDirections, int lengthCap)
 	{
 		return BoardSquare.iterateAll()
 				.map(square -> square.getAllSquaresInDirections(moveDirections, lengthCap))

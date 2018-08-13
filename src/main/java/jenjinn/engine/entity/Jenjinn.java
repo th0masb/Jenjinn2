@@ -11,7 +11,7 @@ import jenjinn.engine.base.FileUtils;
 import jenjinn.engine.boardstate.BoardState;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.movesearch.TreeSearcher;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.collections.Lists;
 
 /**
@@ -20,13 +20,13 @@ import xawd.jflow.collections.Lists;
 public final class Jenjinn
 {
 	private final TreeSearcher treeSearcher = new TreeSearcher();
-	private final FlowList<String> openingFiles;
+	private final FList<String> openingFiles;
 
 	private int openingCount = 0;
 
 	public Jenjinn()
 	{
-		FlowList<String> files = Lists.copyMutable(FileUtils.cacheResource(Jenjinn.class, "openingFileNames"));
+		FList<String> files = Lists.copyMutable(FileUtils.cacheResource(Jenjinn.class, "openingFileNames"));
 		Collections.shuffle(files); // Different openings each time.
 		openingFiles = files.flow().toList();
 	}
@@ -34,7 +34,7 @@ public final class Jenjinn
 	public Optional<ChessMove> calculateBestMove(BoardState state, long timeLimit)
 	{
 		if (openingCount++ < 5) {
-			final Optional<ChessMove> openingSearch = findMoveInOpeningdatabase(state);
+			Optional<ChessMove> openingSearch = findMoveInOpeningdatabase(state);
 			if (openingSearch.isPresent()) {
 				openingCount = 0;
 				// Lets check that the opening move is ok...
@@ -59,13 +59,13 @@ public final class Jenjinn
 
 	private Optional<ChessMove> findMoveInOpeningdatabase(BoardState state)
 	{
-		for (final String openingName : openingFiles) {
-			try (final OpeningDatabaseReader fileReader = new OpeningDatabaseReader(openingName)) {
-				final Optional<ChessMove> moveFound = fileReader.searchForMove(state.calculateHash());
+		for (String openingName : openingFiles) {
+			try (OpeningDatabaseReader fileReader = new OpeningDatabaseReader(openingName)) {
+				Optional<ChessMove> moveFound = fileReader.searchForMove(state.calculateHash());
 				if (moveFound.isPresent()) {
 					return moveFound;
 				}
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				System.out.println("Error with file: " + openingName);
 				e.printStackTrace();
 			}

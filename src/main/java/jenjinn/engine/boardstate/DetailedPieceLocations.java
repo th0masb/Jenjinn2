@@ -33,9 +33,9 @@ public final class DetailedPieceLocations
 	private int midgameEval = 0, endgameEval = 0;
 
 	public DetailedPieceLocations(
-			final List<LocationTracker> pieceLocations,
-			final PieceSquareTables midgameTables,
-			final PieceSquareTables endgameTables)
+			List<LocationTracker> pieceLocations,
+			PieceSquareTables midgameTables,
+			PieceSquareTables endgameTables)
 	{
 		if (pieceLocations.size() != 12) {
 			throw new IllegalArgumentException();
@@ -51,22 +51,22 @@ public final class DetailedPieceLocations
 	}
 
 	public DetailedPieceLocations(
-			final long[] pieceLocations,
-			final PieceSquareTables midgameTables,
-			final PieceSquareTables endgameTables)
+			long[] pieceLocations,
+			PieceSquareTables midgameTables,
+			PieceSquareTables endgameTables)
 	{
 		this (Iterate.overLongs(pieceLocations).mapToObject(LocationTracker::new).toList(),
 				midgameTables,
 				endgameTables);
 	}
 
-	public void addPieceAt(final BoardSquare location, final ChessPiece pieceToAdd)
+	public void addPieceAt(BoardSquare location, ChessPiece pieceToAdd)
 	{
 		squarePieceFeatureHash ^= BoardHasher.INSTANCE.getSquarePieceFeature(location, pieceToAdd);
 		midgameEval += midgameTables.getLocationValue(pieceToAdd, location);
 		endgameEval += endgameTables.getLocationValue(pieceToAdd, location);
 		pieceLocations.get(pieceToAdd.ordinal()).addLoc(location);
-		final long newLocation = location.asBitboard();
+		long newLocation = location.asBitboard();
 		if (pieceToAdd.isWhite()) {
 			whiteLocations |= newLocation;
 		}
@@ -75,13 +75,13 @@ public final class DetailedPieceLocations
 		}
 	}
 
-	public void removePieceAt(final BoardSquare location, final ChessPiece pieceToRemove)
+	public void removePieceAt(BoardSquare location, ChessPiece pieceToRemove)
 	{
 		squarePieceFeatureHash ^= BoardHasher.INSTANCE.getSquarePieceFeature(location, pieceToRemove);
 		midgameEval -= midgameTables.getLocationValue(pieceToRemove, location);
 		endgameEval -= endgameTables.getLocationValue(pieceToRemove, location);
 		pieceLocations.get(pieceToRemove.ordinal()).removeLoc(location);
-		final long newLocation = location.asBitboard();
+		long newLocation = location.asBitboard();
 		if (pieceToRemove.isWhite()) {
 			whiteLocations ^= newLocation;
 		}
@@ -90,7 +90,7 @@ public final class DetailedPieceLocations
 		}
 	}
 
-	public ChessPiece getPieceAt(final BoardSquare square)
+	public ChessPiece getPieceAt(BoardSquare square)
 	{
 		for (int i = 0; i < 12; i++) {
 			if (pieceLocations.get(i).contains(square)) {
@@ -100,7 +100,7 @@ public final class DetailedPieceLocations
 		return null;
 	}
 
-	public ChessPiece getPieceAt(final long bitboard)
+	public ChessPiece getPieceAt(long bitboard)
 	{
 		for (int i = 0; i < 12; i++) {
 			if (bitboardsIntersect(pieceLocations.get(i).allLocs(), bitboard)) {
@@ -110,9 +110,9 @@ public final class DetailedPieceLocations
 		return null;
 	}
 
-	public ChessPiece getPieceAt(final BoardSquare square, final Side side)
+	public ChessPiece getPieceAt(BoardSquare square, Side side)
 	{
-		final int lowerBound = side.isWhite() ? 0 : 6, upperBound = lowerBound + 6;
+		int lowerBound = side.isWhite() ? 0 : 6, upperBound = lowerBound + 6;
 		for (int i = lowerBound; i < upperBound; i++) {
 			if (pieceLocations.get(i).contains(square)) {
 				return ChessPieces.fromIndex(i);
@@ -121,7 +121,7 @@ public final class DetailedPieceLocations
 		return null;
 	}
 
-	public long getSideLocations(final Side query)
+	public long getSideLocations(Side query)
 	{
 		return query.isWhite()? whiteLocations : blackLocations;
 	}
@@ -141,7 +141,7 @@ public final class DetailedPieceLocations
 		return whiteLocations | blackLocations;
 	}
 
-	public long locationsOf(final ChessPiece piece)
+	public long locationsOf(ChessPiece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).allLocs();
 	}
@@ -151,7 +151,7 @@ public final class DetailedPieceLocations
 		return pieceLocations.get(piece.ordinal()).pieceCount();
 	}
 
-	public Flow<BoardSquare> iterateLocs(final ChessPiece piece)
+	public Flow<BoardSquare> iterateLocs(ChessPiece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).iterator();
 	}
@@ -173,7 +173,7 @@ public final class DetailedPieceLocations
 
 	public DetailedPieceLocations copy()
 	{
-		final List<LocationTracker> locTrackerCopy = Iterate.over(pieceLocations).map(LocationTracker::copy).toList();
+		List<LocationTracker> locTrackerCopy = Iterate.over(pieceLocations).map(LocationTracker::copy).toList();
 		return new DetailedPieceLocations(locTrackerCopy, midgameTables, endgameTables);
 	}
 
@@ -181,7 +181,7 @@ public final class DetailedPieceLocations
 	// Eclipse generated
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (blackLocations ^ (blackLocations >>> 32));
 		result = prime * result + endgameEval;
@@ -195,14 +195,14 @@ public final class DetailedPieceLocations
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final DetailedPieceLocations other = (DetailedPieceLocations) obj;
+		DetailedPieceLocations other = (DetailedPieceLocations) obj;
 		if (blackLocations != other.blackLocations)
 			return false;
 		if (endgameEval != other.endgameEval)

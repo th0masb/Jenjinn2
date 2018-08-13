@@ -36,15 +36,15 @@ public final class PinnedPieces
 	 * @return A list of the pinned piece locations as well as their constrained
 	 *         move areas.
 	 */
-	public static PinnedPieceCollection in(final BoardState state)
+	public static PinnedPieceCollection in(BoardState state)
 	{
-		final Side active = state.getActiveSide(), passive = active.otherSide();
-		final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-		final long activeLocs = pieceLocs.getSideLocations(active), allLocs = pieceLocs.getAllLocations();
+		Side active = state.getActiveSide(), passive = active.otherSide();
+		DetailedPieceLocations pieceLocs = state.getPieceLocations();
+		long activeLocs = pieceLocs.getSideLocations(active), allLocs = pieceLocs.getAllLocations();
 
-		final ChessPiece activeKing = ChessPieces.king(active);
-		final BoardSquare kingLoc = pieceLocs.iterateLocs(activeKing).next();
-		final long kloc = kingLoc.asBitboard();
+		ChessPiece activeKing = ChessPieces.king(active);
+		BoardSquare kingLoc = pieceLocs.iterateLocs(activeKing).next();
+		long kloc = kingLoc.asBitboard();
 
 		return Iterate.over(ChessPieces.pinnersOn(passive))
 				/*
@@ -62,7 +62,7 @@ public final class PinnedPieces
 				.filter(cord -> bitCount(cord & activeLocs) == 1 && bitCount(cord & allLocs) == 2)
 				/* This active piece must therefore be pinned. */
 				.mapToObject(cord -> {
-					final BoardSquare pieceLoc = BitboardIterator.from(cord & activeLocs).next();
+					BoardSquare pieceLoc = BitboardIterator.from(cord & activeLocs).next();
 					return new PinnedPiece(pieceLoc, cord);
 				})
 				.build(PinnedPieceCollection::new);

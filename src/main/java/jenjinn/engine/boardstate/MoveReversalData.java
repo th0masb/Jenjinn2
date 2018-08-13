@@ -52,7 +52,7 @@ public class MoveReversalData {
 		return consumed;
 	}
 
-	public void setConsumed(final boolean consumed)
+	public void setConsumed(boolean consumed)
 	{
 		this.consumed = consumed;
 	}
@@ -62,7 +62,7 @@ public class MoveReversalData {
 		return discardedCastlingRights;
 	}
 
-	public void setDiscardedCastlingRights(final Set<CastleZone> discardedCastlingRights)
+	public void setDiscardedCastlingRights(Set<CastleZone> discardedCastlingRights)
 	{
 		this.discardedCastlingRights = discardedCastlingRights;
 	}
@@ -72,7 +72,7 @@ public class MoveReversalData {
 		return pieceTaken;
 	}
 
-	public void setPieceTaken(final ChessPiece pieceTaken)
+	public void setPieceTaken(ChessPiece pieceTaken)
 	{
 		this.pieceTaken = pieceTaken;
 	}
@@ -82,7 +82,7 @@ public class MoveReversalData {
 		return pieceDeveloped;
 	}
 
-	public void setPieceDeveloped(final DevelopmentPiece pieceDeveloped)
+	public void setPieceDeveloped(DevelopmentPiece pieceDeveloped)
 	{
 		this.pieceDeveloped = pieceDeveloped;
 	}
@@ -92,7 +92,7 @@ public class MoveReversalData {
 		return discardedEnpassantSquare;
 	}
 
-	public void setDiscardedEnpassantSquare(final BoardSquare discardedEnpassantSquare)
+	public void setDiscardedEnpassantSquare(BoardSquare discardedEnpassantSquare)
 	{
 		this.discardedEnpassantSquare = discardedEnpassantSquare;
 	}
@@ -102,7 +102,7 @@ public class MoveReversalData {
 		return discardedHash;
 	}
 
-	public void setDiscardedHash(final long discardedHash)
+	public void setDiscardedHash(long discardedHash)
 	{
 		this.discardedHash = discardedHash;
 	}
@@ -112,7 +112,7 @@ public class MoveReversalData {
 		return discardedHalfMoveClock;
 	}
 
-	public void setDiscardedHalfMoveClock(final int discardedHalfMoveClock)
+	public void setDiscardedHalfMoveClock(int discardedHalfMoveClock)
 	{
 		this.discardedHalfMoveClock = discardedHalfMoveClock;
 	}

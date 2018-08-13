@@ -27,13 +27,13 @@ public final class BoardState
 	private BoardSquare enpassantSquare;
 
 	public BoardState(
-			final HashCache hashCache,
-			final DetailedPieceLocations pieceLocations,
-			final HalfMoveCounter gameClock,
-			final CastlingStatus castlingStatus,
-			final Set<DevelopmentPiece> developedPieces,
-			final Side activeSide,
-			final BoardSquare enPassantSquare)
+			HashCache hashCache,
+			DetailedPieceLocations pieceLocations,
+			HalfMoveCounter gameClock,
+			CastlingStatus castlingStatus,
+			Set<DevelopmentPiece> developedPieces,
+			Side activeSide,
+			BoardSquare enPassantSquare)
 	{
 		this.hashCache = hashCache;
 		this.pieceLocations = pieceLocations;
@@ -59,7 +59,7 @@ public final class BoardState
 		return enpassantSquare;
 	}
 
-	public void setEnPassantSquare(final BoardSquare enPassantSquare)
+	public void setEnPassantSquare(BoardSquare enPassantSquare)
 	{
 		this.enpassantSquare = enPassantSquare;
 	}

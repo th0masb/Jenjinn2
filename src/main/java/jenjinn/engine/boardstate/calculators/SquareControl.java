@@ -21,33 +21,33 @@ public final class SquareControl {
 
 	private SquareControl() {}
 
-	public static long calculate(final BoardState state, final Side side)
+	public static long calculate(BoardState state, Side side)
 	{
 		return Iterate.over(ChessPieces.ofSide(side))
 				.mapToLong(piece -> calculate(state, piece))
 				.fold(0L, (a, b) -> a | b);
 	}
 
-	public static long calculate(final BoardState state, final ChessPiece piece)
+	public static long calculate(BoardState state, ChessPiece piece)
 	{
 		if (piece.isPawn()) {
 			return calculatePawn(state, piece);
 		}
 		else {
-			final DetailedPieceLocations pieceLocs = state.getPieceLocations();
-			final long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
+			DetailedPieceLocations pieceLocs = state.getPieceLocations();
+			long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
 			return pieceLocs.iterateLocs(piece)
 					.mapToLong(loc -> piece.getSquaresOfControl(loc, white, black))
 					.fold(0L, (a, b) -> a | b);
 		}
 	}
 
-	private static long calculatePawn(final BoardState state, final ChessPiece piece)
+	private static long calculatePawn(BoardState state, ChessPiece piece)
 	{
 		assert piece.isPawn();
-		final long pawnLocs = state.getPieceLocations().locationsOf(piece);
+		long pawnLocs = state.getPieceLocations().locationsOf(piece);
 		assert !bitboardsIntersect(pawnLocs, rankBitboard(0)) && !bitboardsIntersect(pawnLocs, rankBitboard(7));
-		final long aFileRemover = ~fileBitboard(7), hFileRemover = ~fileBitboard(0);
+		long aFileRemover = ~fileBitboard(7), hFileRemover = ~fileBitboard(0);
 		if (piece.isWhite()) {
 			return ((pawnLocs & aFileRemover) << 9) | ((pawnLocs & hFileRemover) << 7);
 		}

@@ -4,9 +4,7 @@
 package jenjinn.engine.entity;
 
 import static xawd.jflow.utilities.CollectionUtil.head;
-import static xawd.jflow.utilities.CollectionUtil.tail;
-import static xawd.jflow.utilities.Strings.findFirstMatch;
-import static xawd.jflow.utilities.Strings.getAllMatches;
+import static xawd.jflow.utilities.CollectionUtil.last;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -17,12 +15,11 @@ import java.util.Optional;
 import jenjinn.engine.base.BoardSquare;
 import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.base.FileUtils;
-import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.StartStateGenerator;
 import jenjinn.engine.moves.ChessMove;
 import jenjinn.engine.moves.EnpassantMove;
 import jenjinn.engine.moves.MoveCache;
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
+import xawd.jflow.utilities.Strings;
 
 /**
  * @author ThomasB
@@ -34,7 +31,7 @@ public class OpeningDatabaseReader implements Closeable
 
 	public OpeningDatabaseReader(String databaseFilename)
 	{
-		final String absname = FileUtils.absoluteName(getClass(), databaseFilename);
+		String absname = FileUtils.absoluteName(getClass(), databaseFilename);
 		src = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(absname)));
 	}
 
@@ -44,7 +41,7 @@ public class OpeningDatabaseReader implements Closeable
 			consumed = true;
 			String line = src.readLine();
 			while (line != null) {
-				final Optional<ChessMove> extract = extractMove(line, positionHash);
+				Optional<ChessMove> extract = extractMove(line, positionHash);
 				if (extract.isPresent()) {
 					return extract;
 				}
@@ -61,12 +58,10 @@ public class OpeningDatabaseReader implements Closeable
 
 	private Optional<ChessMove> extractMove(String line, long positionHash)
 	{
-		for (final String positionWithMove : getAllMatches(line, ReaderRegex.POS_AND_MOVE)) {
-			final String pos = findFirstMatch(positionWithMove, ReaderRegex.POSITION)
-					.orElseThrow(AssertionError::new);
+		for ( String positionWithMove : Strings.allMatches(line, ReaderRegex.POS_AND_MOVE).toList()) {
+			String pos = Strings.firstMatch(positionWithMove, ReaderRegex.POSITION).get();
 			if (Long.parseUnsignedLong(pos, 16) == positionHash) {
-				final String encodedMove = findFirstMatch(positionWithMove, ReaderRegex.MOVE)
-						.orElseThrow(AssertionError::new);
+				String encodedMove = Strings.firstMatch(positionWithMove, ReaderRegex.MOVE).get();
 				return Optional.of(decodeMove(encodedMove));
 			}
 		}
@@ -75,14 +70,14 @@ public class OpeningDatabaseReader implements Closeable
 
 	private ChessMove decodeMove(String encodedMove)
 	{
-		final FlowList<BoardSquare> squares = getAllMatches(encodedMove, ReaderRegex.SQUARE)
+		FList<BoardSquare> squares = Strings.allMatches(encodedMove, ReaderRegex.SQUARE)
 				.map(BoardSquare::valueOf).toList();
 
 		if (encodedMove.matches(ReaderRegex.SMOVE)) {
-			return MoveCache.getMove(head(squares), tail(squares));
+			return MoveCache.getMove(head(squares), last(squares));
 		}
 		else if (encodedMove.matches(ReaderRegex.EPMOVE)) {
-			return new EnpassantMove(head(squares), tail(squares));
+			return new EnpassantMove(head(squares), last(squares));
 		}
 		else if (encodedMove.matches(ReaderRegex.CASTLEMOVE)) {
 			return MoveCache.getMove(CastleZone.fromSimpleIdentifier(encodedMove));
@@ -96,17 +91,5 @@ public class OpeningDatabaseReader implements Closeable
 	public void close() throws IOException
 	{
 		src.close();
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-
-		final BoardState start = StartStateGenerator.createStartBoard();
-		MoveCache.getMove(BoardSquare.D2, BoardSquare.D4).makeMove(start);
-		MoveCache.getMove(BoardSquare.G8, BoardSquare.F6).makeMove(start);
-
-		try (OpeningDatabaseReader reader = new OpeningDatabaseReader("classicalkid.odb")) {
-			System.out.println(reader.searchForMove(start.calculateHash()));
-		}
 	}
 }

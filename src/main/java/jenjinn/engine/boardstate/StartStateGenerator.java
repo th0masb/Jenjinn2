@@ -9,7 +9,6 @@ import jenjinn.engine.base.CastleZone;
 import jenjinn.engine.base.DevelopmentPiece;
 import jenjinn.engine.base.Side;
 import jenjinn.engine.eval.piecesquaretables.PieceSquareTables;
-import jenjinn.engine.utils.VisualGridGenerator;
 
 /**
  * @author ThomasB
@@ -59,16 +58,5 @@ public final class StartStateGenerator
 				EnumSet.noneOf(DevelopmentPiece.class),
 				Side.WHITE,
 				null);
-	}
-
-	public static void main(final String[] args)
-	{
-		// VisualGridGenerator.from("Test", new
-		// HashMap<>()).getGridLines().forEach(System.out::println);
-
-		// System.out.println(StringifyBoard.formatGrid(VisualGridGenerator.from("Test",
-		// new HashMap<>())));
-
-		System.out.println(VisualGridGenerator.from(getStartLocations()));
 	}
 }

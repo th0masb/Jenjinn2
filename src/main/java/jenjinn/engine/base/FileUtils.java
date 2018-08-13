@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import xawd.jflow.collections.FlowList;
+import xawd.jflow.collections.FList;
 import xawd.jflow.collections.Lists;
 import xawd.jflow.iterators.factories.Iterate;
 
@@ -29,7 +29,7 @@ public final class FileUtils
 	 * @param  relativeName  the relative resource name for which the absolute name is required.
 	 * @return the absolute resource name for {@code relativeName}.
 	 */
-	public static String absoluteName(final Class<?> cls, final String relativeName)
+	public static String absoluteName(Class<?> cls, String relativeName)
 	{
 		return absoluteName(cls.getPackage(), relativeName);
 	}
@@ -40,7 +40,7 @@ public final class FileUtils
 	 * @param  relativeName  the relative resource name for which the absolute name is required.
 	 * @return the absolute resource name for {@code relativeName}.
 	 */
-	public static String absoluteName(final Package pkg, final String relativeName)
+	public static String absoluteName(Package pkg, String relativeName)
 	{
 		return "/" + pkg.getName().replace('.', '/') + "/" + relativeName;
 	}
@@ -74,7 +74,7 @@ public final class FileUtils
 	 * @param filters      A collection of predicates each line must satisfy.
 	 */
 	@SafeVarargs
-	public static FlowList<String> cacheResource(Class<?> cls, String relativeName, Predicate<? super String>... filters)
+	public static FList<String> cacheResource(Class<?> cls, String relativeName, Predicate<? super String>... filters)
 	{
 		return cacheResource(cls, relativeName, Arrays.asList(filters));
 	}
@@ -88,13 +88,13 @@ public final class FileUtils
 	 *                     package.
 	 * @param filters      A collection of predicates each line must satisfy.
 	 */
-	public static FlowList<String> cacheResource(Class<?> cls, String relativeName, Collection<Predicate<? super String>> filters)
+	public static FList<String> cacheResource(Class<?> cls, String relativeName, Collection<Predicate<? super String>> filters)
 	{
 		try (BufferedReader reader = loadResource(cls, relativeName)) {
 			return Lists.copy(reader.lines()
 					.map(String::trim)
 					.filter(x -> !x.isEmpty())
-					.filter(x -> Iterate.over(filters).allMatch(filter -> filter.test(x)).get())
+					.filter(x -> Iterate.over(filters).allMatch(filter -> filter.test(x)))
 					.collect(Collectors.toList()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);

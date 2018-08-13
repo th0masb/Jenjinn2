@@ -23,10 +23,10 @@ public enum Direction
 	NNE(2, -1), NEE(1, -2), SEE(-1, -2), SSE(-2, -1),
 	SSW(-2, 1), SWW(-1, 2), NWW(1, 2), NNW(2, 1);
 
-	public int rankIndexChange;
-	public int fileIndexChange;
+	public final int rankIndexChange;
+	public final int fileIndexChange;
 
-	private Direction(final int rankIndexChange, final int fileIndexChange)
+	private Direction(int rankIndexChange, int fileIndexChange)
 	{
 		this.rankIndexChange = rankIndexChange;
 		this.fileIndexChange = fileIndexChange;
@@ -37,21 +37,21 @@ public enum Direction
 		return Iterate.over(Arrays.asList(values()));
 	}
 
-	public static Optional<Direction> ofLineBetween(final BoardSquare start, final BoardSquare end)
+	public static Optional<Direction> ofLineBetween(BoardSquare start, BoardSquare end)
 	{
 		if (start == end) {
 			return Optional.empty();
 		}
 
-		final int rankChange = end.rank() - start.rank(), fileChange = end.file() - start.file();
-		final int maxAbsChange = max(abs(rankChange), abs(fileChange)), minAbsChange = min(abs(rankChange), abs(fileChange));
-		final int normaliser = minAbsChange == 0? maxAbsChange : minAbsChange;
+		int rankChange = end.rank() - start.rank(), fileChange = end.file() - start.file();
+		int maxAbsChange = max(abs(rankChange), abs(fileChange)), minAbsChange = min(abs(rankChange), abs(fileChange));
+		int normaliser = minAbsChange == 0? maxAbsChange : minAbsChange;
 
 		if (maxAbsChange % normaliser != 0 || minAbsChange % normaliser != 0) {
 			return Optional.empty();
 		}
 		else {
-			final int rankIndexChange = rankChange/normaliser, fileIndexChange = fileChange/normaliser;
+			int rankIndexChange = rankChange/normaliser, fileIndexChange = fileChange/normaliser;
 			return iterateAll().filter(dir -> dir.rankIndexChange == rankIndexChange && dir.fileIndexChange == fileIndexChange).safeNext();
 		}
 	}

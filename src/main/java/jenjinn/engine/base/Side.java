@@ -12,7 +12,7 @@ public enum Side
 
 	private final int penultimatePawnRank;
 
-	private Side(final int penultimatePawnRank)
+	private Side(int penultimatePawnRank)
 	{
 		this.penultimatePawnRank = penultimatePawnRank;
 	}

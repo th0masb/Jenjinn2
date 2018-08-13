@@ -22,7 +22,7 @@ public final class PinnedPieceCollection implements FlowIterable<PinnedPiece>
 {
 	private final Map<BoardSquare, PinnedPiece> cache;
 
-	public PinnedPieceCollection(final Flow<PinnedPiece> pinnedPieces)
+	public PinnedPieceCollection(Flow<PinnedPiece> pinnedPieces)
 	{
 		cache = unmodifiableMap(pinnedPieces.toMap(PinnedPiece::getLocation, identity()));
 	}
@@ -38,12 +38,12 @@ public final class PinnedPieceCollection implements FlowIterable<PinnedPiece>
 		return cache.keySet();
 	}
 
-	public boolean containsLocation(final BoardSquare location)
+	public boolean containsLocation(BoardSquare location)
 	{
 		return cache.containsKey(location);
 	}
 
-	public long getConstraintAreaOfPieceAt(final BoardSquare location)
+	public long getConstraintAreaOfPieceAt(BoardSquare location)
 	{
 		return cache.get(location).getConstrainedArea();
 	}

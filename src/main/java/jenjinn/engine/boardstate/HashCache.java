@@ -15,7 +15,7 @@ public final class HashCache
 	private final long[] hashCache;
 	private int totalHalfMoveCount, cacheIndexer;
 
-	public HashCache(final long[] hashCache, final int halfMoveCount)
+	public HashCache(long[] hashCache, int halfMoveCount)
 	{
 		if (hashCache.length != CACHE_SIZE) {
 			throw new IllegalArgumentException();
@@ -30,16 +30,16 @@ public final class HashCache
 		this(new long[CACHE_SIZE], 0);
 	}
 
-	public long incrementHalfMoveCount(final long newHash)
+	public long incrementHalfMoveCount(long newHash)
 	{
 		totalHalfMoveCount++;
 		updateCacheIndexer();
-		final long discardedHash = hashCache[cacheIndexer];
+		long discardedHash = hashCache[cacheIndexer];
 		hashCache[cacheIndexer] = newHash;
 		return discardedHash;
 	}
 
-	public void decrementHalfMoveCount(final long replacementHash)
+	public void decrementHalfMoveCount(long replacementHash)
 	{
 		hashCache[cacheIndexer] = replacementHash;
 		totalHalfMoveCount--;
@@ -77,12 +77,12 @@ public final class HashCache
 			return false;
 		}
 		else {
-			final long[] cpy = Arrays.copyOf(hashCache, CACHE_SIZE);
+			long[] cpy = Arrays.copyOf(hashCache, CACHE_SIZE);
 			Arrays.sort(cpy);
 			int sameCount = 1;
 			long last = cpy[0];
 			for (int i = 1; i < CACHE_SIZE && sameCount < 3; i++) {
-				final long next = cpy[i];
+				long next = cpy[i];
 				if (next == last) {
 					sameCount++;
 				}
@@ -113,7 +113,7 @@ public final class HashCache
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + cacheIndexer;
 		result = prime * result + Arrays.hashCode(hashCache);
@@ -122,7 +122,7 @@ public final class HashCache
 	}
 
 	@Override
-	public boolean equals(final Object obj)
+	public boolean equals(Object obj)
 	{
 		if (this == obj)
 			return true;
@@ -130,7 +130,7 @@ public final class HashCache
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final HashCache other = (HashCache) obj;
+		HashCache other = (HashCache) obj;
 		if (cacheIndexer != other.cacheIndexer)
 			return false;
 		if (!Arrays.equals(hashCache, other.hashCache))

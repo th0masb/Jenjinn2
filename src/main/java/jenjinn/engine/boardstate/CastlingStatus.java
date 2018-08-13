@@ -19,7 +19,7 @@ public final class CastlingStatus
 	private final Set<CastleZone> castlingRights;
 	private CastleZone whiteCastlingStatus, blackCastlingStatus;
 
-	public CastlingStatus(final Set<CastleZone> castlingRights, final CastleZone whiteCastlingStatus, final CastleZone blackCastlingStatus)
+	public CastlingStatus(Set<CastleZone> castlingRights, CastleZone whiteCastlingStatus, CastleZone blackCastlingStatus)
 	{
 		this.castlingRights = castlingRights;
 		this.whiteCastlingStatus = whiteCastlingStatus;
@@ -41,12 +41,12 @@ public final class CastlingStatus
 		return blackCastlingStatus;
 	}
 
-	public CastleZone getStatusFor(final Side side)
+	public CastleZone getStatusFor(Side side)
 	{
 		return side.isWhite()? whiteCastlingStatus : blackCastlingStatus;
 	}
 
-	public void setCastlingStatus(final CastleZone newStatus)
+	public void setCastlingStatus(CastleZone newStatus)
 	{
 		if (newStatus.isWhiteZone()) {
 			assert whiteCastlingStatus == null;
@@ -58,7 +58,7 @@ public final class CastlingStatus
 		}
 	}
 
-	public void removeCastlingStatus(final CastleZone toRemove)
+	public void removeCastlingStatus(CastleZone toRemove)
 	{
 		if (toRemove.isWhiteZone()) {
 			assert toRemove == whiteCastlingStatus;
@@ -94,7 +94,7 @@ public final class CastlingStatus
 	@Override
 	public int hashCode()
 	{
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + ((blackCastlingStatus == null) ? 0 : blackCastlingStatus.hashCode());
 		result = prime * result + ((castlingRights == null) ? 0 : castlingRights.hashCode());
@@ -103,7 +103,7 @@ public final class CastlingStatus
 	}
 
 	@Override
-	public boolean equals(final Object obj)
+	public boolean equals(Object obj)
 	{
 		if (this == obj)
 			return true;
@@ -111,7 +111,7 @@ public final class CastlingStatus
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final CastlingStatus other = (CastlingStatus) obj;
+		CastlingStatus other = (CastlingStatus) obj;
 		if (blackCastlingStatus != other.blackCastlingStatus)
 			return false;
 		if (castlingRights == null) {

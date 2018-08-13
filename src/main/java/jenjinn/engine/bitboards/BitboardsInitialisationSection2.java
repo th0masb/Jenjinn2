@@ -1,7 +1,7 @@
 package jenjinn.engine.bitboards;
 
 import static java.util.Arrays.asList;
-import static xawd.jflow.utilities.CollectionUtil.tail;
+import static xawd.jflow.utilities.CollectionUtil.last;
 import static xawd.jflow.utilities.CollectionUtil.take;
 import static xawd.jflow.utilities.MapUtil.longMap;
 
@@ -41,12 +41,12 @@ final class BitboardsInitialisationSection2
 				.toArray(new long[64][]);
 	}
 
-	static long[] calculateOccupancyVariations(final BoardSquare startSq, final List<Direction> movementDirections)
+	static long[] calculateOccupancyVariations(BoardSquare startSq, List<Direction> movementDirections)
 	{
-		final List<BoardSquare> relevantSquares = new ArrayList<>();
-		for (final Direction dir : movementDirections)
+		List<BoardSquare> relevantSquares = new ArrayList<>();
+		for (Direction dir : movementDirections)
 		{
-			final int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
+			int numOfSqsLeft = startSq.getNumberOfSquaresLeftInDirection(dir);
 			relevantSquares.addAll(startSq.getAllSquaresInDirections(asList(dir), numOfSqsLeft - 1));
 		}
 		return BitboardsInitialisationSection2.bitwiseOrAllSetsInPowerset(longMap(BoardSquare::asBitboard, relevantSquares));
@@ -54,12 +54,12 @@ final class BitboardsInitialisationSection2
 
 	static long[] generateRookOccupancyMasks()
 	{
-		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
+		return IterRange.to(64).mapToLong(i -> last(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
 	static long[] generateBishopOccupancyMasks()
 	{
-		return IterRange.to(64).mapToLong(i -> tail(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
+		return IterRange.to(64).mapToLong(i -> last(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS[i])).toArray();
 	}
 
 	static int[] generateRookMagicBitshifts()
@@ -77,9 +77,9 @@ final class BitboardsInitialisationSection2
 	 * performing bitwise | operation on each element of each subset of the powerset
 	 * of the given array. The size of the returned array is 2^(array.length).
 	 */
-	static long[] bitwiseOrAllSetsInPowerset(final long[] array)
+	static long[] bitwiseOrAllSetsInPowerset(long[] array)
 	{
-		final int length = array.length;
+		int length = array.length;
 		if (length == 0) {
 			return new long[0];
 		}
@@ -87,8 +87,8 @@ final class BitboardsInitialisationSection2
 			return new long[] { 0L, array[0] };
 		}
 		else {
-			final long[] ans = new long[(int) Math.pow(2.0, length)];
-			final long[] recursiveAns = bitwiseOrAllSetsInPowerset(take(length - 1, array));
+			long[] ans = new long[(int) Math.pow(2.0, length)];
+			long[] recursiveAns = bitwiseOrAllSetsInPowerset(take(length - 1, array));
 			int ansIndexCounter = 0;
 			int recursiveAnsIndexCounter = 0;
 			for (int j = 0; j < recursiveAns.length; j++) {

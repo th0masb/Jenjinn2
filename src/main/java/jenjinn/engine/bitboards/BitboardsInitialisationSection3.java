@@ -36,17 +36,17 @@ final class BitboardsInitialisationSection3
 				PieceMovementDirections.BISHOP);
 	}
 
-	static long[][] generateMagicMoveDatabase(final long[][] occupancyVariations, final long[] magicNumbers, final int[] magicBitshifts, final List<Direction> movementDirections)
+	static long[][] generateMagicMoveDatabase(long[][] occupancyVariations, long[] magicNumbers, int[] magicBitshifts, List<Direction> movementDirections)
 	{
-		final long[][] magicMoveDatabase = new long[64][];
+		long[][] magicMoveDatabase = new long[64][];
 		for (byte i = 0; i < 64; i++) {
-			final long[] singleSquareOccupancyVariations = occupancyVariations[i];
-			final long magicNumber = magicNumbers[i];
-			final int bitShift = magicBitshifts[i];
-			final long[] singleSquareMagicMoveDatabase = new long[singleSquareOccupancyVariations.length];
+			long[] singleSquareOccupancyVariations = occupancyVariations[i];
+			long magicNumber = magicNumbers[i];
+			int bitShift = magicBitshifts[i];
+			long[] singleSquareMagicMoveDatabase = new long[singleSquareOccupancyVariations.length];
 
-			for (final long occVar : singleSquareOccupancyVariations) {
-				final int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
+			for (long occVar : singleSquareOccupancyVariations) {
+				int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
 				singleSquareMagicMoveDatabase[magicIndex] = findControlSetFromOccupancyVariation(BoardSquare.of(i), occVar, movementDirections);
 			}
 			magicMoveDatabase[i] = singleSquareMagicMoveDatabase;
@@ -54,7 +54,7 @@ final class BitboardsInitialisationSection3
 		return magicMoveDatabase;
 	}
 
-	static long findControlSetFromOccupancyVariation(final BoardSquare startSq, final long occVar, final List<Direction> movementDirections)
+	static long findControlSetFromOccupancyVariation(BoardSquare startSq, long occVar, List<Direction> movementDirections)
 	{
 		return bitwiseOr(Iterate.over(movementDirections)
 				.map(direction -> startSq.getAllSquaresInDirections(direction, 8))
@@ -66,10 +66,10 @@ final class BitboardsInitialisationSection3
 	 * Copies all elements of the input List in order up to and including the first element for which
 	 * the predicate fails to be true (or the whole list if the predicate is true for all elements).
 	 */
-	static <E> List<E> takeUntil(final Predicate<? super E> stopCondition, final List<? extends E> xs)
+	static <E> List<E> takeUntil(Predicate<? super E> stopCondition, List<? extends E> xs)
 	{
-		final List<E> taken = new ArrayList<>();
-		for (final E x : xs) {
+		List<E> taken = new ArrayList<>();
+		for (E x : xs) {
 			taken.add(x);
 			if (stopCondition.test(x)) {
 				break;

@@ -25,13 +25,13 @@ public final class LocationTracker implements Iterable<BoardSquare>
 	private final Set<BoardSquare> locs = EnumSet.noneOf(BoardSquare.class);
 	private long allLocs;
 
-	public LocationTracker(final Set<BoardSquare> locations)
+	public LocationTracker(Set<BoardSquare> locations)
 	{
 		locs.addAll(locations);
 		allLocs = iterator().mapToLong(BoardSquare::asBitboard).fold(0L, (a, b) -> a | b);
 	}
 
-	public LocationTracker(final long locations)
+	public LocationTracker(long locations)
 	{
 		this(BitboardIterator.from(locations).toSet());
 	}
@@ -41,7 +41,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 		return allLocs;
 	}
 
-	public boolean contains(final BoardSquare location)
+	public boolean contains(BoardSquare location)
 	{
 		return bitboardsIntersect(allLocs, location.asBitboard());
 	}
@@ -51,14 +51,14 @@ public final class LocationTracker implements Iterable<BoardSquare>
 		return locs.size();
 	}
 
-	void addLoc(final BoardSquare location)
+	void addLoc(BoardSquare location)
 	{
 		assert !bitboardsIntersect(allLocs, location.asBitboard());
 		allLocs ^= location.asBitboard();
 		locs.add(location);
 	}
 
-	void removeLoc(final BoardSquare location)
+	void removeLoc(BoardSquare location)
 	{
 		assert bitboardsIntersect(allLocs, location.asBitboard());
 		allLocs ^= location.asBitboard();
@@ -72,7 +72,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 	@Override
 	public Flow<BoardSquare> iterator()
 	{
-		final Iterator<BoardSquare> src = locs.iterator();
+		Iterator<BoardSquare> src = locs.iterator();
 		return new AbstractFlow<BoardSquare>(Optionals.ofInt(locs.size())) {
 			@Override
 			public boolean hasNext() {
@@ -96,7 +96,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (allLocs ^ (allLocs >>> 32));
 		result = prime * result + ((locs == null) ? 0 : locs.hashCode());
@@ -111,7 +111,7 @@ public final class LocationTracker implements Iterable<BoardSquare>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final LocationTracker other = (LocationTracker) obj;
+		LocationTracker other = (LocationTracker) obj;
 		if (allLocs != other.allLocs)
 			return false;
 		if (locs == null) {

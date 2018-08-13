@@ -36,7 +36,7 @@ public final class FileUtils
 
 	/**
 	 * Returns the absolute resource name for the specified class and relative resource name.
-	 * @param  cls           the class whose package contains the resource.
+	 * @param  pkg           the package which contains the resource.
 	 * @param  relativeName  the relative resource name for which the absolute name is required.
 	 * @return the absolute resource name for {@code relativeName}.
 	 */

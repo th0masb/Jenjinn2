@@ -10,9 +10,15 @@ repositories {
     }
 }
 
+if (JavaVersion.current().isJava8Compatible()) {
+	tasks.withType(Javadoc) {
+    	options.addStringOption('Xdoclint:none', '-quiet')
+    }
+ }
+
 dependencies {
 	if (subprojects.isEmpty()) {
-		compile name: 'JFlowOpen-0.3'
+		compile name: 'JFlow-0.4'
 	}
 	else {
 		def asList = new ArrayList<>(subprojects)
@@ -32,7 +38,6 @@ jar {
         	'Implementation-Title': 'Jenjinn',
             'Implementation-Version': '2.0',
             'Class-Path': configurations.compileClasspath.files.collect {"$it.name"} .join(' '),
-            'Main-Class': 'jenjinn.fx.JenjinnApp'
             )
     }
     
@@ -48,4 +53,19 @@ task wrapper(type: Wrapper) {
 
 test {
     useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }

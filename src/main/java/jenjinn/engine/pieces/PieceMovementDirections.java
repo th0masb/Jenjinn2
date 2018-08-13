@@ -11,7 +11,6 @@ import jenjinn.engine.base.Direction;
  * attack.
  * 
  * @author TB
- * @date 22 Jan 2017
  */
 public class PieceMovementDirections
 {

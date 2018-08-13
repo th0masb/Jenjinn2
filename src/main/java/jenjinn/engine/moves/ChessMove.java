@@ -61,7 +61,7 @@ public interface ChessMove
 	/**
 	 * @param repr
 	 *            A string encoding a chess move, it must be the same as the output
-	 *            of {@link #toString()} or {@link #toCompactString()} of one of the
+	 *            of {@link Object#toString()} or {@link #toCompactString()} of one of the
 	 *            concrete subclasses of this interface.
 	 * @return the decoded move.
 	 */

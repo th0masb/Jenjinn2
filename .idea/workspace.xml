@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="1be3579f-1e7b-4cf7-b817-4e6be7121ffd" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/JFlow-0.4-javadoc.jar" beforeDir="false" afterPath="$PROJECT_DIR$/libs/JFlow-0.4-javadoc.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/JFlow-0.4-sources.jar" beforeDir="false" afterPath="$PROJECT_DIR$/libs/JFlow-0.4-sources.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/JFlow-0.4.jar" beforeDir="false" afterPath="$PROJECT_DIR$/libs/JFlow-0.4.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/BoardSquare.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/CastleZone.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/DevelopmentPiece.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/Direction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/FileUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/GameTermination.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/Side.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardIterator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/Bitboards.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardsImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardsInitialisationSection1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardsInitialisationSection2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardsInitialisationSection3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/BoardState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/CastlingStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/DetailedPieceLocations.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/HalfMoveCounter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/HashCache.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/LocationTracker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/MoveReversalData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/StartStateGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/LegalMoves.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/PinnedPiece.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/PinnedPieceCollection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/PinnedPieces.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/SquareControl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/boardstate/calculators/TerminationState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/entity/Jenjinn.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/entity/OpeningDatabaseReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/entity/ReaderRegex.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/DevelopmentEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/EvaluationComponent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/KingSafetyArea.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/KingSafetyEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/KingSafetyTable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/PawnStructureEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/PawnTable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/PieceLocationEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/PieceValues.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/StateEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/StaticExchangeEvaluator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/piecesquaretables/PieceSquareTable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/piecesquaretables/PieceSquareTables.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/eval/piecesquaretables/TableParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/AbstractChessMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/CastleMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/ChessMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/EnpassantMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/MoveCache.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/MoveConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/PromotionMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/PromotionResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/moves/StandardMove.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/movesearch/IntConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/movesearch/QuiescentSearcher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/movesearch/TranspositionTable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/movesearch/TreeNodeType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/movesearch/TreeSearcher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/BadPgnException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/CommonRegex.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/PgnConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/PgnFileConversion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/PgnGameConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pgn/PgnMoveBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pieces/ChessPiece.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pieces/ChessPieces.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pieces/Moveable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/pieces/PieceMovementDirections.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/BasicPieceLocations.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/BoardHasher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/CharGrid.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/CharPair.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/PieceSquarePair.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/StringifyBoard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/TitledVisualGrid.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jenjinn/engine/utils/VisualGridGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Alekhine2Nc3-d5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Alekhine4Pawns" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/AlekhineExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/AlekhineModern" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/AlekhineOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/BenkoGambit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/BlackKnightTango" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Bogo4Bd2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Bogo4Nbd2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/BudapestGambit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-Kann2Knight" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-Kann2c4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-Kann4Nd7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-Kann4Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-KannClassic" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-KannEx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Caro-KannPan-Bot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Catalan3Bb4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Catalan3c5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/CatalanClosed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/CatalanOpen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/CenterGame-Danish" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Colle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/CzechBenoni" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Dutch3Nc3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/DutchClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/DutchLeningrad" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EngSymDoubleFianchetto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1Nf6-2Nc3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1Nf6-2Nf3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1b6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1e6-2Nc3-d5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1e6-2Nf3-d5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/English1e6Main" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishFlohr-Mikenas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSicRev4Knights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSicRevBremen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSicRevClosed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSym3d4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSymFourKnights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSymHedgehog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSymMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/EnglishSymOtherB3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FourKnights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrTarrasch3Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrTarraschOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrWinawerMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrWinawerOtherB4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrWinawerOtherW4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchAdvance" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchBurn" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchMacCutcheon" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchRubinstein" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/FrenchSteinitz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/GiuocoPiano" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/GoringGambit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Grunfeld4Nf3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/GrunfeldExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/GrunfeldFianchetto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/GrunfeldOther" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Hungarian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KID4pawns" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDAverbakh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDFianchetto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDOther56" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDOther7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDPetrosian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/KIDSaemisch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Latvian-Elephant" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/London2e6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/London2g6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Modern" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Modern3Nc3-c6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Modern3Nc3-d6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Modern3Nc3Other" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/ModernBenoni6Nf3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/ModernBenoni6e4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Nimzo4Nf3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Nimzo4f3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoCl4O-O" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoCl4c5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoClOther" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoLeningrad" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoOther4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoRub4O-O" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoRub4c5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoRubOther" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/NimzoSaemisch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/OldIndian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PetroffMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PircAustrian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PircClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PircOtherBlack3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PircOtherWhite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/PircOtherWhite4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Ponziani" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QG-Albin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QG-Chigorin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGA3e4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGAMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGAOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGAOther4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGD5Bf4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGDExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGDOrthoMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGDOrthoOther4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGDOther34" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGDTarrasch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QGSym-Baltic" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QID4Nc3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QID4a3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QID4e3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QID4g3-Ba6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QID4g3Other" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/QIDOther" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Reti2b3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezAntiMarshall" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezArchangelsk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezBerlin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezBreyer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezChigorin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezFlohr-Zaitsev" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezKar-Smy-Khol" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezMarshall" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezModSteinitz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezOpen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezOther5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezOther6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezOther9" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyLopezSchliemann" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/RuyMoeller-SteinDef" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scand2Nf6-3d4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scand2Nf6Other" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scand2Qxd5-3Qa5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scand3Qd6-Qd8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scotch4Bc5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Scotch4Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/ScotchGambit" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/ScotchOther4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiBenoni" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiSlavBotvinnik" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiSlavMeran" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiSlavOther5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiTarr5e3-Nc6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SemiTarraschMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Sic2Nc6-4Qc7-4Qb6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicDragon6Be2-6Bc4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Sicilian2Nc3-d6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Sicilian2Nc6Other5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Sicilian2d6-4Qxd4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianAccelDragon" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianAlapin2Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianAlapin2d5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianClassicalOther6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianClassicalSozin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianClosedMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianDragonOther6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianDragonYugoslav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianGrandPrix" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianKan5Bd3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianKan5Nc3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianKan5c4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianMoscow" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6Bc4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6Be2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6Be3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6Bg5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6a4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6f3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6f4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianNajdorf6g3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianRichter-Rauzer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianScheveningen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianSmith-Morra" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianSveshnikov" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianTaimanov5Nb5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianTaimanovMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SicilianTaimanovOther5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/Slav4a6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SlavExchange" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SlavMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SlavOther34" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/SlavOther5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/ThreeKnights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/TwoKnights" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/entity/openingFileNames" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/bishop-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/bishop-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/king-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/king-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/knight-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/knight-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/pawn-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/pawn-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/queen-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/queen-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/rook-endgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/jenjinn/engine/eval/piecesquaretables/rook-midgame" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/bitboards/BitboardIteratorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/bitboards/BitboardUtilsTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/bitboards/BitboardsInitialisationSection1Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/bitboards/BitboardsInitialisationSection2Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/bitboards/BitboardsInitialisationSection3Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/DetailedPieceLocationsTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/HashCacheTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/legalmoves/LegalMovesGenerationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/legalmoves/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/pinnedpieces/PinnedPiecesTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/pinnedpieces/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/squarecontrol/SquareControlTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/squarecontrol/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/terminationstate/TerminationStateTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/boardstate/terminationstate/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/enums/BoardSquareTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/enums/DirectionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/enums/chesspiece/IntegrationTestDataWriter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/enums/chesspiece/MovementIntegrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/enums/chesspiece/TestChessPiece.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/kingsafety/KingSafetyEvaluationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/kingsafety/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/pawnstructure/ExpectedValues.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/pawnstructure/PawnStructureEvalTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/pawnstructure/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/piecesquaretables/PieceSquareTableInversionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/piecesquaretables/TableParseTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/piecesquaretables/TestingPieceSquareTables.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/staticexchangeevaluator/IndividualStateCase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/staticexchangeevaluator/StaticExchangeEvaluatorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/eval/staticexchangeevaluator/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/integrationtests/MoveSearchIntegrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/integrationtests/PgnGameConversionIntegrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/misc/PieceLocationsTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/moves/AbstractBoardStateTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/moves/MoveDecodingTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/moves/MoveTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/moves/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/movesearch/quiescent/QuiescentSearchTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/movesearch/quiescent/TestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/AbstractTestFileParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/BoardParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/CordParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/CordParserTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/ShorthandMoveParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/jenjinn/engine/parseutils/ShorthandMoveParserTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case003" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case004" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case005" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case006" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case007" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case008" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case009" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/legalmoves/case010" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/pinnedpieces/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/pinnedpieces/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/pinnedpieces/case002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/squarecontrol/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/boardstate/squarecontrol/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/enums/chesspiece/movementIntegrationTestData" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/kingsafety/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/kingsafety/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/pawnstructure/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/pawnstructure/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/pawnstructure/case002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/piecesquaretables/table-testing" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/staticexchangeevaluator/ExampleCase" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/eval/staticexchangeevaluator/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/BishopsOpening" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Caro-Kann4Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Catalan3Bb4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Dunst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/DutchClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/English1Nf6-2Nc3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/EnglishFlohr-Mikenas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/EnglishSymHedgehog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/FrWinawerOtherB4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/FrenchSteinitz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Hodgson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Hungarian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/KIDAverbakh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/London2g6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/ModernBenoni6e4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/NimzoSaemisch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Nimzowitsch-Larsen" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/PetroffOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/PircAustrian" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/QGAOther3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/QGDTarrasch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/QID4g3-Ba6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Reti2c4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/RuyLopezClassical" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Scand2Qxd5-3Qa5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Scotch4Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/SicilianAlapin2Nf6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/SicilianDragonYugoslav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/SicilianGrandPrix" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/SicilianNajdorf6Be2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/SlavMain" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Trompowsky2e6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/Vienna" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/integrationtests/integrationtestpgns" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case000" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case003" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case004" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case005" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case006" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case007" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case008" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case009" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case010" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case011" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case012" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case013" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case014" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case015" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case016" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case017" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case018" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case019" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case020" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case021" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case022" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case023" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case024" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case025" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case026" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case027" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case028" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case029" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case030" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case031" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case032" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case033" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case034" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case035" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case036" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case037" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case038" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/moves/case039" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/movesearch/quiescent/case001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/movesearch/quiescent/case002" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/movesearch/quiescent/case003" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/movesearch/quiescent/case004" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/movesearch/quiescent/case005" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/jenjinn/engine/terminationstate/ExampleCase" beforeDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.gradle/" />
+    <ignored path="$PROJECT_DIR$/build/" />
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/pgn/PgnMoveBuilder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/bitboards/BitboardsImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1365">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/bitboards/Bitboards.java">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/jenjinn/engine/base/BoardSquare.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jenjinn/base/GameTermination.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="32" />
+    <option name="width" value="1910" />
+    <option name="height" value="1048" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jenjinn" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jenjinn" type="462c0819:PsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Jenjinn2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Jenjinn2" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="jenjinn" type="462c0819:PsiDirectoryNode" />
+              <item name="bitboards" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1be3579f-1e7b-4cf7-b817-4e6be7121ffd" name="Default Changelist" comment="" />
+      <created>1551987158960</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1551987158960</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="32" width="1920" height="1048" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26605996" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="7" weight="0.12151617" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.2831661" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Build" order="11" weight="0.32998884" />
+      <window_info anchor="bottom" id="Messages" order="12" visible="true" weight="0.32998884" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="3" />
+      <window_info anchor="right" id="Gradle" order="4" />
+      <window_info anchor="right" id="Cargo" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="sbt" order="7" />
+    </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/CastleZone.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/DevelopmentPiece.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/FileUtils.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/Direction.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/Side.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/GameTermination.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/BitboardIterator.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/bitboards/Bitboards.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/engine/base/BoardSquare.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/utils/BasicPieceLocations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-270">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/utils/VisualGridGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="39" column="78" selection-start-line="39" selection-start-column="78" selection-end-line="39" selection-end-column="78" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jenjinn2.iws">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jenjinn2.ipr">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/bitboards/BitboardIterator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/Dir.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/jenjinn/bitboards/BitboardIteratorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/GameTermination.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="34" column="53" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/DevelopmentPiece.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="25" column="27" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="27" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/CastleZone.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="738">
+          <caret line="66" column="25" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/Side.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-177" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/base/Square.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-699">
+          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Jenjinn2.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/bitboards/Bitboards.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/pgn/PgnMoveBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jenjinn/bitboards/BitboardsImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1365">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Jenjinn2</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: :JFlow-0.4:</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

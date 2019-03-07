@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 sourceCompatibility = 1.8
 
 repositories {
@@ -17,14 +18,14 @@ if (JavaVersion.current().isJava8Compatible()) {
  }
 
 dependencies {
-	def jflow = subprojects.stream().findFirst()
-	if (jflow.isPresent()) {
-		compile project(jflow.get().name)
-	}
-	else {
-		compile name: 'JFlow-0.4'
-	}
-	
+//	def jflow = subprojects.stream().findFirst()
+//	if (jflow.isPresent()) {
+//		compile project(jflow.get().name)
+//	}
+//	else {
+//	}
+
+    compile name: 'JFlow-0.4'
 	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'

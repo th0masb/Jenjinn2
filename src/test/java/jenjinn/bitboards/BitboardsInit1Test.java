@@ -39,9 +39,9 @@ import static jenjinn.base.Square.H7;
 import static jenjinn.base.Square.H8;
 import static jenjinn.bitboards.Bitboards.antiDiagonalBitboard;
 import static jenjinn.bitboards.Bitboards.diagonalBitboard;
-import static jenjinn.bitboards.Bitboards.fileBitboard;
-import static jenjinn.bitboards.Bitboards.rankBitboard;
-import static jenjinn.bitboards.Bitboards.singleOccupancyBitboard;
+import static jenjinn.bitboards.Bitboards.file;
+import static jenjinn.bitboards.Bitboards.rank;
+import static jenjinn.bitboards.Bitboards.square;
 import static jenjinn.pieces.Piece.BLACK_BISHOP;
 import static jenjinn.pieces.Piece.BLACK_KING;
 import static jenjinn.pieces.Piece.BLACK_KNIGHT;
@@ -81,7 +81,7 @@ class BitboardsInit1Test
 	@Test
 	void testSingleOccupancyBitboard()
 	{
-		IterRange.to(64).forEach(i -> assertEquals(1L << i, singleOccupancyBitboard(i)));
+		IterRange.to(64).forEach(i -> assertEquals(1L << i, square(i)));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ class BitboardsInit1Test
 				.map(square -> square.getAllSquares(Dir.E, 8).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr);
 
-		IterRange.to(8).forEach(i -> assertEquals(expectedRanks[i], rankBitboard(i)));
+		IterRange.to(8).forEach(i -> assertEquals(expectedRanks[i], rank(i)));
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class BitboardsInit1Test
 				.map(square -> square.getAllSquares(Dir.N, 8).insert(square))
 				.mapToLong(BitboardUtils::bitwiseOr);
 
-		IterRange.to(8).forEach(i -> assertEquals(expectedFiles[i], fileBitboard(i)));
+		IterRange.to(8).forEach(i -> assertEquals(expectedFiles[i], file(i)));
 	}
 
 	@Test

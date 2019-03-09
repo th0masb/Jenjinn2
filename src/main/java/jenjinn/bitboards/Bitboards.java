@@ -24,7 +24,7 @@ public final class Bitboards
 	 * bitboards are just numbers growing in size. The bitboard representing h1 is
 	 * the smallest, a8 the largest.
 	 */
-	public static long singleOccupancyBitboard(int squareIndex)
+	public static long square(int squareIndex)
 	{
 		return BitboardsImpl.SINGLE_OCCUPANCY_BITBOARDS[squareIndex];
 	}
@@ -33,7 +33,7 @@ public final class Bitboards
 	 * Access array of 8 bitboards representing the ranks on a chessboard. Ordered rank 1
 	 * up to rank 8.
 	 */
-	public static long rankBitboard(int rankIndex)
+	public static long rank(int rankIndex)
 	{
 		return BitboardsImpl.RANK_BITBOARDS[rankIndex];
 	}
@@ -42,7 +42,7 @@ public final class Bitboards
 	 * Access array of 8 bitboards representing the files on a chessboard. Ordered from h
 	 * to a.
 	 */
-	public static long fileBitboard(int fileIndex)
+	public static long file(int fileIndex)
 	{
 		return BitboardsImpl.FILE_BITBOARDS[fileIndex];
 	}

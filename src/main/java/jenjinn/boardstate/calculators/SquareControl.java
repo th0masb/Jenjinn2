@@ -4,8 +4,8 @@
 package jenjinn.boardstate.calculators;
 
 import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
-import static jenjinn.bitboards.Bitboards.fileBitboard;
-import static jenjinn.bitboards.Bitboards.rankBitboard;
+import static jenjinn.bitboards.Bitboards.file;
+import static jenjinn.bitboards.Bitboards.rank;
 
 import jenjinn.base.Side;
 import jenjinn.boardstate.BoardState;
@@ -45,8 +45,8 @@ public final class SquareControl {
 	{
 		assert piece.isPawn();
 		long pawnLocs = state.getPieceLocations().locationsOf(piece);
-		assert !bitboardsIntersect(pawnLocs, rankBitboard(0)) && !bitboardsIntersect(pawnLocs, rankBitboard(7));
-		long aFileRemover = ~fileBitboard(7), hFileRemover = ~fileBitboard(0);
+		assert !bitboardsIntersect(pawnLocs, rank(0)) && !bitboardsIntersect(pawnLocs, rank(7));
+		long aFileRemover = ~file(7), hFileRemover = ~file(0);
 		if (piece.isWhite()) {
 			return ((pawnLocs & aFileRemover) << 9) | ((pawnLocs & hFileRemover) << 7);
 		}

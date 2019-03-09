@@ -3,6 +3,7 @@
  */
 package jenjinn.base;
 
+import static com.github.maumay.jflow.vec.Vec.vec;
 import static jenjinn.base.Square.A1;
 import static jenjinn.base.Square.A8;
 import static jenjinn.base.Square.C1;
@@ -32,7 +33,7 @@ public enum CastleZone
 	WHITE_KINGSIDE(E1, G1, H1, F1), WHITE_QUEENSIDE(E1, C1, A1, D1),
 	BLACK_KINGSIDE(E8, G8, H8, F8), BLACK_QUEENSIDE(E8, C8, A8, D8);
 
-	public static final Vec<CastleZone> ALL = Vec.of(values());
+	public static final Vec<CastleZone> ALL = vec(values());
 
 	public final Square kingSource, kingTarget, rookSource, rookTarget;
 

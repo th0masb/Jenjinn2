@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.OptionalInt;
 
 import com.github.maumay.jflow.iterators.AbstractEnhancedIterator;
+import com.github.maumay.jflow.iterators.EnhancedIterator;
 
 import jenjinn.base.Square;
 
@@ -58,7 +59,7 @@ public final class BitboardIterator extends AbstractEnhancedIterator<Square>
 		next();
 	}
 
-	public static Flow<Square> from(long bitboard)
+	public static EnhancedIterator<Square> from(long bitboard)
 	{
 		return new BitboardIterator(bitboard);
 	}

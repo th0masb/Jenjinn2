@@ -16,10 +16,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Square;
-import jenjinn.bitboards.BitboardIterator;
-import jenjinn.bitboards.Bitboard;
-import jflow.iterators.factories.Iter;
 
 /**
  * @author ThomasB
@@ -28,18 +27,16 @@ class BitboardUtilsTest
 {
 	@ParameterizedTest
 	@MethodSource
-	void testBitboardIntersection(final Long bitboardA, final Long bitboardB, final Boolean expectedIntersection)
+	void testBitboardIntersection(final Long bitboardA, final Long bitboardB,
+			final Boolean expectedIntersection)
 	{
 		assertEquals(expectedIntersection, Bitboard.intersects(bitboardA, bitboardB));
 	}
 
 	static Stream<Arguments> testBitboardIntersection()
 	{
-		return Stream.of(
-				Arguments.of(0L, 0L, false),
-				Arguments.of(0L, 0b1L, false),
-				Arguments.of(0b1L, 0L, false),
-				Arguments.of(0b1L, 0b10L, false),
+		return Stream.of(Arguments.of(0L, 0L, false), Arguments.of(0L, 0b1L, false),
+				Arguments.of(0b1L, 0L, false), Arguments.of(0b1L, 0b10L, false),
 				Arguments.of(0b100L, 0b101L, true));
 	}
 
@@ -52,48 +49,45 @@ class BitboardUtilsTest
 
 	static Stream<Arguments> testBitwiseOrOfLongArray()
 	{
-		return Stream.of(
-				Arguments.of(new long[] {}, 0L),
-				Arguments.of(new long[] {0b1001, 0b1}, 0b1001L),
-				Arguments.of(new long[] {0b1001, 0b10, 0b1010000}, 0b1011011L)
-				);
+		return Stream.of(Arguments.of(new long[] {}, 0L),
+				Arguments.of(new long[] { 0b1001, 0b1 }, 0b1001L),
+				Arguments.of(new long[] { 0b1001, 0b10, 0b1010000 }, 0b1011011L));
 	}
 
 	@ParameterizedTest
 	@MethodSource
-	void testBitwiseOrOfBoardSquareList(final List<Square> squares, final Long expectedResult)
+	void testBitwiseOrOfBoardSquareList(final List<Square> squares,
+			final Long expectedResult)
 	{
 		assertEquals(expectedResult.longValue(), Bitboard.fold(squares));
 	}
 
 	@ParameterizedTest
 	@MethodSource("testBitwiseOrOfBoardSquareList")
-	void testBitwiseOrOfBoardSquareFlow(final List<Square> squares, final Long expectedResult)
+	void testBitwiseOrOfBoardSquareFlow(final List<Square> squares,
+			final Long expectedResult)
 	{
 		assertEquals(expectedResult.longValue(), Bitboard.fold(Iter.over(squares)));
 	}
 
 	static Stream<Arguments> testBitwiseOrOfBoardSquareList()
 	{
-		return Stream.of(
-				Arguments.of(asList(), 0L),
-				Arguments.of(asList(C1, D2, H1), 0b1000000100001L)
-				);
+		return Stream.of(Arguments.of(asList(), 0L),
+				Arguments.of(asList(C1, D2, H1), 0b1000000100001L));
 	}
 
 	@ParameterizedTest
 	@MethodSource
 	void testGetSetBitIndices(final List<Square> expectedSquares, final Long bitboard)
 	{
-		assertEquals(expectedSquares, BitboardIterator.from(bitboard.longValue()).toList());
+		assertEquals(expectedSquares,
+				BitboardIterator.from(bitboard.longValue()).toList());
 	}
 
 	static Stream<Arguments> testGetSetBitIndices()
 	{
-		return Stream.of(
-				Arguments.of(asList(), 0L),
+		return Stream.of(Arguments.of(asList(), 0L),
 				Arguments.of(asList(Square.C1), 0b100000L),
-				Arguments.of(asList(Square.E1, Square.F2), 0b10000001000L)
-				);
+				Arguments.of(asList(Square.E1, Square.F2), 0b10000001000L));
 	}
 }

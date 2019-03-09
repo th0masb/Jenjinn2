@@ -68,11 +68,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.utils.Tup;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
-import jflow.iterators.factories.IterRange;
-import jflow.iterators.misc.Pair;
-import jflow.seq.Seq;
 
 /**
  * @author t
@@ -83,9 +84,11 @@ class BoardSquareTest
 	void testGetNumberOfSquaresLeftInDirection()
 	{
 		Square a1 = Square.A1;
-		
-		Pair<Seq<Dir>, Seq<Dir>> partitioned = Dir.ALL.partition(dir -> dir.name().matches(".*[SsWw].*"));
-		partitioned._1.forEach(dir -> assertEquals(0, a1.getNumberOfSquaresLeft(dir), dir.name()));
+
+		Tup<Vec<Dir>, Vec<Dir>> partitioned = Dir.ALL
+				.partition(dir -> dir.name().matches(".*[SsWw].*"));
+		partitioned._1.forEach(
+				dir -> assertEquals(0, a1.getNumberOfSquaresLeft(dir), dir.name()));
 		partitioned._2.forEach(dir -> assertTrue(a1.getNumberOfSquaresLeft(dir) > 0));
 
 		Square d4 = Square.D4;
@@ -101,7 +104,8 @@ class BoardSquareTest
 	void testGetNextSquareInDirection()
 	{
 		Square a1 = Square.A1;
-		Pair<Seq<Dir>, Seq<Dir>> partitioned = Dir.ALL.partition(dir -> dir.name().matches(".*[SsWw].*"));
+		Tup<Vec<Dir>, Vec<Dir>> partitioned = Dir.ALL
+				.partition(dir -> dir.name().matches(".*[SsWw].*"));
 		partitioned._1.forEach(dir -> assertFalse(a1.next(dir).isPresent()));
 		partitioned._2.forEach(dir -> assertTrue(a1.next(dir).isPresent()));
 
@@ -116,21 +120,22 @@ class BoardSquareTest
 
 	@ParameterizedTest
 	@MethodSource
-	void testGetAllSquaresInDirection(Square startSquare, Map<Dir, Seq<Square>> expectedSquaresInEachDirection)
+	void testGetAllSquaresInDirection(Square startSquare,
+			Map<Dir, Vec<Square>> expectedSquaresInEachDirection)
 	{
-		Map<Dir, Seq<Square>> expsquares = expectedSquaresInEachDirection;
+		Map<Dir, Vec<Square>> expsquares = expectedSquaresInEachDirection;
 		for (int i = 0; i < 9; i++) {
 			// Test that we get every direction individually correct
 			int j = i;
 			Dir.ALL.forEach(dir -> {
-				Seq<Square> expected = expsquares.get(dir).take(j);
-				Seq<Square> actual = startSquare.getAllSquares(dir, j);
+				Vec<Square> expected = expsquares.get(dir).take(j);
+				Vec<Square> actual = startSquare.getAllSquares(dir, j);
 				assertEquals(expected, actual);
 			});
-					
+
 			// Test that combining two directions works
-			Seq<Seq<Dir>> twoDirs = Seq.of(Seq.of(Dir.N, Dir.E), Seq.of(Dir.S, Dir.SE));
-			for (Seq<Dir> pair : twoDirs) {
+			Vec<Vec<Dir>> twoDirs = Vec.of(Vec.of(Dir.N, Dir.E), Vec.of(Dir.S, Dir.SE));
+			for (Vec<Dir> pair : twoDirs) {
 				Set<Square> expected = expsquares.get(pair.head()).take(j).toSet();
 				expected.addAll(expsquares.get(pair.last()).take(j).toSet());
 				assertEquals(expected, startSquare.getAllSquares(pair, j).toSet());
@@ -145,46 +150,46 @@ class BoardSquareTest
 
 	private static Arguments getTestCaseForEdgeSquare()
 	{
-		Map<Dir, Seq<Square>> expectedResults = new HashMap<>();
-		expectedResults.put(Dir.N, Seq.of(A2, A3, A4, A5, A6, A7, A8));
-		expectedResults.put(Dir.E, Seq.of(B1, C1, D1, E1, F1, G1, H1));
-		expectedResults.put(Dir.S, Seq.of());
-		expectedResults.put(Dir.W, Seq.of());
-		expectedResults.put(Dir.NE, Seq.of(B2, C3, D4, E5, F6, G7, H8));
-		expectedResults.put(Dir.SE, Seq.of());
-		expectedResults.put(Dir.SW, Seq.of());
-		expectedResults.put(Dir.NW, Seq.of());
-		expectedResults.put(Dir.NNE, Seq.of(B3, C5, D7));
-		expectedResults.put(Dir.NEE, Seq.of(C2, E3, G4));
-		expectedResults.put(Dir.SEE, Seq.of());
-		expectedResults.put(Dir.SSE, Seq.of());
-		expectedResults.put(Dir.SSW, Seq.of());
-		expectedResults.put(Dir.SWW, Seq.of());
-		expectedResults.put(Dir.NWW, Seq.of());
-		expectedResults.put(Dir.NNW, Seq.of());
+		Map<Dir, Vec<Square>> expectedResults = new HashMap<>();
+		expectedResults.put(Dir.N, Vec.of(A2, A3, A4, A5, A6, A7, A8));
+		expectedResults.put(Dir.E, Vec.of(B1, C1, D1, E1, F1, G1, H1));
+		expectedResults.put(Dir.S, Vec.of());
+		expectedResults.put(Dir.W, Vec.of());
+		expectedResults.put(Dir.NE, Vec.of(B2, C3, D4, E5, F6, G7, H8));
+		expectedResults.put(Dir.SE, Vec.of());
+		expectedResults.put(Dir.SW, Vec.of());
+		expectedResults.put(Dir.NW, Vec.of());
+		expectedResults.put(Dir.NNE, Vec.of(B3, C5, D7));
+		expectedResults.put(Dir.NEE, Vec.of(C2, E3, G4));
+		expectedResults.put(Dir.SEE, Vec.of());
+		expectedResults.put(Dir.SSE, Vec.of());
+		expectedResults.put(Dir.SSW, Vec.of());
+		expectedResults.put(Dir.SWW, Vec.of());
+		expectedResults.put(Dir.NWW, Vec.of());
+		expectedResults.put(Dir.NNW, Vec.of());
 
 		return Arguments.of(A1, expectedResults);
 	}
 
 	private static Arguments getTestCaseForCentreSquare()
 	{
-		Map<Dir, Seq<Square>> expectedResults = new HashMap<>();
-		expectedResults.put(Dir.N, Seq.of(E6, E7, E8));
-		expectedResults.put(Dir.E, Seq.of(F5, G5, H5));
-		expectedResults.put(Dir.S, Seq.of(E4, E3, E2, E1));
-		expectedResults.put(Dir.W, Seq.of(D5, C5, B5, A5));
-		expectedResults.put(Dir.NE, Seq.of(F6, G7, H8));
-		expectedResults.put(Dir.SE, Seq.of(F4, G3, H2));
-		expectedResults.put(Dir.SW, Seq.of(D4, C3, B2, A1));
-		expectedResults.put(Dir.NW, Seq.of(D6, C7, B8));
-		expectedResults.put(Dir.NNE, Seq.of(F7));
-		expectedResults.put(Dir.NEE, Seq.of(G6));
-		expectedResults.put(Dir.SEE, Seq.of(G4));
-		expectedResults.put(Dir.SSE, Seq.of(F3, G1));
-		expectedResults.put(Dir.SSW, Seq.of(D3, C1));
-		expectedResults.put(Dir.SWW, Seq.of(C4, A3));
-		expectedResults.put(Dir.NWW, Seq.of(C6, A7));
-		expectedResults.put(Dir.NNW, Seq.of(D7));
+		Map<Dir, Vec<Square>> expectedResults = new HashMap<>();
+		expectedResults.put(Dir.N, Vec.of(E6, E7, E8));
+		expectedResults.put(Dir.E, Vec.of(F5, G5, H5));
+		expectedResults.put(Dir.S, Vec.of(E4, E3, E2, E1));
+		expectedResults.put(Dir.W, Vec.of(D5, C5, B5, A5));
+		expectedResults.put(Dir.NE, Vec.of(F6, G7, H8));
+		expectedResults.put(Dir.SE, Vec.of(F4, G3, H2));
+		expectedResults.put(Dir.SW, Vec.of(D4, C3, B2, A1));
+		expectedResults.put(Dir.NW, Vec.of(D6, C7, B8));
+		expectedResults.put(Dir.NNE, Vec.of(F7));
+		expectedResults.put(Dir.NEE, Vec.of(G6));
+		expectedResults.put(Dir.SEE, Vec.of(G4));
+		expectedResults.put(Dir.SSE, Vec.of(F3, G1));
+		expectedResults.put(Dir.SSW, Vec.of(D3, C1));
+		expectedResults.put(Dir.SWW, Vec.of(C4, A3));
+		expectedResults.put(Dir.NWW, Vec.of(C6, A7));
+		expectedResults.put(Dir.NNW, Vec.of(D7));
 
 		return Arguments.of(E5, expectedResults);
 	}
@@ -192,13 +197,13 @@ class BoardSquareTest
 	@Test
 	void testAsBitboard()
 	{
-		IterRange.to(64).forEach(i -> assertEquals(1L << i, Square.values()[i].bitboard));
+		Iter.until(64).forEach(i -> assertEquals(1L << i, Square.values()[i].bitboard));
 	}
 
 	@Test
 	void testFromIndex()
 	{
-		IterRange.to(64).forEach(i -> assertEquals(Square.values()[i], Square.of(i)));
+		Iter.until(64).forEach(i -> assertEquals(Square.values()[i], Square.of(i)));
 	}
 
 	@Test

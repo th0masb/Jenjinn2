@@ -51,7 +51,7 @@ public final class Bitboards
 	 * Array of 15 bitboards representing the diagonals of gradient 1 on a
 	 * chessboard. Ordered from right to left.
 	 */
-	public static long diagonalBitboard(int diagonalIndex)
+	public static long diag(int diagonalIndex)
 	{
 		return BitboardsImpl.DIAGONAL_BITBOARDS[diagonalIndex];
 	}
@@ -60,7 +60,7 @@ public final class Bitboards
 	 * Array of 15 bitboards representing the diagonals of gradient -1 on a
 	 * chessboard. Ordered from left to right.
 	 */
-	public static long antiDiagonalBitboard(int antiDiagonalIndex)
+	public static long adiag(int antiDiagonalIndex)
 	{
 		return BitboardsImpl.ANTI_DIAGONAL_BITBOARDS[antiDiagonalIndex];
 	}

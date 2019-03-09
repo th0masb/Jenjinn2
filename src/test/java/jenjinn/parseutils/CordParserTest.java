@@ -7,10 +7,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Square;
-import jflow.iterators.Flow;
-import jflow.iterators.factories.Iter;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -21,16 +22,15 @@ class CordParserTest
 	@MethodSource
 	void test(String encodedCord, int[] expectedSquareIndices)
 	{
-		Seq<Square> squares = Iter.overInts(expectedSquareIndices).mapToObject(Square::of).toSeq();
+		Vec<Square> squares = Iter.ints(expectedSquareIndices).mapToObject(Square::of)
+				.toVec();
 		assertEquals(squares, CordParser.parse(encodedCord));
 	}
 
-	static Flow<Arguments> test()
+	static EnhancedIterator<Arguments> test()
 	{
-		return Iter.over(
-				Arguments.of("g1->D1", new int[] {1, 2, 3, 4}),
-				Arguments.of("G1->F3", new int[] {1, 18})
-				);
+		return Iter.over(Arguments.of("g1->D1", new int[] { 1, 2, 3, 4 }),
+				Arguments.of("G1->F3", new int[] { 1, 18 }));
 	}
 
 	void testErrors()

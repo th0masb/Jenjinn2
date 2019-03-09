@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Square;
 import jenjinn.utils.BasicPieceLocations;
-import jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB
@@ -32,11 +33,8 @@ public final class IntegrationTestDataWriter
 	static void writeTestData(Path filePath, int dataCount)
 	{
 		try {
-			Files.write(
-					filePath,
-					createRandomPieceLocations(dataCount, SIDE_PIECE_COUNT),
-					Charset.defaultCharset(),
-					StandardOpenOption.CREATE_NEW);
+			Files.write(filePath, createRandomPieceLocations(dataCount, SIDE_PIECE_COUNT),
+					Charset.defaultCharset(), StandardOpenOption.CREATE_NEW);
 
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
@@ -49,25 +47,23 @@ public final class IntegrationTestDataWriter
 
 		Set<BasicPieceLocations> createdLocations = new HashSet<>(locationCount);
 
-		IterRange.to(locationCount).forEach(i ->
-		{
+		Iter.until(locationCount).forEach(i -> {
 			int oldSize = createdLocations.size();
 			while (createdLocations.size() == oldSize) {
-				BasicPieceLocations newLocations = generateRandomBoard(random, sidePieceCount);
+				BasicPieceLocations newLocations = generateRandomBoard(random,
+						sidePieceCount);
 				if (!createdLocations.contains(newLocations)) {
 					createdLocations.add(newLocations);
 				}
 			}
 		});
 
-		return createdLocations
-				.stream()
-				.map(BasicPieceLocations::toString)
-				.sorted()
+		return createdLocations.stream().map(BasicPieceLocations::toString).sorted()
 				.collect(toList());
 	}
 
-	static BasicPieceLocations generateRandomBoard(Random numberGenerator, int sidePieceCount)
+	static BasicPieceLocations generateRandomBoard(Random numberGenerator,
+			int sidePieceCount)
 	{
 		if (sidePieceCount > 32 || sidePieceCount < 0) {
 			throw new IllegalArgumentException();
@@ -75,17 +71,20 @@ public final class IntegrationTestDataWriter
 		List<Square> squares = Square.ALL.toList();
 		List<Square> whiteLocs = new ArrayList<>(), blackLocs = new ArrayList<>();
 
-		IterRange.to(sidePieceCount).forEach(i -> whiteLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
-		IterRange.to(sidePieceCount).forEach(i -> blackLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
+		Iter.until(sidePieceCount).forEach(i -> whiteLocs
+				.add(squares.remove(numberGenerator.nextInt(squares.size()))));
+		Iter.until(sidePieceCount).forEach(i -> blackLocs
+				.add(squares.remove(numberGenerator.nextInt(squares.size()))));
 
 		return new BasicPieceLocations(fold(whiteLocs), fold(blackLocs));
 	}
 
-	//	/**
-	//	 * @param args
-	//	 */
-	//	public static void main(String[] args)
-	//	{
-	//		writeTestData(Paths.get("/home/t/git/Jenjinn2/src/test/resources/movementIntegrationTestData"), 500);
-	//	}
+	// /**
+	// * @param args
+	// */
+	// public static void main(String[] args)
+	// {
+	// writeTestData(Paths.get("/home/t/git/Jenjinn2/src/test/resources/movementIntegrationTestData"),
+	// 500);
+	// }
 }

@@ -8,9 +8,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
-import jflow.iterators.factories.Iter;
 
 /**
  * @author ThomasB

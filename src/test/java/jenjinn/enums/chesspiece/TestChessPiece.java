@@ -20,8 +20,8 @@ import static jenjinn.base.Dir.SSW;
 import static jenjinn.base.Dir.SW;
 import static jenjinn.base.Dir.SWW;
 import static jenjinn.base.Dir.W;
-import static jenjinn.bitboards.Bitboard.intersects;
 import static jenjinn.bitboards.Bitboard.fold;
+import static jenjinn.bitboards.Bitboard.intersects;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,21 +29,21 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.utils.Tup;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
 import jenjinn.pieces.Moveable;
-import jflow.iterators.Flow;
-import jflow.iterators.factories.Iter;
-import jflow.iterators.misc.Pair;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
  */
 public enum TestChessPiece implements Moveable
 {
-	WHITE_PAWN
-	{
+	WHITE_PAWN {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
@@ -51,150 +51,161 @@ public enum TestChessPiece implements Moveable
 			Predicate<Square> isStartSquare = sq -> 7 < sq.index && sq.index < 16;
 			Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
 			Function<Square, Optional<Square>> nextSquare = sq -> sq.next(N);
-			
-			Optional<Square> firstpush = nextSquare.apply(currentLocation).filter(isClearSquare);
-			
-			Optional<Square> secondpush = Optional.of(currentLocation)
-					.filter(isStartSquare)
-					.flatMap(nextSquare)
-					.filter(isClearSquare)
-					.flatMap(nextSquare)
+
+			Optional<Square> firstpush = nextSquare.apply(currentLocation)
 					.filter(isClearSquare);
-			
-			long moves = Iter.over(firstpush, secondpush)
-					.filter(Optional::isPresent)
-					.mapToLong(x -> x.get().bitboard)
-					.fold(0L, (a, b) -> a | b);
-			
+
+			Optional<Square> secondpush = Optional.of(currentLocation)
+					.filter(isStartSquare).flatMap(nextSquare).filter(isClearSquare)
+					.flatMap(nextSquare).filter(isClearSquare);
+
+			long moves = Iter.over(firstpush, secondpush).filter(Optional::isPresent)
+					.mapToLong(x -> x.get().bitboard).fold(0L, (a, b) -> a | b);
+
 			return moves | getAttacks(currentLocation, whitePieces, blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(NE, NW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
-	WHITE_KNIGHT
-	{
+	WHITE_KNIGHT {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~whitePieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
-	WHITE_BISHOP
-	{
+	WHITE_BISHOP {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~whitePieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(NE, SE, SW, NW);
-			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces, currentLocation, directions);
+			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces,
+					currentLocation, directions);
 		}
 	},
 
-	WHITE_ROOK
-	{
+	WHITE_ROOK {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~whitePieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(Dir.N, Dir.S, Dir.W, Dir.E);
-			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces, currentLocation, directions);
+			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces,
+					currentLocation, directions);
 		}
 	},
 
-	WHITE_QUEEN
-	{
+	WHITE_QUEEN {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~whitePieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
-			return WHITE_BISHOP.getSquaresOfControl(currentLocation, whitePieces, blackPieces)
-					| WHITE_ROOK.getSquaresOfControl(currentLocation, whitePieces, blackPieces);
+			return WHITE_BISHOP.getSquaresOfControl(currentLocation, whitePieces,
+					blackPieces)
+					| WHITE_ROOK.getSquaresOfControl(currentLocation, whitePieces,
+							blackPieces);
 		}
 	},
 
-	WHITE_KING
-	{
+	WHITE_KING {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~whitePieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~whitePieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & blackPieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& blackPieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(N, NE, E, SE, S, SW, W, NW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
-	BLACK_PAWN
-	{
+	BLACK_PAWN {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
@@ -202,156 +213,169 @@ public enum TestChessPiece implements Moveable
 			Predicate<Square> isStartSquare = sq -> 47 < sq.index && sq.index < 56;
 			Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
 			Function<Square, Optional<Square>> nextSquare = sq -> sq.next(S);
-			
-			Optional<Square> firstpush = nextSquare.apply(currentLocation).filter(isClearSquare);
-			
-			Optional<Square> secondpush = Optional.of(currentLocation)
-					.filter(isStartSquare)
-					.flatMap(nextSquare)
-					.filter(isClearSquare)
-					.flatMap(nextSquare)
+
+			Optional<Square> firstpush = nextSquare.apply(currentLocation)
 					.filter(isClearSquare);
-			
-			long moves = Iter.over(firstpush, secondpush)
-					.filter(Optional::isPresent)
-					.mapToLong(x -> x.get().bitboard)
-					.fold(0L, (a, b) -> a | b);
-			
+
+			Optional<Square> secondpush = Optional.of(currentLocation)
+					.filter(isStartSquare).flatMap(nextSquare).filter(isClearSquare)
+					.flatMap(nextSquare).filter(isClearSquare);
+
+			long moves = Iter.over(firstpush, secondpush).filter(Optional::isPresent)
+					.mapToLong(x -> x.get().bitboard).fold(0L, (a, b) -> a | b);
+
 			return moves | getAttacks(currentLocation, whitePieces, blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(SE, SW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
-	BLACK_KNIGHT
-	{
+	BLACK_KNIGHT {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
-	BLACK_BISHOP
-	{
+	BLACK_BISHOP {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(NE, SE, SW, NW);
-			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces, currentLocation, directions);
+			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces,
+					currentLocation, directions);
 		}
 	},
 
-	BLACK_ROOK
-	{
+	BLACK_ROOK {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(N, E, S, W);
-			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces, currentLocation, directions);
+			return getSlidingPieceSquaresOfControl(whitePieces | blackPieces,
+					currentLocation, directions);
 		}
 	},
 
-	BLACK_QUEEN
-	{
+	BLACK_QUEEN {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
-			return BLACK_BISHOP.getSquaresOfControl(currentLocation, whitePieces, blackPieces)
-					| BLACK_ROOK.getSquaresOfControl(currentLocation, whitePieces, blackPieces);
+			return BLACK_BISHOP.getSquaresOfControl(currentLocation, whitePieces,
+					blackPieces)
+					| BLACK_ROOK.getSquaresOfControl(currentLocation, whitePieces,
+							blackPieces);
 		}
 	},
 
-	BLACK_KING
-	{
+	BLACK_KING {
 		@Override
 		public long getMoves(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & (~blackPieces);
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& (~blackPieces);
 		}
 
 		@Override
 		public long getAttacks(Square currentLocation, long whitePieces, long blackPieces)
 		{
-			return getSquaresOfControl(currentLocation, whitePieces, blackPieces) & whitePieces;
+			return getSquaresOfControl(currentLocation, whitePieces, blackPieces)
+					& whitePieces;
 		}
 
 		@Override
-		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
+		public long getSquaresOfControl(Square currentLocation, long whitePieces,
+				long blackPieces)
 		{
 			List<Dir> directions = asList(N, NE, E, SE, S, SW, W, NW);
 			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	};
 
-	private static long getSlidingPieceSquaresOfControl(long allPieces, Square startSquare, List<Dir> movementDirections)
+	private static long getSlidingPieceSquaresOfControl(long allPieces,
+			Square startSquare, List<Dir> movementDirections)
 	{
 		Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
-		
+
 		return Iter.over(movementDirections).flatMap(dir -> {
-			Seq<Square> allSquares = startSquare.getAllSquares(dir, 8);
-			Pair<Seq<Square>, Seq<Square>> spanned = allSquares.span(isClearSquare);
-			return spanned._1.flow().append(spanned._2.headOption());
+			Vec<Square> allSquares = startSquare.getAllSquares(dir, 8);
+			Tup<Vec<Square>, Vec<Square>> spanned = allSquares.span(isClearSquare);
+			return spanned._1.iter().append(Iter.option(spanned._2.headOption()));
 		}).map(sq -> sq.bitboard).fold((a, b) -> a | b);
 	}
 
@@ -360,7 +384,7 @@ public enum TestChessPiece implements Moveable
 		return Arrays.asList(values());
 	}
 
-	public static Flow<TestChessPiece> iterateAll()
+	public static EnhancedIterator<TestChessPiece> iterateAll()
 	{
 		return Iter.over(valuesAsList());
 	}

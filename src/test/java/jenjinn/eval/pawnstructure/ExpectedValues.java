@@ -3,8 +3,8 @@
  */
 package jenjinn.eval.pawnstructure;
 
-import jflow.iterators.misc.IntPair;
-import jflow.seq.Seq;
+import com.github.maumay.jflow.utils.IntTup;
+import com.github.maumay.jflow.vec.Vec;
 
 /**
  * @author ThomasB
@@ -16,18 +16,14 @@ public final class ExpectedValues
 	private final int passedPawnCountDifference;
 	private final int chainLinkCountDifference;
 	private final int backwardCountDifference;
-	private final IntPair isolatedPawnCountDifferences;
-	private final Seq<Integer> whitePhalanxSizes;
-	private final Seq<Integer> blackPhalanxSizes;
+	private final IntTup isolatedPawnCountDifferences;
+	private final Vec<Integer> whitePhalanxSizes;
+	private final Vec<Integer> blackPhalanxSizes;
 
-	public ExpectedValues(
-			int doubledPawnCountDifference,
-			int passedPawnCountDifference,
-			int chainLinkCountDifference,
-			int backwardCountDifference,
-			IntPair isolatedPawnCountDifferences,
-			Seq<Integer> whitePhalanxSizes,
-			Seq<Integer> blackPhalanxSizes)
+	public ExpectedValues(int doubledPawnCountDifference, int passedPawnCountDifference,
+			int chainLinkCountDifference, int backwardCountDifference,
+			IntTup isolatedPawnCountDifferences, Vec<Integer> whitePhalanxSizes,
+			Vec<Integer> blackPhalanxSizes)
 	{
 		this.doubledPawnCountDifference = doubledPawnCountDifference;
 		this.passedPawnCountDifference = passedPawnCountDifference;
@@ -58,17 +54,17 @@ public final class ExpectedValues
 		return backwardCountDifference;
 	}
 
-	public IntPair getIsolatedPawnCountDifferences()
+	public IntTup getIsolatedPawnCountDifferences()
 	{
 		return isolatedPawnCountDifferences;
 	}
 
-	public Seq<Integer> getWhitePhalanxSizes()
+	public Vec<Integer> getWhitePhalanxSizes()
 	{
 		return whitePhalanxSizes;
 	}
 
-	public Seq<Integer> getBlackPhalanxSizes()
+	public Vec<Integer> getBlackPhalanxSizes()
 	{
 		return blackPhalanxSizes;
 	}

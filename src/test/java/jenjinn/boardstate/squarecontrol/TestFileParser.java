@@ -9,6 +9,10 @@ import java.util.Set;
 
 import org.junit.jupiter.params.provider.Arguments;
 
+import com.github.maumay.jflow.utils.Strings;
+import com.github.maumay.jflow.utils.Tup;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Square;
 import jenjinn.bitboards.Bitboard;
 import jenjinn.parseutils.AbstractTestFileParser;
@@ -17,10 +21,6 @@ import jenjinn.parseutils.CordParser;
 import jenjinn.pgn.CommonRegex;
 import jenjinn.pieces.ChessPieces;
 import jenjinn.pieces.Piece;
-import jflow.iterators.misc.Pair;
-import jflow.iterators.misc.Strings;
-import jflow.seq.Seq;
-
 
 /**
  * @author ThomasB
@@ -30,19 +30,19 @@ final class TestFileParser extends AbstractTestFileParser
 	@Override
 	public Arguments parse(String fileName)
 	{
-		Seq<String> lines = loadFile(fileName);
-		return Arguments.of(BoardParser.parse(lines.take(9)), parseSquaresOfControl(lines.drop(9)));
+		Vec<String> lines = loadFile(fileName);
+		return Arguments.of(BoardParser.parse(lines.take(9)),
+				parseSquaresOfControl(lines.skip(9)));
 	}
 
-	private Map<Piece, Long> parseSquaresOfControl(Seq<String> squaresOfControl)
+	private Map<Piece, Long> parseSquaresOfControl(Vec<String> squaresOfControl)
 	{
 		if (squaresOfControl.size() != 12) {
-			throw new IllegalArgumentException(
-					"Only passed squares of control for " + squaresOfControl.size() + " pieces");
+			throw new IllegalArgumentException("Only passed squares of control for "
+					+ squaresOfControl.size() + " pieces");
 		}
-		return ChessPieces.ALL.flow()
-				.zipWith(squaresOfControl.iterator())
-				.toMap(Pair::_1, p -> parseSinglePieceSquaresOfControl(p._2));
+		return ChessPieces.ALL.iter().zipWith(squaresOfControl.iterator()).toMap(Tup::_1,
+				p -> parseSinglePieceSquaresOfControl(p._2));
 	}
 
 	private Long parseSinglePieceSquaresOfControl(String encoded)
@@ -52,21 +52,15 @@ final class TestFileParser extends AbstractTestFileParser
 
 		if (ec.matches("none ")) {
 			return 0L;
-		}
-		else if (ec.matches("((" + sqrx +"|" + cordrx + ") +)+")) {
-			Set<Square> squares = Strings.allMatches(ec, sqrx)
-			.map(String::toUpperCase)
-			.map(Square::valueOf)
-			.toCollection(HashSet::new);
+		} else if (ec.matches("((" + sqrx + "|" + cordrx + ") +)+")) {
+			Set<Square> squares = Strings.allMatches(ec, sqrx).map(String::toUpperCase)
+					.map(Square::valueOf).toCollection(HashSet::new);
 
-			Strings.allMatches(ec, cordrx)
-			.map(CordParser::parse)
-			.flatMap(Seq::flow)
-			.forEach(squares::add);
+			Strings.allMatches(ec, cordrx).map(CordParser::parse).flatMap(Vec::iter)
+					.forEach(squares::add);
 
 			return Bitboard.fold(squares);
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException(encoded);
 		}
 	}

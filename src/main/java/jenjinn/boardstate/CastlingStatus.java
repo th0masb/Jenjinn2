@@ -6,9 +6,10 @@ package jenjinn.boardstate;
 import java.util.EnumSet;
 import java.util.Set;
 
+import com.github.maumay.jflow.utils.Strings;
+
 import jenjinn.base.CastleZone;
 import jenjinn.base.Side;
-import jflow.iterators.misc.Strings;
 
 /**
  * @author ThomasB
@@ -18,7 +19,8 @@ public final class CastlingStatus
 	private final Set<CastleZone> castlingRights;
 	private CastleZone whiteCastlingStatus, blackCastlingStatus;
 
-	public CastlingStatus(Set<CastleZone> castlingRights, CastleZone whiteCastlingStatus, CastleZone blackCastlingStatus)
+	public CastlingStatus(Set<CastleZone> castlingRights, CastleZone whiteCastlingStatus,
+			CastleZone blackCastlingStatus)
 	{
 		this.castlingRights = castlingRights;
 		this.whiteCastlingStatus = whiteCastlingStatus;
@@ -42,7 +44,7 @@ public final class CastlingStatus
 
 	public CastleZone getStatusFor(Side side)
 	{
-		return side.isWhite()? whiteCastlingStatus : blackCastlingStatus;
+		return side.isWhite() ? whiteCastlingStatus : blackCastlingStatus;
 	}
 
 	public void setCastlingStatus(CastleZone newStatus)
@@ -50,8 +52,7 @@ public final class CastlingStatus
 		if (newStatus.isWhiteZone()) {
 			assert whiteCastlingStatus == null;
 			whiteCastlingStatus = newStatus;
-		}
-		else {
+		} else {
 			assert blackCastlingStatus == null;
 			blackCastlingStatus = newStatus;
 		}
@@ -62,8 +63,7 @@ public final class CastlingStatus
 		if (toRemove.isWhiteZone()) {
 			assert toRemove == whiteCastlingStatus;
 			whiteCastlingStatus = null;
-		}
-		else {
+		} else {
 			assert toRemove == blackCastlingStatus;
 			blackCastlingStatus = null;
 		}
@@ -73,18 +73,15 @@ public final class CastlingStatus
 	public String toString()
 	{
 		return new StringBuilder("CastlingStatus[Castling rights: ")
-				.append(Strings.$(castlingRights))
-				.append(", White status: ")
-				.append(Strings.$(whiteCastlingStatus))
-				.append(", Black status: ")
-				.append(Strings.$(blackCastlingStatus))
-				.append("]")
-				.toString();
+				.append(Strings.str(castlingRights)).append(", White status: ")
+				.append(Strings.str(whiteCastlingStatus)).append(", Black status: ")
+				.append(Strings.str(blackCastlingStatus)).append("]").toString();
 	}
-	
+
 	public CastlingStatus copy()
 	{
-		return new CastlingStatus(EnumSet.copyOf(castlingRights), whiteCastlingStatus, blackCastlingStatus);
+		return new CastlingStatus(EnumSet.copyOf(castlingRights), whiteCastlingStatus,
+				blackCastlingStatus);
 	}
 
 	/*
@@ -95,9 +92,12 @@ public final class CastlingStatus
 	{
 		int prime = 31;
 		int result = 1;
-		result = prime * result + ((blackCastlingStatus == null) ? 0 : blackCastlingStatus.hashCode());
-		result = prime * result + ((castlingRights == null) ? 0 : castlingRights.hashCode());
-		result = prime * result + ((whiteCastlingStatus == null) ? 0 : whiteCastlingStatus.hashCode());
+		result = prime * result
+				+ ((blackCastlingStatus == null) ? 0 : blackCastlingStatus.hashCode());
+		result = prime * result
+				+ ((castlingRights == null) ? 0 : castlingRights.hashCode());
+		result = prime * result
+				+ ((whiteCastlingStatus == null) ? 0 : whiteCastlingStatus.hashCode());
 		return result;
 	}
 

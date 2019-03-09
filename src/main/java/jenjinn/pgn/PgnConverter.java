@@ -20,11 +20,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.github.maumay.jflow.utils.Strings;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.StartStateGenerator;
 import jenjinn.moves.ChessMove;
-import jflow.iterators.misc.Strings;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -50,7 +51,8 @@ public final class PgnConverter implements Closeable
 		}
 		fileName = sourceFilePath.getFileName().toString();
 		src = Files.newBufferedReader(sourceFilePath, Charset.forName("ISO-8859-1"));
-		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+		out = Files.newBufferedWriter(outFilePath, StandardOpenOption.CREATE_NEW,
+				StandardOpenOption.WRITE);
 	}
 
 	public void writeLines() throws IOException
@@ -74,26 +76,27 @@ public final class PgnConverter implements Closeable
 		flushBuffer(writeBuffer);
 
 		String outputLog = new StringBuilder("We searched ").append(totalGamesSearched)
-				.append(" games and extracted ").append(usedPositions.size()).append(" moves. There were ")
-				.append(totalErrorsInGames).append(" pgns which caused an error in the file ").append(fileName)
+				.append(" games and extracted ").append(usedPositions.size())
+				.append(" moves. There were ").append(totalErrorsInGames)
+				.append(" pgns which caused an error in the file ").append(fileName)
 				.toString();
 
 		System.out.println(outputLog);
 	}
 
-	private void writeUniquePositions(String gameString, List<PositionalInstruction> writeBuffer,
-			int gameDepthCap) throws IOException
+	private void writeUniquePositions(String gameString,
+			List<PositionalInstruction> writeBuffer, int gameDepthCap) throws IOException
 	{
 		try {
-			Seq<ChessMove> moves = PgnGameConverter.parse(gameString);
+			Vec<ChessMove> moves = PgnGameConverter.parse(gameString);
 			BoardState state = StartStateGenerator.createStartBoard();
 			for (int i = 0; i < min(gameDepthCap, moves.size()); i++) {
 				ChessMove ithMove = moves.get(i);
 				long stateHash = state.calculateHash();
 				if (!usedPositions.contains(stateHash)) {
 					usedPositions.add(stateHash);
-					PositionalInstruction newInstruction = new PositionalInstruction(stateHash,
-							ithMove.toCompactString());
+					PositionalInstruction newInstruction = new PositionalInstruction(
+							stateHash, ithMove.toCompactString());
 					addPositionToBuffer(newInstruction, writeBuffer);
 				}
 				ithMove.makeMove(state);
@@ -105,8 +108,8 @@ public final class PgnConverter implements Closeable
 		}
 	}
 
-	private void addPositionToBuffer(PositionalInstruction instructionToAdd, List<PositionalInstruction> buffer)
-			throws IOException
+	private void addPositionToBuffer(PositionalInstruction instructionToAdd,
+			List<PositionalInstruction> buffer) throws IOException
 	{
 		if (buffer.size() == POSITIONS_PER_LINE) {
 			flushBuffer(buffer);
@@ -132,7 +135,8 @@ public final class PgnConverter implements Closeable
 		if (nextLine == null) {
 			return Optional.empty();
 		} else {
-			String gameStart = PgnGameConverter.GAME_START, gameEnd = PgnGameConverter.GAME_TERMINATION;
+			String gameStart = PgnGameConverter.GAME_START,
+					gameEnd = PgnGameConverter.GAME_TERMINATION;
 			while (!Strings.matchesAnywhere(nextLine, gameStart)) {
 				nextLine = src.readLine();
 				if (nextLine == null) {

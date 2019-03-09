@@ -26,7 +26,7 @@ public final class EnpassantMove extends AbstractChessMove
 	public EnpassantMove(Square start, Square target)
 	{
 		super(start, target);
-		enPassantSquare = target.getNextSquare(start.ordinal() - target.ordinal() > 0? Dir.N : Dir.S).get();
+		enPassantSquare = target.next(start.ordinal() - target.ordinal() > 0? Dir.N : Dir.S).get();
 	}
 
 	@Override

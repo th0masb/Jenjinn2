@@ -20,8 +20,8 @@ import static jenjinn.base.Dir.SSW;
 import static jenjinn.base.Dir.SW;
 import static jenjinn.base.Dir.SWW;
 import static jenjinn.base.Dir.W;
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
-import static jenjinn.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.bitboards.Bitboard.intersects;
+import static jenjinn.bitboards.Bitboard.fold;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +49,8 @@ public enum TestChessPiece implements Moveable
 		{
 			long allPieces = whitePieces | blackPieces;
 			Predicate<Square> isStartSquare = sq -> 7 < sq.index && sq.index < 16;
-			Predicate<Square> isClearSquare = sq -> !bitboardsIntersect(allPieces, sq.bitboard);
-			Function<Square, Optional<Square>> nextSquare = sq -> sq.getNextSquare(N);
+			Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
+			Function<Square, Optional<Square>> nextSquare = sq -> sq.next(N);
 			
 			Optional<Square> firstpush = nextSquare.apply(currentLocation).filter(isClearSquare);
 			
@@ -79,7 +79,7 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(NE, NW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
@@ -101,7 +101,7 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
@@ -189,7 +189,7 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(N, NE, E, SE, S, SW, W, NW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
@@ -200,8 +200,8 @@ public enum TestChessPiece implements Moveable
 		{
 			long allPieces = whitePieces | blackPieces;
 			Predicate<Square> isStartSquare = sq -> 47 < sq.index && sq.index < 56;
-			Predicate<Square> isClearSquare = sq -> !bitboardsIntersect(allPieces, sq.bitboard);
-			Function<Square, Optional<Square>> nextSquare = sq -> sq.getNextSquare(S);
+			Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
+			Function<Square, Optional<Square>> nextSquare = sq -> sq.next(S);
 			
 			Optional<Square> firstpush = nextSquare.apply(currentLocation).filter(isClearSquare);
 			
@@ -230,7 +230,7 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(SE, SW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
@@ -252,7 +252,7 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(NNE, NEE, SEE, SSE, SSW, SWW, NWW, NNW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	},
 
@@ -340,13 +340,13 @@ public enum TestChessPiece implements Moveable
 		public long getSquaresOfControl(Square currentLocation, long whitePieces, long blackPieces)
 		{
 			List<Dir> directions = asList(N, NE, E, SE, S, SW, W, NW);
-			return bitwiseOr(currentLocation.getAllSquares(directions, 1));
+			return fold(currentLocation.getAllSquares(directions, 1));
 		}
 	};
 
 	private static long getSlidingPieceSquaresOfControl(long allPieces, Square startSquare, List<Dir> movementDirections)
 	{
-		Predicate<Square> isClearSquare = sq -> !bitboardsIntersect(allPieces, sq.bitboard);
+		Predicate<Square> isClearSquare = sq -> !intersects(allPieces, sq.bitboard);
 		
 		return Iter.over(movementDirections).flatMap(dir -> {
 			Seq<Square> allSquares = startSquare.getAllSquares(dir, 8);

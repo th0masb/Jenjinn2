@@ -5,11 +5,11 @@ package jenjinn.eval.piecesquaretables;
 
 import java.util.Arrays;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Square;
 import jenjinn.pieces.ChessPieces;
 import jenjinn.pieces.Piece;
-import jflow.iterators.factories.IterRange;
-import jflow.iterators.factories.Iter;
 
 /**
  * @author ThomasB
@@ -25,7 +25,8 @@ public final class PieceSquareTable
 			throw new IllegalArgumentException();
 		}
 		this.associatedPiece = associatedPiece;
-		this.locationValues = Iter.overInts(locationValues).map(n -> n + pieceValue).toArray();
+		this.locationValues = Iter.ints(locationValues).map(n -> n + pieceValue)
+				.toArray();
 	}
 
 	public Piece getAssociatedPiece()
@@ -41,23 +42,25 @@ public final class PieceSquareTable
 	public PieceSquareTable invertValues()
 	{
 		return new PieceSquareTable(
-				ChessPieces.fromIndex((associatedPiece.ordinal() + 6) % 12),
-				0,
-				IterRange.to(64).map(i -> -locationValues[63  - 8*(i/8) - (7 - (i % 8))]).toArray()
-				);
+				ChessPieces.fromIndex((associatedPiece.ordinal() + 6) % 12), 0,
+				Iter.until(64).map(i -> -locationValues[63 - 8 * (i / 8) - (7 - (i % 8))])
+						.toArray());
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		int prime = 31;
 		int result = 1;
-		result = prime * result + ((associatedPiece == null) ? 0 : associatedPiece.hashCode());
+		result = prime * result
+				+ ((associatedPiece == null) ? 0 : associatedPiece.hashCode());
 		result = prime * result + Arrays.hashCode(locationValues);
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)

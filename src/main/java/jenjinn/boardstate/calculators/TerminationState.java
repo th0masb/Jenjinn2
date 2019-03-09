@@ -5,7 +5,7 @@ package jenjinn.boardstate.calculators;
 
 import jenjinn.base.GameTermination;
 import jenjinn.base.Side;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 import jenjinn.boardstate.BoardState;
 import jenjinn.pieces.ChessPieces;
 
@@ -43,7 +43,7 @@ public final class TerminationState
 			Side active = state.getActiveSide(), passive = active.otherSide();
 			long passiveControl = SquareControl.calculate(state, passive);
 			long kingLoc = state.getPieceLocations().locationsOf(ChessPieces.of(active).last());
-			boolean inCheck = BitboardUtils.bitboardsIntersect(passiveControl, kingLoc);
+			boolean inCheck = Bitboard.intersects(passiveControl, kingLoc);
 			return inCheck ? GameTermination.getWinFor(passive) : GameTermination.DRAW;
 		}
 	}

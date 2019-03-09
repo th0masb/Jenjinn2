@@ -1,17 +1,15 @@
 package jenjinn.bitboards;
 
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
-import static jenjinn.bitboards.BitboardUtils.bitwiseOr;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
 import jenjinn.pieces.PieceMovementDirs;
-import jflow.iterators.factories.Iter;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -21,24 +19,20 @@ final class BitboardsInit3
 {
 	static long[][] generateRookMagicMoveDatabase()
 	{
-		return generateMagicMoveDatabase(
-				BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS,
-				BitboardsImpl.ROOK_MAGIC_NUMBERS,
-				BitboardsImpl.ROOK_MAGIC_BITSHIFTS,
+		return generateMagicMoveDatabase(BitboardsImpl.ROOK_OCCUPANCY_VARIATIONS,
+				BitboardsImpl.ROOK_MAGIC_NUMBERS, BitboardsImpl.ROOK_MAGIC_BITSHIFTS,
 				PieceMovementDirs.ROOK);
 	}
 
 	static long[][] generateBishopMagicMoveDatabase()
 	{
-		return generateMagicMoveDatabase(
-				BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS,
-				BitboardsImpl.BISHOP_MAGIC_NUMBERS,
-				BitboardsImpl.BISHOP_MAGIC_BITSHIFTS,
+		return generateMagicMoveDatabase(BitboardsImpl.BISHOP_OCCUPANCY_VARIATIONS,
+				BitboardsImpl.BISHOP_MAGIC_NUMBERS, BitboardsImpl.BISHOP_MAGIC_BITSHIFTS,
 				PieceMovementDirs.BISHOP);
 	}
 
-	static long[][] generateMagicMoveDatabase(long[][] occupancyVariations, long[] magicNumbers, 
-			int[] magicBitshifts, Seq<Dir> moveDirs)
+	static long[][] generateMagicMoveDatabase(long[][] occupancyVariations,
+			long[] magicNumbers, int[] magicBitshifts, Vec<Dir> moveDirs)
 	{
 		long[][] magicMoveDatabase = new long[64][];
 		for (byte i = 0; i < 64; i++) {
@@ -49,24 +43,28 @@ final class BitboardsInit3
 
 			for (long occVar : singleSquareOccupancyVariations) {
 				int magicIndex = (int) ((occVar * magicNumber) >>> bitShift);
-				singleSquareDatabase[magicIndex] = findControlSetFromOccupancyVariation(Square.of(i), occVar, moveDirs);
+				singleSquareDatabase[magicIndex] = findControlSetFromOccupancyVariation(
+						Square.of(i), occVar, moveDirs);
 			}
 			magicMoveDatabase[i] = singleSquareDatabase;
 		}
 		return magicMoveDatabase;
 	}
 
-	static long findControlSetFromOccupancyVariation(Square startSq, long occVar, Seq<Dir> movementDirections)
+	static long findControlSetFromOccupancyVariation(Square startSq, long occVar,
+			Vec<Dir> movementDirections)
 	{
-		return bitwiseOr(movementDirections.flow()
+		return movementDirections.iter()
 				.map(direction -> startSq.getAllSquares(direction, 8).toList())
-				.map(squares -> takeUntil(sq -> bitboardsIntersect(occVar, sq.bitboard), squares))
-				.flatMap(Iter::over));
+				.map(squares -> takeUntil(sq -> Bitboard.intersects(occVar, sq.bitboard),
+						squares))
+				.flatMap(Iter::over).collect(Bitboard::fold);
 	}
 
 	/**
-	 * Copies all elements of the input List in order up to and including the first element for which
-	 * the predicate fails to be true (or the whole list if the predicate is true for all elements).
+	 * Copies all elements of the input List in order up to and including the first
+	 * element for which the predicate fails to be true (or the whole list if the
+	 * predicate is true for all elements).
 	 */
 	static <E> List<E> takeUntil(Predicate<? super E> stopCondition, List<? extends E> xs)
 	{

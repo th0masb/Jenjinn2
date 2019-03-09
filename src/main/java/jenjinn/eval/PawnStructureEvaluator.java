@@ -4,7 +4,7 @@
 package jenjinn.eval;
 
 import static java.lang.Long.bitCount;
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.bitboards.Bitboard.intersects;
 import static jenjinn.bitboards.Bitboards.file;
 import static jenjinn.bitboards.Bitboards.rank;
 
@@ -111,7 +111,7 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 				int phalanxCount = 0;
 				for (int j = 0; j < 8; j++) {
 					long file = file(j);
-					if (bitboardsIntersect(file, pawnsOnIthRank)) {
+					if (intersects(file, pawnsOnIthRank)) {
 						phalanxCount++;
 					}
 					else {
@@ -135,13 +135,13 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 			int wFoundIndex = -1, bFoundIndex = -1;
 			for (int j = 0; j < 8; j++) {
 				long rank = rank(j);
-				if (bitboardsIntersect(rank, wfile)) {
+				if (intersects(rank, wfile)) {
 					if (wFoundIndex > -1 && j - wFoundIndex < 3) {
 						score -= DOUBLED_PENALTY;
 					}
 					wFoundIndex = j;
 				}
-				else if (bitboardsIntersect(rank, bfile)) {
+				else if (intersects(rank, bfile)) {
 					if (bFoundIndex > -1 && j - bFoundIndex < 3) {
 						score += DOUBLED_PENALTY;
 					}
@@ -178,10 +178,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 			if (bitCount(wfile) > 0) {
 				for (int j = 1; j < 7; j++) {
 					long rank = rank(j);
-					if (bitboardsIntersect(rank, wadj)) {
+					if (intersects(rank, wadj)) {
 						break;
 					}
-					else if (bitboardsIntersect(rank, wfile)) {
+					else if (intersects(rank, wfile)) {
 						score -= BACKWARD_PENALTY;
 					}
 				}
@@ -190,10 +190,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 			if (bitCount(bfile) > 0) {
 				for (int j = 6; j > 0; j--) {
 					long rank = rank(j);
-					if (bitboardsIntersect(rank, badj)) {
+					if (intersects(rank, badj)) {
 						break;
 					}
-					else if (bitboardsIntersect(rank, bfile)) {
+					else if (intersects(rank, bfile)) {
 						score += BACKWARD_PENALTY;
 					}
 				}
@@ -220,10 +220,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 				else {
 					for (int rankIndex = 7; rankIndex > 1; rankIndex--) {
 						long workingRank = rank(rankIndex);
-						if (bitboardsIntersect(workingRank, wfile)) {
+						if (intersects(workingRank, wfile)) {
 							score += PASSED_BONUS;
 						}
-						if (bitboardsIntersect(workingRank, badj)) {
+						if (intersects(workingRank, badj)) {
 							break;
 						}
 					}
@@ -238,10 +238,10 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 				else {
 					for (int rankIndex = 1; rankIndex < 7; rankIndex++) {
 						long workingRank = rank(rankIndex);
-						if (bitboardsIntersect(workingRank, bfile)) {
+						if (intersects(workingRank, bfile)) {
 							score -= PASSED_BONUS;
 						}
-						if (bitboardsIntersect(workingRank, wadj)) {
+						if (intersects(workingRank, wadj)) {
 							break;
 						}
 					}
@@ -262,16 +262,16 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 
 		for (int i = 0; i < 7; i++) {
 			long fileFromRight = file(i), fileFromLeft = file(7 - i);
-			if (!bitboardsIntersect(fileFromRight, wpawns)) {
+			if (!intersects(fileFromRight, wpawns)) {
 				wIsolatedRight |= 1 << (i + 1);
 			}
-			if (!bitboardsIntersect(fileFromLeft, wpawns)) {
+			if (!intersects(fileFromLeft, wpawns)) {
 				wIsolatedLeft |= 1 << (6 - i);
 			}
-			if (!bitboardsIntersect(fileFromRight, bpawns)) {
+			if (!intersects(fileFromRight, bpawns)) {
 				bIsolatedRight |= 1 << (i + 1);
 			}
-			if (!bitboardsIntersect(fileFromLeft, bpawns)) {
+			if (!intersects(fileFromLeft, bpawns)) {
 				bIsolatedLeft |= 1 << (6 - i);
 			}
 		}
@@ -282,12 +282,12 @@ public final class PawnStructureEvaluator implements EvaluationComponent
 		int score = 0;
 		for (int i = 0; i < 8; i++) {
 			long file = file(i);
-			if (bitboardsIntersect(wIsolated, 1L << i)) {
-				boolean semiOpen = !bitboardsIntersect(file, bpawns);
+			if (intersects(wIsolated, 1L << i)) {
+				boolean semiOpen = !intersects(file, bpawns);
 				score -= bitCount(wpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
-			if (bitboardsIntersect(bIsolated, 1L << i)) {
-				boolean semiOpen = !bitboardsIntersect(file, wpawns);
+			if (intersects(bIsolated, 1L << i)) {
+				boolean semiOpen = !intersects(file, wpawns);
 				score += bitCount(bpawns & file) * (ISOLATED_PENALTY + (semiOpen? SEMIOPEN_FILE_BONUS : 0));
 			}
 		}

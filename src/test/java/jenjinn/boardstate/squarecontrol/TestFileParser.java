@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.params.provider.Arguments;
 
 import jenjinn.base.Square;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 import jenjinn.parseutils.AbstractTestFileParser;
 import jenjinn.parseutils.BoardParser;
 import jenjinn.parseutils.CordParser;
@@ -64,7 +64,7 @@ final class TestFileParser extends AbstractTestFileParser
 			.flatMap(Seq::flow)
 			.forEach(squares::add);
 
-			return BitboardUtils.bitwiseOr(squares);
+			return Bitboard.fold(squares);
 		}
 		else {
 			throw new IllegalArgumentException(encoded);

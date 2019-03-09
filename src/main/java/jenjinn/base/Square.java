@@ -38,11 +38,11 @@ public enum Square
 
 	public int getNumberOfSquaresLeft(Dir direction)
 	{
-		return (int) Repeatedly.apply(sq -> sq.flatMap(x -> x.getNextSquare(direction)),
+		return (int) Repeatedly.apply(sq -> sq.flatMap(x -> x.next(direction)),
 				Optional.of(this)).skip(1).takeWhile(Optional::isPresent).count();
 	}
 
-	public Optional<Square> getNextSquare(Dir direction)
+	public Optional<Square> next(Dir direction)
 	{
 		int newRank = rank + direction.rankIndexChange;
 		int newFile = file + direction.fileIndexChange;
@@ -59,7 +59,7 @@ public enum Square
 		require(maxDist >= 0);
 		return Vec.copy(directions).flatMap(dir -> {
 			return Repeatedly
-					.apply(sq -> sq.flatMap(x -> x.getNextSquare(dir)), Optional.of(this))
+					.apply(sq -> sq.flatMap(x -> x.next(dir)), Optional.of(this))
 					.skip(1).takeWhile(Optional::isPresent).take(maxDist)
 					.map(x -> x.get());
 		});

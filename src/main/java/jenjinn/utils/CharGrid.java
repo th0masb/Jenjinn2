@@ -5,8 +5,9 @@ package jenjinn.utils;
 
 import java.util.Arrays;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Square;
-import jflow.iterators.factories.IterRange;
 
 /**
  * @author ThomasB
@@ -25,7 +26,7 @@ final class CharGrid
 	{
 		final char[] grid = new char[BOARD_CHAR_WIDTH * BOARD_LINE_HEIGHT];
 
-		IterRange.to(BOARD_LINE_HEIGHT).forEach(i -> {
+		Iter.until(BOARD_LINE_HEIGHT).forEach(i -> {
 			final char[] line = (i % 2 == 0) ? getEvenIndexLine() : getOddLineIndex();
 			System.arraycopy(line, 0, grid, i * BOARD_CHAR_WIDTH, BOARD_CHAR_WIDTH);
 		});
@@ -36,14 +37,14 @@ final class CharGrid
 	private static char[] getEvenIndexLine()
 	{
 		final char[] line = new char[BOARD_CHAR_WIDTH];
-		IterRange.to(BOARD_CHAR_WIDTH).forEach(i -> line[i] = (i % 3 == 0) ? '+' : '-');
+		Iter.until(BOARD_CHAR_WIDTH).forEach(i -> line[i] = (i % 3 == 0) ? '+' : '-');
 		return line;
 	}
 
 	private static char[] getOddLineIndex()
 	{
 		final char[] line = new char[BOARD_CHAR_WIDTH];
-		IterRange.to(BOARD_CHAR_WIDTH).forEach(i -> line[i] = (i % 3 == 0) ? '|' : ' ');
+		Iter.until(BOARD_CHAR_WIDTH).forEach(i -> line[i] = (i % 3 == 0) ? '|' : ' ');
 		return line;
 	}
 

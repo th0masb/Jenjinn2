@@ -102,16 +102,16 @@ class BoardSquareTest
 	{
 		Square a1 = Square.A1;
 		Pair<Seq<Dir>, Seq<Dir>> partitioned = Dir.ALL.partition(dir -> dir.name().matches(".*[SsWw].*"));
-		partitioned._1.forEach(dir -> assertFalse(a1.getNextSquare(dir).isPresent()));
-		partitioned._2.forEach(dir -> assertTrue(a1.getNextSquare(dir).isPresent()));
+		partitioned._1.forEach(dir -> assertFalse(a1.next(dir).isPresent()));
+		partitioned._2.forEach(dir -> assertTrue(a1.next(dir).isPresent()));
 
 		Square d4 = Square.D4;
-		assertEquals(Optional.of(Square.D5), d4.getNextSquare(Dir.N));
-		assertEquals(Optional.of(Square.C4), d4.getNextSquare(Dir.W));
-		assertEquals(Optional.of(Square.E3), d4.getNextSquare(Dir.SE));
-		assertEquals(Optional.of(Square.E5), d4.getNextSquare(Dir.NE));
-		assertEquals(Optional.of(Square.F5), d4.getNextSquare(Dir.NEE));
-		assertEquals(Optional.of(Square.C2), d4.getNextSquare(Dir.SSW));
+		assertEquals(Optional.of(Square.D5), d4.next(Dir.N));
+		assertEquals(Optional.of(Square.C4), d4.next(Dir.W));
+		assertEquals(Optional.of(Square.E3), d4.next(Dir.SE));
+		assertEquals(Optional.of(Square.E5), d4.next(Dir.NE));
+		assertEquals(Optional.of(Square.F5), d4.next(Dir.NEE));
+		assertEquals(Optional.of(Square.C2), d4.next(Dir.SSW));
 	}
 
 	@ParameterizedTest

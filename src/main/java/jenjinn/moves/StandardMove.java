@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.CastleZone;
 import jenjinn.base.DevelopmentPiece;
 import jenjinn.base.Dir;
@@ -20,7 +22,6 @@ import jenjinn.base.Square;
 import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.MoveReversalData;
 import jenjinn.pieces.Piece;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -42,15 +43,11 @@ public final class StandardMove extends AbstractChessMove
 	{
 		Optional<Dir> dir = Dir.ofLineBetween(getSource(), getTarget());
 		if (dir.isPresent()) {
-			Seq<Square> squares = getSource().getAllSquares(dir.get(), 10);
-			return squares.flow()
-					.takeWhile(sq -> sq != getTarget())
-					.insert(getSource())
-					.append(getTarget())
-					.mapToLong(sq -> sq.bitboard)
+			Vec<Square> squares = getSource().getAllSquares(dir.get(), 10);
+			return squares.iter().takeWhile(sq -> sq != getTarget()).insert(getSource())
+					.append(getTarget()).mapToLong(sq -> sq.bitboard)
 					.fold(0L, (a, b) -> a ^ b);
-		}
-		else {
+		} else {
 			return Long.MIN_VALUE;
 		}
 	}
@@ -61,14 +58,15 @@ public final class StandardMove extends AbstractChessMove
 
 		Predicate<Object> p = rightsSets::containsKey;
 		if (p.test(getSource()) || p.test(getTarget())) {
-			Set<CastleZone> x = p.test(getSource())? rightsSets.get(getSource()) : EnumSet.noneOf(CastleZone.class);
-			Set<CastleZone> y = p.test(getTarget())? rightsSets.get(getTarget()) : EnumSet.noneOf(CastleZone.class);
+			Set<CastleZone> x = p.test(getSource()) ? rightsSets.get(getSource())
+					: EnumSet.noneOf(CastleZone.class);
+			Set<CastleZone> y = p.test(getTarget()) ? rightsSets.get(getTarget())
+					: EnumSet.noneOf(CastleZone.class);
 			Set<CastleZone> mutableResult = EnumSet.noneOf(CastleZone.class);
 			mutableResult.addAll(x);
 			mutableResult.addAll(y);
 			return unmodifiableSet(mutableResult);
-		}
-		else {
+		} else {
 			return MoveConstants.EMPTY_RIGHTS_SET;
 		}
 	}
@@ -95,7 +93,7 @@ public final class StandardMove extends AbstractChessMove
 			state.getPieceLocations().removePieceAt(target, removedPiece);
 		}
 
-		//---------------------------------------------
+		// ---------------------------------------------
 		// Update enpassant stuff
 		unmakeDataStore.setDiscardedEnpassantSquare(state.getEnPassantSquare());
 		state.setEnPassantSquare(null);
@@ -103,17 +101,17 @@ public final class StandardMove extends AbstractChessMove
 		if (pawnWasMoved) {
 			int squareOrdinalDifference = target.ordinal() - source.ordinal();
 			if (abs(squareOrdinalDifference) == 16) {
-				Square newEnpassantSquare = Square.of(source.ordinal() + squareOrdinalDifference/2);
+				Square newEnpassantSquare = Square
+						.of(source.ordinal() + squareOrdinalDifference / 2);
 				state.setEnPassantSquare(newEnpassantSquare);
 			}
 		}
-		//---------------------------------------------
+		// ---------------------------------------------
 		// Update half move clock
 		unmakeDataStore.setDiscardedHalfMoveClock(state.getHalfMoveClock().getValue());
 		if (pawnWasMoved || pieceWasRemoved) {
 			state.getHalfMoveClock().resetValue();
-		}
-		else {
+		} else {
 			state.getHalfMoveClock().incrementValue();
 		}
 	}
@@ -122,7 +120,8 @@ public final class StandardMove extends AbstractChessMove
 	void resetPieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
 		// Reset locations
-		Piece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(), state.getActiveSide());
+		Piece previouslyMovedPiece = state.getPieceLocations().getPieceAt(getTarget(),
+				state.getActiveSide());
 		state.getPieceLocations().removePieceAt(getTarget(), previouslyMovedPiece);
 		state.getPieceLocations().addPieceAt(getSource(), previouslyMovedPiece);
 
@@ -147,9 +146,7 @@ public final class StandardMove extends AbstractChessMove
 	@Override
 	public String toCompactString()
 	{
-		return new StringBuilder("S")
-				.append(getSource().name())
-				.append(getTarget().name())
-				.toString();
+		return new StringBuilder("S").append(getSource().name())
+				.append(getTarget().name()).toString();
 	}
 }

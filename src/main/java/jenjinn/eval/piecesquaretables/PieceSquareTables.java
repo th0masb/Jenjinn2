@@ -3,12 +3,13 @@
  */
 package jenjinn.eval.piecesquaretables;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Square;
 import jenjinn.boardstate.LocationTracker;
 import jenjinn.pieces.ChessPieces;
 import jenjinn.pieces.Piece;
-import jflow.iterators.factories.IterRange;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -16,11 +17,12 @@ import jflow.seq.Seq;
  */
 public final class PieceSquareTables
 {
-	private final Seq<PieceSquareTable> tables;
+	private final Vec<PieceSquareTable> tables;
 
-	public PieceSquareTables(Seq<PieceSquareTable> whiteTables)
+	public PieceSquareTables(Vec<PieceSquareTable> whiteTables)
 	{
-		if (whiteTables.size() != 6 || IterRange.to(6).anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i)) {
+		if (whiteTables.size() != 6 || Iter.until(6)
+				.anyMatch(i -> whiteTables.get(i).getAssociatedPiece().ordinal() != i)) {
 			throw new IllegalArgumentException();
 		}
 		this.tables = whiteTables.append(whiteTables.map(PieceSquareTable::invertValues));
@@ -31,7 +33,7 @@ public final class PieceSquareTables
 		return tables.get(piece.ordinal()).getValueAt(location);
 	}
 
-	public int evaluateLocations(Seq<LocationTracker> pieceLocations)
+	public int evaluateLocations(Vec<LocationTracker> pieceLocations)
 	{
 		if (pieceLocations.size() != 12) {
 			throw new IllegalArgumentException();
@@ -40,14 +42,14 @@ public final class PieceSquareTables
 		for (int i = 0; i < pieceLocations.size(); i++) {
 			PieceSquareTable pieceTable = tables.get(i);
 			eval += pieceLocations.get(i).iterator()
-					.mapToInt(loc -> pieceTable.getValueAt(loc))
-					.fold(0, (a, b) -> a + b);
+					.mapToInt(loc -> pieceTable.getValueAt(loc)).fold(0, (a, b) -> a + b);
 		}
 		return eval;
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		int prime = 31;
 		int result = 1;
 		result = prime * result + ((tables == null) ? 0 : tables.hashCode());
@@ -55,7 +57,8 @@ public final class PieceSquareTables
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -73,17 +76,13 @@ public final class PieceSquareTables
 
 	public static PieceSquareTables endgame()
 	{
-		return new PieceSquareTables(
-				ChessPieces.WHITE
-				.map(p -> TableParser.parseFile(p, p.name().substring(6).toLowerCase() + "-endgame"))
-				);
+		return new PieceSquareTables(ChessPieces.WHITE.map(p -> TableParser.parseFile(p,
+				p.name().substring(6).toLowerCase() + "-endgame")));
 	}
 
 	public static PieceSquareTables midgame()
 	{
-		return new PieceSquareTables(
-				ChessPieces.WHITE
-				.map(p -> TableParser.parseFile(p, p.name().substring(6).toLowerCase() + "-midgame"))
-				);
+		return new PieceSquareTables(ChessPieces.WHITE.map(p -> TableParser.parseFile(p,
+				p.name().substring(6).toLowerCase() + "-midgame")));
 	}
 }

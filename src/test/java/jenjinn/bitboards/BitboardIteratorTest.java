@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.base.Square;
 import jenjinn.bitboards.BitboardIterator;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 
 /**
  * @author ThomasB
@@ -29,7 +29,7 @@ class BitboardIteratorTest
 	void test(final List<Square> squareCollection)
 	{
 		final Set<Square> squareSet = new HashSet<>(squareCollection);
-		final long bitboard = BitboardUtils.bitwiseOr(squareCollection);
+		final long bitboard = Bitboard.fold(squareCollection);
 		assertEquals(squareSet, BitboardIterator.from(bitboard).toSet());
 	}
 

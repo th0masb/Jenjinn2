@@ -3,7 +3,7 @@
  */
 package jenjinn.boardstate;
 
-import static jenjinn.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.bitboards.Bitboard.fold;
 import static jenjinn.eval.piecesquaretables.TestingPieceSquareTables.getEndgameTables;
 import static jenjinn.eval.piecesquaretables.TestingPieceSquareTables.getMidgameTables;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +42,7 @@ class DetailedPieceLocationsTest
 			Square loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
 			assertEquals(loc.bitboard, locations.locationsOf(piece));
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(0, piece.ordinal() + 1)), locations.getWhiteLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(0, piece.ordinal() + 1)), locations.getWhiteLocations());
 			assertEquals(0L, locations.getBlackLocations());
 
 			runningMidgameEval += midTables.getLocationValue(piece, loc);
@@ -57,8 +57,8 @@ class DetailedPieceLocationsTest
 			Square loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.addPieceAt(loc, piece);
 			assertEquals(loc.bitboard, locations.locationsOf(piece));
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(0, 6)), locations.getWhiteLocations());
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(6, piece.ordinal() + 1)), locations.getBlackLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(0, 6)), locations.getWhiteLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(6, piece.ordinal() + 1)), locations.getBlackLocations());
 
 			runningMidgameEval += midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
@@ -85,8 +85,8 @@ class DetailedPieceLocationsTest
 			Square loc = locationsToAddPieceAt.get(piece.ordinal());
 			locations.removePieceAt(loc, piece);
 			assertEquals(0L, locations.locationsOf(piece));
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 6)), locations.getWhiteLocations());
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(6, nlocs)), locations.getBlackLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(piece.ordinal() + 1, 6)), locations.getWhiteLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(6, nlocs)), locations.getBlackLocations());
 
 			runningMidgameEval -= midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());
@@ -101,7 +101,7 @@ class DetailedPieceLocationsTest
 			locations.removePieceAt(loc, piece);
 			assertEquals(0L, locations.locationsOf(piece));
 			assertEquals(0L, locations.getWhiteLocations());
-			assertEquals(bitwiseOr(locationsToAddPieceAt.subList(piece.ordinal() + 1, 12)), locations.getBlackLocations());
+			assertEquals(fold(locationsToAddPieceAt.subList(piece.ordinal() + 1, 12)), locations.getBlackLocations());
 
 			runningMidgameEval -= midTables.getLocationValue(piece, loc);
 			assertEquals(runningMidgameEval, locations.getMidgameEval());

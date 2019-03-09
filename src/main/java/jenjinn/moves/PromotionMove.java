@@ -5,6 +5,9 @@ package jenjinn.moves;
 
 import java.util.Set;
 
+import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.CastleZone;
 import jenjinn.base.DevelopmentPiece;
 import jenjinn.base.Side;
@@ -12,8 +15,6 @@ import jenjinn.base.Square;
 import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.MoveReversalData;
 import jenjinn.pieces.Piece;
-import jflow.iterators.Flow;
-import jflow.iterators.factories.Iter;
 
 /**
  * @author ThomasB
@@ -29,9 +30,11 @@ public final class PromotionMove extends AbstractChessMove
 		this.promotionResult = promotionResult;
 	}
 
-	public static Flow<ChessMove> generateAllPossibilities(Square start, Square target)
+	public static EnhancedIterator<ChessMove> generateAllPossibilities(Square start,
+			Square target)
 	{
-		return Iter.over(PromotionResult.values()).map(res -> new PromotionMove(start, target, res));
+		return Iter.over(PromotionResult.values())
+				.map(res -> new PromotionMove(start, target, res));
 	}
 
 	public PromotionResult getPromotionResult()
@@ -43,15 +46,17 @@ public final class PromotionMove extends AbstractChessMove
 	void updatePieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
 		Side activeSide = state.getActiveSide();
-		state.getPieceLocations().removePieceAt(getSource(), activeSide.isWhite() ? Piece.WHITE_PAWN : Piece.BLACK_PAWN);
-		state.getPieceLocations().addPieceAt(getTarget(), promotionResult.toPiece(activeSide));
+		state.getPieceLocations().removePieceAt(getSource(),
+				activeSide.isWhite() ? Piece.WHITE_PAWN : Piece.BLACK_PAWN);
+		state.getPieceLocations().addPieceAt(getTarget(),
+				promotionResult.toPiece(activeSide));
 
-		Piece removedPiece = state.getPieceLocations().getPieceAt(getTarget(), activeSide.otherSide());
+		Piece removedPiece = state.getPieceLocations().getPieceAt(getTarget(),
+				activeSide.otherSide());
 		if (removedPiece != null) {
 			state.getPieceLocations().removePieceAt(getTarget(), removedPiece);
 			unmakeDataStore.setPieceTaken(removedPiece);
-		}
-		else {
+		} else {
 			unmakeDataStore.setPieceTaken(null);
 		}
 
@@ -65,8 +70,10 @@ public final class PromotionMove extends AbstractChessMove
 	void resetPieceLocations(BoardState state, MoveReversalData unmakeDataStore)
 	{
 		Side activeSide = state.getActiveSide();
-		state.getPieceLocations().removePieceAt(getTarget(), promotionResult.toPiece(activeSide));
-		state.getPieceLocations().addPieceAt(getSource(), activeSide.isWhite() ? Piece.WHITE_PAWN : Piece.BLACK_PAWN);
+		state.getPieceLocations().removePieceAt(getTarget(),
+				promotionResult.toPiece(activeSide));
+		state.getPieceLocations().addPieceAt(getSource(),
+				activeSide.isWhite() ? Piece.WHITE_PAWN : Piece.BLACK_PAWN);
 
 		Piece pieceToReplace = unmakeDataStore.getPieceTaken();
 		if (pieceToReplace != null) {
@@ -89,25 +96,17 @@ public final class PromotionMove extends AbstractChessMove
 	@Override
 	public String toString()
 	{
-		return new StringBuilder(getClass().getSimpleName())
-				.append("[source=")
-				.append(getSource().name().toLowerCase())
-				.append("|target=")
-				.append(getTarget().name().toLowerCase())
-				.append("|result=")
-				.append(promotionResult.name())
-				.append("]")
-				.toString();
+		return new StringBuilder(getClass().getSimpleName()).append("[source=")
+				.append(getSource().name().toLowerCase()).append("|target=")
+				.append(getTarget().name().toLowerCase()).append("|result=")
+				.append(promotionResult.name()).append("]").toString();
 	}
 
 	@Override
 	public String toCompactString()
 	{
-		return new StringBuilder("P")
-				.append(getSource().name())
-				.append(getTarget().name())
-				.append(promotionResult.name())
-				.toString();
+		return new StringBuilder("P").append(getSource().name())
+				.append(getTarget().name()).append(promotionResult.name()).toString();
 	}
 
 	@Override
@@ -116,8 +115,7 @@ public final class PromotionMove extends AbstractChessMove
 		if (super.equals(obj)) {
 			PromotionMove other = (PromotionMove) obj;
 			return promotionResult.equals(other.promotionResult);
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -125,6 +123,6 @@ public final class PromotionMove extends AbstractChessMove
 	@Override
 	public int hashCode()
 	{
-		return 31*super.hashCode() + promotionResult.hashCode();
+		return 31 * super.hashCode() + promotionResult.hashCode();
 	}
 }

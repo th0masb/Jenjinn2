@@ -18,7 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.base.Square;
 import jenjinn.bitboards.BitboardIterator;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 import jflow.iterators.factories.Iter;
 
 /**
@@ -30,7 +30,7 @@ class BitboardUtilsTest
 	@MethodSource
 	void testBitboardIntersection(final Long bitboardA, final Long bitboardB, final Boolean expectedIntersection)
 	{
-		assertEquals(expectedIntersection, BitboardUtils.bitboardsIntersect(bitboardA, bitboardB));
+		assertEquals(expectedIntersection, Bitboard.intersects(bitboardA, bitboardB));
 	}
 
 	static Stream<Arguments> testBitboardIntersection()
@@ -47,7 +47,7 @@ class BitboardUtilsTest
 	@MethodSource
 	void testBitwiseOrOfLongArray(final long[] array, final Long expectedResult)
 	{
-		assertEquals(expectedResult.longValue(), BitboardUtils.bitwiseOr(array));
+		assertEquals(expectedResult.longValue(), Bitboard.fold(array));
 	}
 
 	static Stream<Arguments> testBitwiseOrOfLongArray()
@@ -63,14 +63,14 @@ class BitboardUtilsTest
 	@MethodSource
 	void testBitwiseOrOfBoardSquareList(final List<Square> squares, final Long expectedResult)
 	{
-		assertEquals(expectedResult.longValue(), BitboardUtils.bitwiseOr(squares));
+		assertEquals(expectedResult.longValue(), Bitboard.fold(squares));
 	}
 
 	@ParameterizedTest
 	@MethodSource("testBitwiseOrOfBoardSquareList")
 	void testBitwiseOrOfBoardSquareFlow(final List<Square> squares, final Long expectedResult)
 	{
-		assertEquals(expectedResult.longValue(), BitboardUtils.bitwiseOr(Iter.over(squares)));
+		assertEquals(expectedResult.longValue(), Bitboard.fold(Iter.over(squares)));
 	}
 
 	static Stream<Arguments> testBitwiseOrOfBoardSquareList()

@@ -4,7 +4,7 @@
 package jenjinn.enums.chesspiece;
 
 import static java.util.stream.Collectors.toList;
-import static jenjinn.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.bitboards.Bitboard.fold;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -78,7 +78,7 @@ public final class IntegrationTestDataWriter
 		IterRange.to(sidePieceCount).forEach(i -> whiteLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
 		IterRange.to(sidePieceCount).forEach(i -> blackLocs.add(squares.remove(numberGenerator.nextInt(squares.size()))));
 
-		return new BasicPieceLocations(bitwiseOr(whiteLocs), bitwiseOr(blackLocs));
+		return new BasicPieceLocations(fold(whiteLocs), fold(blackLocs));
 	}
 
 	//	/**

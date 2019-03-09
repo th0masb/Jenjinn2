@@ -4,7 +4,7 @@
 package jenjinn.utils;
 
 import static java.lang.Long.toHexString;
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.bitboards.Bitboard.intersects;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +20,7 @@ public final class BasicPieceLocations
 
 	public BasicPieceLocations(final long whiteLocations, final long blackLocations)
 	{
-		if (bitboardsIntersect(whiteLocations, blackLocations)) {
+		if (intersects(whiteLocations, blackLocations)) {
 			throw new IllegalArgumentException();
 		}
 		this.whiteLocations = whiteLocations;

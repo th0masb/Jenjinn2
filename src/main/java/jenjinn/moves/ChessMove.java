@@ -3,13 +3,13 @@
  */
 package jenjinn.moves;
 
+import com.github.maumay.jflow.utils.Strings;
+import com.github.maumay.jflow.vec.Vec;
 
 import jenjinn.base.CastleZone;
 import jenjinn.base.Square;
 import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.MoveReversalData;
-import jflow.iterators.misc.Strings;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -55,17 +55,17 @@ public interface ChessMove
 	void reverseMove(BoardState state, MoveReversalData unmakeDataStore);
 
 	/**
-	 * @param repr
-	 *            A string encoding a chess move, it must be the same as the output
-	 *            of {@link Object#toString()} or {@link #toCompactString()} of one of the
-	 *            concrete subclasses of this interface.
+	 * @param repr A string encoding a chess move, it must be the same as the output
+	 *             of {@link Object#toString()} or {@link #toCompactString()} of one
+	 *             of the concrete subclasses of this interface.
 	 * @return the decoded move.
 	 */
 	static ChessMove decode(String repr)
 	{
 		String explicitStandardEnpassantRx = "([SE][a-z]+Move\\[source=[a-h][1-8]\\|target=[a-h][1-8]\\])";
 		String compactStandardEnpassantRx = "([SE]([a-h][1-8]){2})";
-		String standardEnpassantRx = "^" + explicitStandardEnpassantRx + "|" + compactStandardEnpassantRx + "$";
+		String standardEnpassantRx = "^" + explicitStandardEnpassantRx + "|"
+				+ compactStandardEnpassantRx + "$";
 
 		String explicitCastleRx = "(CastleMove\\[zone=((wk)|(wq)|(bk)|(bq))\\])";
 		String compactCastleRx = "((wk)|(wq)|(bk)|(bq))";
@@ -76,7 +76,7 @@ public interface ChessMove
 		String promotionRx = "^" + explicitPromotionRx + "|" + compactPromotionRx + "$";
 
 		if (repr.matches(standardEnpassantRx)) {
-			Seq<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toSeq();
+			Vec<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toVec();
 			Square source = Square.valueOf(squares.head().toUpperCase());
 			Square target = Square.valueOf(squares.last().toUpperCase());
 			char firstChar = repr.charAt(0);
@@ -89,10 +89,11 @@ public interface ChessMove
 				throw new RuntimeException();
 			}
 		} else if (repr.matches(promotionRx)) {
-			Seq<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toSeq();
+			Vec<String> squares = Strings.allMatches(repr, "[a-h][1-8]").toVec();
 			Square source = Square.valueOf(squares.head().toUpperCase());
 			Square target = Square.valueOf(squares.last().toUpperCase());
-			PromotionResult result = PromotionResult.valueOf(Strings.lastMatch(repr, "[NBRQ]").get());
+			PromotionResult result = PromotionResult
+					.valueOf(Strings.lastMatch(repr, "[NBRQ]").get());
 			return new PromotionMove(source, target, result);
 		} else if (repr.matches(castleMoveRx)) {
 			String zoneId = Strings.firstMatch(repr, "(wk)|(wq)|(bk)|(bq)").get();

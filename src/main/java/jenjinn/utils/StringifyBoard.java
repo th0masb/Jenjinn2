@@ -6,13 +6,14 @@ package jenjinn.utils;
 import java.util.Arrays;
 import java.util.List;
 
-import jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.factories.Iter;
 
 /**
  * @author t
  *
  */
-public final class StringifyBoard {
+public final class StringifyBoard
+{
 
 	public static String formatGrid(final TitledVisualGrid grid)
 	{
@@ -24,9 +25,11 @@ public final class StringifyBoard {
 		return formatGrids(gridData, "    ");
 	}
 
-	public static String formatGrids(final List<TitledVisualGrid> gridData, final String gridSeparator)
+	public static String formatGrids(final List<TitledVisualGrid> gridData,
+			final String gridSeparator)
 	{
-		final List<List<String>> rawGridLines = Iter.over(gridData).map(TitledVisualGrid::getGridLines).toList();
+		final List<List<String>> rawGridLines = Iter.over(gridData)
+				.map(TitledVisualGrid::getGridLines).toList();
 
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < CharGrid.BOARD_LINE_HEIGHT + 1; i++) {
@@ -41,11 +44,12 @@ public final class StringifyBoard {
 		return sb.toString();
 	}
 
-	private StringifyBoard() {
-		//		+--+
-		//	    |BN|
-		//	    +--+
-		//	    |WQ|
-		//		+--+
+	private StringifyBoard()
+	{
+		// +--+
+		// |BN|
+		// +--+
+		// |WQ|
+		// +--+
 	}
 }

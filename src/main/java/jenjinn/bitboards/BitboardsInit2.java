@@ -6,13 +6,13 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.utils.ArrayUtils;
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
 import jenjinn.pieces.PieceMovementDirs;
-import jflow.iterators.factories.Iter;
-import jflow.iterators.factories.IterRange;
-import jflow.iterators.misc.ArrayUtils;
-import jflow.seq.Seq;
 
 /**
  * Second of three utility classes containing only static methods to initialise
@@ -27,39 +27,38 @@ final class BitboardsInit2
 {
 	static long[][] generateAllBishopOccupancyVariations()
 	{
-		return Square.ALL.flow()
-				.map(square -> calculateOccupancyVariations(square, PieceMovementDirs.BISHOP))
-				.toList()
-				.toArray(new long[64][]);
+		return Square.ALL.iter().map(
+				square -> calculateOccupancyVariations(square, PieceMovementDirs.BISHOP))
+				.toList().toArray(new long[64][]);
 	}
 
 	static long[][] generateAllRookOccupancyVariations()
 	{
-		return Square.ALL.flow()
-				.map(square -> calculateOccupancyVariations(square, PieceMovementDirs.ROOK))
-				.toList()
-				.toArray(new long[64][]);
+		return Square.ALL.iter().map(
+				square -> calculateOccupancyVariations(square, PieceMovementDirs.ROOK))
+				.toList().toArray(new long[64][]);
 	}
 
-	static long[] calculateOccupancyVariations(Square startSq, Seq<Dir> movementDirections)
+	static long[] calculateOccupancyVariations(Square startSq,
+			Vec<Dir> movementDirections)
 	{
 		List<Square> relevantSquares = new ArrayList<>();
 		for (Dir dir : movementDirections) {
 			int numOfSqsLeft = startSq.getNumberOfSquaresLeft(dir);
-			relevantSquares.addAll(startSq.getAllSquares(asList(dir), max(numOfSqsLeft - 1, 0)).toList());
+			relevantSquares.addAll(startSq
+					.getAllSquares(asList(dir), max(numOfSqsLeft - 1, 0)).toList());
 		}
 		return foldedPowerset(ArrayUtils.longMap(s -> s.bitboard, relevantSquares));
 	}
-	
+
 	static long[] foldedPowerset(long[] src)
 	{
-		if (src.length == 0) 
-			return new long[] {0L};
+		if (src.length == 0)
+			return new long[] { 0L };
 		else {
 			long head = src[0];
 			long[] recursed = foldedPowerset(ArrayUtils.drop(1, src));
-			return Iter.overLongs(recursed)
-					.append(Iter.overLongs(recursed).map(x -> x | head))
+			return Iter.longs(recursed).append(Iter.longs(recursed).map(x -> x | head))
 					.toArray();
 		}
 	}
@@ -67,26 +66,24 @@ final class BitboardsInit2
 	static long[] generateRookOccupancyMasks()
 	{
 		long[][] rov = generateAllRookOccupancyVariations();
-		return IterRange.to(64).mapToLong(i -> rov[i][rov[i].length - 1]).toArray();
+		return Iter.until(64).mapToLong(i -> rov[i][rov[i].length - 1]).toArray();
 	}
 
 	static long[] generateBishopOccupancyMasks()
 	{
 		long[][] bov = generateAllBishopOccupancyVariations();
-		return IterRange.to(64).mapToLong(i -> bov[i][bov[i].length - 1]).toArray();
+		return Iter.until(64).mapToLong(i -> bov[i][bov[i].length - 1]).toArray();
 	}
 
 	static int[] generateRookMagicBitshifts()
 	{
-		return Iter.overLongs(generateRookOccupancyMasks())
-				.mapToInt(x -> 64 - Long.bitCount(x))
-				.toArray();
+		return Iter.longs(generateRookOccupancyMasks())
+				.mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 
 	static int[] generateBishopMagicBitshifts()
 	{
-		return Iter.overLongs(generateBishopOccupancyMasks())
-				.mapToInt(x -> 64 - Long.bitCount(x))
-				.toArray();
+		return Iter.longs(generateBishopOccupancyMasks())
+				.mapToInt(x -> 64 - Long.bitCount(x)).toArray();
 	}
 }

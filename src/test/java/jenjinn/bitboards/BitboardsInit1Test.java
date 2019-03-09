@@ -65,7 +65,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import jenjinn.base.Dir;
 import jenjinn.base.Square;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 import jenjinn.bitboards.Bitboards;
 import jenjinn.pieces.Piece;
 import jenjinn.pieces.PieceMovementDirs;
@@ -89,7 +89,7 @@ class BitboardsInit1Test
 	{
 		long[] expectedRanks = Seq.of(A1, A2, A3, A4, A5, A6, A7, A8)
 				.map(square -> square.getAllSquares(Dir.E, 8).insert(square))
-				.mapToLong(BitboardUtils::bitwiseOr);
+				.mapToLong(Bitboard::fold);
 
 		IterRange.to(8).forEach(i -> assertEquals(expectedRanks[i], rank(i)));
 	}
@@ -99,7 +99,7 @@ class BitboardsInit1Test
 	{
 		long[] expectedFiles = Seq.of(H1, G1, F1, E1, D1, C1, B1, A1)
 				.map(square -> square.getAllSquares(Dir.N, 8).insert(square))
-				.mapToLong(BitboardUtils::bitwiseOr);
+				.mapToLong(Bitboard::fold);
 
 		IterRange.to(8).forEach(i -> assertEquals(expectedFiles[i], file(i)));
 	}
@@ -109,7 +109,7 @@ class BitboardsInit1Test
 	{
 		long[] expectedDiagonals = Seq.of(H1, G1, F1, E1, D1, C1, B1, A1, A2, A3, A4, A5, A6, A7, A8)
 				.map(square -> square.getAllSquares(Dir.NE, 8).insert(square))
-				.mapToLong(BitboardUtils::bitwiseOr);
+				.mapToLong(Bitboard::fold);
 
 		IterRange.to(15).forEach(i -> assertEquals(expectedDiagonals[i], diagonalBitboard(i)));
 	}
@@ -119,7 +119,7 @@ class BitboardsInit1Test
 	{
 		long[] expectedDiagonals = Seq.of(A1, B1, C1, D1, E1, F1, G1, H1, H2, H3, H4, H5, H6, H7, H8)
 				.map(square -> square.getAllSquares(Dir.NW, 8).insert(square))
-				.mapToLong(BitboardUtils::bitwiseOr);
+				.mapToLong(Bitboard::fold);
 
 		IterRange.to(15).forEach(i -> assertEquals(expectedDiagonals[i], antiDiagonalBitboard(i)));
 	}
@@ -128,7 +128,7 @@ class BitboardsInit1Test
 	@MethodSource
 	void testEmptyBoardMovesetBitboard(Piece piece, Square location, Seq<Square> expectedMoveLocations)
 	{
-		assertEquals(BitboardUtils.bitwiseOr(expectedMoveLocations), Bitboards.emptyBoardMoveset(piece, location));
+		assertEquals(Bitboard.fold(expectedMoveLocations), Bitboards.emptyBoardMoveset(piece, location));
 	}
 
 	static Stream<Arguments> testEmptyBoardMovesetBitboard()
@@ -156,7 +156,7 @@ class BitboardsInit1Test
 	@MethodSource
 	void testEmptyBoardAttacksetBitboard(Piece piece, Square location, Seq<Square> expectedMoveLocations)
 	{
-		assertEquals(BitboardUtils.bitwiseOr(expectedMoveLocations), Bitboards.emptyBoardAttackset(piece, location));
+		assertEquals(Bitboard.fold(expectedMoveLocations), Bitboards.emptyBoardAttackset(piece, location));
 	}
 
 	static Stream<Arguments> testEmptyBoardAttacksetBitboard()

@@ -3,7 +3,7 @@
  */
 package jenjinn.bitboards;
 
-import static jenjinn.bitboards.BitboardUtils.bitwiseOr;
+import static jenjinn.bitboards.Bitboard.fold;
 import static jenjinn.bitboards.BitboardsInit1.generateAllEmptyBoardPieceAttackBitboards;
 import static jenjinn.bitboards.BitboardsInit1.generateAllEmptyBoardPieceMovementBitboards;
 import static jenjinn.bitboards.BitboardsInit1.generateAntidiagonalBitboards;
@@ -41,10 +41,10 @@ final class BitboardsImpl
 	static final long[] ANTI_DIAGONAL_BITBOARDS = generateAntidiagonalBitboards();
 
 	/** Universal set bitboard (all bits set) */
-	static final long UNIVERSAL_BITBOARD = bitwiseOr(RANK_BITBOARDS);
+	static final long UNIVERSAL_BITBOARD = fold(RANK_BITBOARDS);
 
 	/** Border set */
-	static final long BORDER_BITBOARD = bitwiseOr(new long[] { RANK_BITBOARDS[0],
+	static final long BORDER_BITBOARD = fold(new long[] { RANK_BITBOARDS[0],
 			FILE_BITBOARDS[0], RANK_BITBOARDS[7], FILE_BITBOARDS[7] });
 
 	/*

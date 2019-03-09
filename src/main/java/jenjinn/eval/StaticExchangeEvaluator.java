@@ -4,8 +4,10 @@
 package jenjinn.eval;
 
 import static java.lang.Math.max;
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.bitboards.Bitboard.intersects;
 import static jenjinn.bitboards.Bitboards.emptyBoardAttackset;
+
+import com.github.maumay.jflow.iterators.EnhancedIterator;
 
 import jenjinn.base.Side;
 import jenjinn.base.Square;
@@ -14,7 +16,6 @@ import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.DetailedPieceLocations;
 import jenjinn.pieces.ChessPieces;
 import jenjinn.pieces.Piece;
-import jflow.iterators.Flow;
 
 /**
  * @author ThomasB
@@ -24,7 +25,8 @@ public class StaticExchangeEvaluator
 {
 	private long target, source, attadef, xrays;
 
-	public boolean isGoodExchange(Square sourceSquare, Square targetSquare, BoardState state)
+	public boolean isGoodExchange(Square sourceSquare, Square targetSquare,
+			BoardState state)
 	{
 		// Make sure all instance variables set correctly first
 		DetailedPieceLocations pieceLocs = state.getPieceLocations();
@@ -50,7 +52,7 @@ public class StaticExchangeEvaluator
 
 			attadef ^= source;
 			// If a knight moves to attack or defend it can't open an x-ray.
-			if (!bitboardsIntersect(source, knightLocs)) {
+			if (!intersects(source, knightLocs)) {
 				updateXrays(pieceLocs);
 			}
 			source = getLeastValuablePiece(state.getPieceLocations(), activeSide);
@@ -60,18 +62,19 @@ public class StaticExchangeEvaluator
 		while (--d > 0) {
 			gain[d - 1] = -Math.max(-gain[d - 1], gain[d]);
 		}
-		return gain[0]>= 0;
+		return gain[0] >= 0;
 	}
 
 	private void updateXrays(DetailedPieceLocations pieceLocs)
 	{
 		if (xrays != 0) {
-			Flow<Square> xrayLocs = BitboardIterator.from(xrays);
-			long white = pieceLocs.getWhiteLocations(), black = pieceLocs.getBlackLocations();
+			EnhancedIterator<Square> xrayLocs = BitboardIterator.from(xrays);
+			long white = pieceLocs.getWhiteLocations(),
+					black = pieceLocs.getBlackLocations();
 			while (xrayLocs.hasNext()) {
 				Square loc = xrayLocs.next();
 				Piece p = pieceLocs.getPieceAt(loc);
-				if (bitboardsIntersect(p.getSquaresOfControl(loc, white, black), target)) {
+				if (intersects(p.getSquaresOfControl(loc, white, black), target)) {
 					long locBitboard = loc.bitboard;
 					xrays ^= locBitboard;
 					attadef ^= locBitboard;
@@ -88,21 +91,22 @@ public class StaticExchangeEvaluator
 		long black = locationProvider.getBlackLocations();
 
 		for (Piece p : ChessPieces.ALL) {
-			Flow<Square> locations = locationProvider.iterateLocs(p);
+			EnhancedIterator<Square> locations = locationProvider.iterateLocs(p);
 			while (locations.hasNext()) {
 				Square loc = locations.next();
 				long control = p.getSquaresOfControl(loc, white, black);
-				if (bitboardsIntersect(control, target)) {
+				if (intersects(control, target)) {
 					attadef |= loc.bitboard;
-				}
-				else if (p.isSlidingPiece() && bitboardsIntersect(emptyBoardAttackset(p, loc), target)) {
+				} else if (p.isSlidingPiece()
+						&& intersects(emptyBoardAttackset(p, loc), target)) {
 					xrays |= loc.bitboard;
 				}
 			}
 		}
 	}
 
-	private long getLeastValuablePiece(DetailedPieceLocations locationProvider, Side fromSide)
+	private long getLeastValuablePiece(DetailedPieceLocations locationProvider,
+			Side fromSide)
 	{
 		for (Piece p : ChessPieces.of(fromSide)) {
 			long intersection = attadef & locationProvider.locationsOf(p);

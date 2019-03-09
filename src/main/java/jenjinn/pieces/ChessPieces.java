@@ -10,8 +10,9 @@ import static jenjinn.pieces.Piece.WHITE_BISHOP;
 import static jenjinn.pieces.Piece.WHITE_QUEEN;
 import static jenjinn.pieces.Piece.WHITE_ROOK;
 
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.Side;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -19,33 +20,37 @@ import jflow.seq.Seq;
  */
 public final class ChessPieces
 {
-	private ChessPieces() {}
+	private ChessPieces()
+	{
+	}
 
-	public static final Seq<Piece> ALL = Seq.of(Piece.values());
-	public static final Seq<Piece> WHITE = ALL.take(6);
-	public static final Seq<Piece> BLACK = ALL.drop(6);
-	
-	private static final Seq<Piece> WHITE_PINNING_PIECES = Seq.of(WHITE_QUEEN, WHITE_ROOK, WHITE_BISHOP);
-	private static final Seq<Piece> BLACK_PINNING_PIECES = Seq.of(BLACK_QUEEN, BLACK_ROOK, BLACK_BISHOP);
+	public static final Vec<Piece> ALL = Vec.of(Piece.values());
+	public static final Vec<Piece> WHITE = ALL.take(6);
+	public static final Vec<Piece> BLACK = ALL.skip(6);
 
-	public static Seq<Piece> whitePinners()
+	private static final Vec<Piece> WHITE_PINNING_PIECES = Vec.of(WHITE_QUEEN, WHITE_ROOK,
+			WHITE_BISHOP);
+	private static final Vec<Piece> BLACK_PINNING_PIECES = Vec.of(BLACK_QUEEN, BLACK_ROOK,
+			BLACK_BISHOP);
+
+	public static Vec<Piece> whitePinners()
 	{
 		return WHITE_PINNING_PIECES;
 	}
 
-	public static Seq<Piece> blackPinners()
+	public static Vec<Piece> blackPinners()
 	{
 		return BLACK_PINNING_PIECES;
 	}
 
-	public static Seq<Piece> pinnersOn(Side side)
+	public static Vec<Piece> pinnersOn(Side side)
 	{
-		return side.isWhite()? WHITE_PINNING_PIECES : BLACK_PINNING_PIECES;
+		return side.isWhite() ? WHITE_PINNING_PIECES : BLACK_PINNING_PIECES;
 	}
 
-	public static Seq<Piece> of(Side side)
+	public static Vec<Piece> of(Side side)
 	{
-		return side.isWhite()? WHITE : BLACK;
+		return side.isWhite() ? WHITE : BLACK;
 	}
 
 	public static Piece fromIndex(int index)

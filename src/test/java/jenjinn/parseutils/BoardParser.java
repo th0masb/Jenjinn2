@@ -16,7 +16,7 @@ import jenjinn.base.CastleZone;
 import jenjinn.base.DevelopmentPiece;
 import jenjinn.base.Side;
 import jenjinn.base.Square;
-import jenjinn.bitboards.BitboardUtils;
+import jenjinn.bitboards.Bitboard;
 import jenjinn.boardstate.BoardState;
 import jenjinn.boardstate.CastlingStatus;
 import jenjinn.boardstate.DetailedPieceLocations;
@@ -145,7 +145,7 @@ public final class BoardParser
 				.map(x -> Strings.allMatches(x, "[a-h][1-8]"))
 				.map(xs -> xs.map(String::toUpperCase))
 				.map(xs -> xs.map(Square::valueOf).toSeq())
-				.mapToLong(BitboardUtils::bitwiseOr)
+				.mapToLong(Bitboard::bitwiseOr)
 				.build(flow -> new DetailedPieceLocations(flow.toArray(), midTables, endTables));
 	}
 }

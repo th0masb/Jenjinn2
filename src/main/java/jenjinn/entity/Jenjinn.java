@@ -8,11 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.maumay.jflow.vec.Vec;
+
 import jenjinn.base.FileUtils;
 import jenjinn.boardstate.BoardState;
 import jenjinn.moves.ChessMove;
 import jenjinn.movesearch.TreeSearcher;
-import jflow.seq.Seq;
 
 /**
  * @author ThomasB
@@ -20,15 +21,16 @@ import jflow.seq.Seq;
 public final class Jenjinn
 {
 	private final TreeSearcher treeSearcher = new TreeSearcher();
-	private final Seq<String> openingFiles;
+	private final Vec<String> openingFiles;
 
 	private int openingCount = 0;
 
 	public Jenjinn()
 	{
-		List<String> files = FileUtils.cacheResource(Jenjinn.class, "openingFileNames").toList();
+		List<String> files = FileUtils.cacheResource(Jenjinn.class, "openingFileNames")
+				.toList();
 		Collections.shuffle(files); // Different openings each time.
-		openingFiles = Seq.copy(files);
+		openingFiles = Vec.copy(files);
 	}
 
 	public Optional<ChessMove> calculateBestMove(BoardState state, long timeLimit)
@@ -43,10 +45,10 @@ public final class Jenjinn
 				try {
 					int qsearch = treeSearcher.getQuiescent().search(cpy);
 					if (qsearch > 300) {
-						System.out.println("Potential hash collision? Aborting opening db and switching to calculation.");
+						System.out.println(
+								"Potential hash collision? Aborting opening db and switching to calculation.");
 						openingCount = 5;
-					}
-					else {
+					} else {
 						return openingSearch;
 					}
 				} catch (InterruptedException e) {
@@ -60,8 +62,10 @@ public final class Jenjinn
 	private Optional<ChessMove> findMoveInOpeningdatabase(BoardState state)
 	{
 		for (String openingName : openingFiles) {
-			try (OpeningDatabaseReader fileReader = new OpeningDatabaseReader(openingName)) {
-				Optional<ChessMove> moveFound = fileReader.searchForMove(state.calculateHash());
+			try (OpeningDatabaseReader fileReader = new OpeningDatabaseReader(
+					openingName)) {
+				Optional<ChessMove> moveFound = fileReader
+						.searchForMove(state.calculateHash());
 				if (moveFound.isPresent()) {
 					return moveFound;
 				}

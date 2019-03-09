@@ -3,16 +3,17 @@
  */
 package jenjinn.boardstate;
 
-import static jenjinn.bitboards.BitboardUtils.bitboardsIntersect;
+import static jenjinn.bitboards.Bitboard.intersects;
 
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.factories.Iter;
+
 import jenjinn.base.Square;
 import jenjinn.bitboards.BitboardIterator;
-import jflow.iterators.Flow;
-import jflow.iterators.factories.Iter;
 
 /**
  * @author t
@@ -41,7 +42,7 @@ public final class LocationTracker implements Iterable<Square>
 
 	public boolean contains(Square location)
 	{
-		return bitboardsIntersect(allLocs, location.bitboard);
+		return intersects(allLocs, location.bitboard);
 	}
 
 	public int pieceCount()
@@ -51,24 +52,24 @@ public final class LocationTracker implements Iterable<Square>
 
 	void addLoc(Square location)
 	{
-		assert !bitboardsIntersect(allLocs, location.bitboard);
+		assert !intersects(allLocs, location.bitboard);
 		allLocs ^= location.bitboard;
 		locs.add(location);
 	}
 
 	void removeLoc(Square location)
 	{
-		assert bitboardsIntersect(allLocs, location.bitboard);
+		assert intersects(allLocs, location.bitboard);
 		allLocs ^= location.bitboard;
 		locs.remove(location);
 	}
 
 	/**
-	 * Note that this iterator makes no guarantee about the order in
-	 * which squares appear in the iteration.
+	 * Note that this iterator makes no guarantee about the order in which squares
+	 * appear in the iteration.
 	 */
 	@Override
-	public Flow<Square> iterator()
+	public EnhancedIterator<Square> iterator()
 	{
 		return Iter.over(locs);
 	}
@@ -79,7 +80,8 @@ public final class LocationTracker implements Iterable<Square>
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (allLocs ^ (allLocs >>> 32));
@@ -88,7 +90,8 @@ public final class LocationTracker implements Iterable<Square>
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -11,6 +11,15 @@ repositories {
     }
 }
 
+sourceSets {
+	main
+	test
+	app {
+		compileClasspath += main.output
+		runtimeClasspath += main.output
+	}
+}
+
 if (JavaVersion.current().isJava8Compatible()) {
 	tasks.withType(Javadoc) {
     	options.addStringOption('Xdoclint:none', '-quiet')
@@ -18,14 +27,8 @@ if (JavaVersion.current().isJava8Compatible()) {
  }
 
 dependencies {
-//	def jflow = subprojects.stream().findFirst()
-//	if (jflow.isPresent()) {
-//		compile project(jflow.get().name)
-//	}
-//	else {
-//	}
+    compile name: 'JFlow-0.5'
 
-    compile name: 'JFlow-0.4'
 	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
@@ -36,7 +39,6 @@ dependencies {
 version = '1.0'
 
 jar {
-	
     manifest {
         attributes(
         	'Implementation-Title': 'Jenjinn',

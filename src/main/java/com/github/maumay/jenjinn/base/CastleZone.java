@@ -98,7 +98,7 @@ public enum CastleZone
 	{
 		String id = identifier.trim().toLowerCase();
 		if (id.matches(CommonRegex.CASTLE_ZONE)) {
-			return ALL.findFirst(z -> z.getSimpleIdentifier().equals(id)).get();
+			return ALL.find(z -> z.getSimpleIdentifier().equals(id)).get();
 		} else {
 			throw new IllegalArgumentException(identifier);
 		}

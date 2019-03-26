@@ -5,7 +5,8 @@ import static java.util.Arrays.asList;
 
 import java.util.Optional;
 
-import com.github.maumay.jflow.iterators.factories.Repeatedly;
+import com.github.maumay.jflow.iterators.api.Iter;
+import com.github.maumay.jflow.iterators.api.Repeatedly;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -38,8 +39,9 @@ public enum Square
 
 	public int getNumberOfSquaresLeft(Dir direction)
 	{
-		return (int) Repeatedly.apply(sq -> sq.flatMap(x -> x.next(direction)),
-				Optional.of(this)).skip(1).takeWhile(Optional::isPresent).count();
+		return (int) Repeatedly
+				.apply(sq -> sq.flatMap(x -> x.next(direction)), Optional.of(this))
+				.drop(1).takeWhile(Optional::isPresent).count();
 	}
 
 	public Optional<Square> next(Dir direction)
@@ -57,10 +59,9 @@ public enum Square
 	public Vec<Square> getAllSquares(Iterable<Dir> directions, int maxDist)
 	{
 		require(maxDist >= 0);
-		return Vec.copy(directions).flatMap(dir -> {
-			return Repeatedly
-					.apply(sq -> sq.flatMap(x -> x.next(dir)), Optional.of(this))
-					.skip(1).takeWhile(Optional::isPresent).take(maxDist)
+		return Iter.wrap(directions).toVec().flatMap(dir -> {
+			return Repeatedly.apply(sq -> sq.flatMap(x -> x.next(dir)), Optional.of(this))
+					.drop(1).takeWhile(Optional::isPresent).take(maxDist)
 					.map(x -> x.get());
 		});
 	}

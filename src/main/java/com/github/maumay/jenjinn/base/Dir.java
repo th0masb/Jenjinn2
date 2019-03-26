@@ -47,7 +47,7 @@ public enum Dir
 		} else {
 			int rankIndexChange = rankChange / normaliser,
 					fileIndexChange = fileChange / normaliser;
-			return ALL.findFirst(dir -> dir.rankIndexChange == rankIndexChange
+			return ALL.find(dir -> dir.rankIndexChange == rankIndexChange
 					&& dir.fileIndexChange == fileIndexChange);
 		}
 	}

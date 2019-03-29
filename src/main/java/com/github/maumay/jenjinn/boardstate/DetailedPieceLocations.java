@@ -11,8 +11,8 @@ import com.github.maumay.jenjinn.eval.piecesquaretables.PieceSquareTables;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
 import com.github.maumay.jenjinn.utils.BoardHasher;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -40,7 +40,7 @@ public final class DetailedPieceLocations
 		this.pieceLocations = pieceLocations;
 		this.whiteLocations = pieceLocations.iter().take(6).mapToLong(x -> x.allLocs())
 				.fold(0L, (a, b) -> a | b);
-		this.blackLocations = pieceLocations.iter().skip(6).mapToLong(x -> x.allLocs())
+		this.blackLocations = pieceLocations.iter().drop(6).mapToLong(x -> x.allLocs())
 				.fold(0L, (a, b) -> a | b);
 		this.midgameTables = midgameTables;
 		this.endgameTables = endgameTables;
@@ -146,7 +146,7 @@ public final class DetailedPieceLocations
 		return pieceLocations.get(piece.ordinal()).pieceCount();
 	}
 
-	public EnhancedIterator<Square> iterateLocs(Piece piece)
+	public RichIterator<Square> iterateLocs(Piece piece)
 	{
 		return pieceLocations.get(piece.ordinal()).iterator();
 	}

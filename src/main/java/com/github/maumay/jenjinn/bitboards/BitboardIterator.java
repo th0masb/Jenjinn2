@@ -4,62 +4,60 @@
 package com.github.maumay.jenjinn.bitboards;
 
 import static com.github.maumay.jenjinn.bitboards.Bitboard.intersects;
-import static java.lang.Long.bitCount;
 
 import java.util.NoSuchElementException;
-import java.util.OptionalInt;
 
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jflow.iterators.AbstractEnhancedIterator;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.impl.AbstractRichIterator;
+import com.github.maumay.jflow.impl.KnownSize;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
  *
  */
-public final class BitboardIterator extends AbstractEnhancedIterator<Square>
+public final class BitboardIterator extends AbstractRichIterator<Square>
 {
 	private final long source;
+	private final int initialsize;
 	private int cached = -1, elementsReturned = 0;
 
-	public BitboardIterator(long source)
+	private BitboardIterator(long source, int initialsize)
 	{
-		super(OptionalInt.of(bitCount(source)));
+		super(KnownSize.of(initialsize));
 		this.source = source;
+		this.initialsize = initialsize;
+	}
+
+	public static RichIterator<Square> from(long bitboard)
+	{
+		int bitcount = Long.bitCount(bitboard);
+		return new BitboardIterator(bitboard, bitcount);
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		return elementsReturned < size.getAsInt();
+		return elementsReturned < initialsize;
 	}
 
 	@Override
-	public Square next()
+	public Square nextImpl()
 	{
-		if (hasNext()) {
-			int loopStart = cached < 0 ? 0 : cached + 1;
-			for (int i = loopStart; i < 64; i++) {
-				if (intersects(1L << i, source)) {
-					cached = i;
-					elementsReturned++;
-					return Square.of(cached);
-				}
+		int loopStart = cached + 1;
+		for (int i = loopStart; i < 64; i++) {
+			if (intersects(1L << i, source)) {
+				cached = i;
+				elementsReturned++;
+				return Square.of(cached);
 			}
-			throw new AssertionError();
-		} else {
-			throw new NoSuchElementException();
 		}
+		throw new NoSuchElementException();
 	}
 
 	@Override
-	public void skip()
+	public void skipImpl()
 	{
-		next();
-	}
-
-	public static EnhancedIterator<Square> from(long bitboard)
-	{
-		return new BitboardIterator(bitboard);
+		nextImpl();
 	}
 }

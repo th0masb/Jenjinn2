@@ -17,8 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.maumay.jenjinn.base.Dir;
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jenjinn.bitboards.BitboardsInit2;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.vec.Vec;
 
 /**

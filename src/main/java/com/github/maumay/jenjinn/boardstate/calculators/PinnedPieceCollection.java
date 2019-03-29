@@ -11,15 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jflow.iterables.EnhancedIterable;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterables.RichIterable;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
  *
  */
-public final class PinnedPieceCollection implements EnhancedIterable<PinnedPiece>
+public final class PinnedPieceCollection implements RichIterable<PinnedPiece>
 {
 	private final Map<Square, PinnedPiece> cache;
 
@@ -30,7 +30,7 @@ public final class PinnedPieceCollection implements EnhancedIterable<PinnedPiece
 	}
 
 	@Override
-	public EnhancedIterator<PinnedPiece> iter()
+	public RichIterator<PinnedPiece> iter()
 	{
 		return Iter.over(cache.values());
 	}

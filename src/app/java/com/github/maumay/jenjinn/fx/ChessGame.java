@@ -1,11 +1,23 @@
 /**
  *
  */
-package jenjinn.fx;
+package com.github.maumay.jenjinn.fx;
 
-import static jenjinn.engine.bitboards.BitboardUtils.bitboardsIntersect;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import com.github.maumay.jenjinn.base.GameTermination;
+import com.github.maumay.jenjinn.base.Side;
+import com.github.maumay.jenjinn.base.Square;
+import com.github.maumay.jenjinn.bitboards.Bitboard;
+import com.github.maumay.jenjinn.boardstate.BoardState;
+import com.github.maumay.jenjinn.boardstate.StartStateGenerator;
+import com.github.maumay.jenjinn.boardstate.calculators.LegalMoves;
+import com.github.maumay.jenjinn.boardstate.calculators.TerminationState;
+import com.github.maumay.jenjinn.entity.Jenjinn;
+import com.github.maumay.jenjinn.moves.ChessMove;
+import com.github.maumay.jflow.utils.Option;
 
 import javafx.application.Platform;
 import javafx.beans.property.Property;
@@ -14,18 +26,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import jenjinn.engine.base.BoardSquare;
-import jenjinn.engine.base.GameTermination;
-import jenjinn.engine.base.Side;
-import jenjinn.engine.boardstate.BoardState;
-import jenjinn.engine.boardstate.StartStateGenerator;
-import jenjinn.engine.boardstate.calculators.LegalMoves;
-import jenjinn.engine.boardstate.calculators.TerminationState;
-import jenjinn.engine.entity.Jenjinn;
-import jenjinn.engine.moves.ChessMove;
-import xawd.jflow.collections.FList;
-import xawd.jflow.collections.impl.FlowArrayList;
-import xawd.jflow.utilities.Optionals;
 
 /**
  * @author ThomasB
@@ -36,20 +36,21 @@ public final class ChessGame
 	private long moveTime = 5000;
 
 	private final Property<Side> sideToMove = new SimpleObjectProperty<>(Side.WHITE);
-	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>(GameTermination.NOT_TERMINAL);
+	private final Property<GameTermination> terminationState = new SimpleObjectProperty<>(
+			GameTermination.NOT_TERMINAL);
 	private final Jenjinn jenjinn;
 	private final BoardState stateOfPlay;
 	private final ChessBoard board;
-	private final FList<ChessMove> movesPlayed;
+	private final List<ChessMove> movesPlayed;
 
-	private Optional<BoardSquare> squareSelection;
+	private Optional<Square> squareSelection;
 
 	public ChessGame(Side humanSide, ColorScheme colors)
 	{
 		jenjinn = new Jenjinn();
 		stateOfPlay = StartStateGenerator.createStartBoard();
 		board = new ChessBoard(colors, stateOfPlay);
-		movesPlayed = new FlowArrayList<>();
+		movesPlayed = new ArrayList<>();
 		squareSelection = Optional.empty();
 		board.getFxComponent().setMouseClickInteractionProcedure(this::handleMouseClicks);
 		board.getFxComponent().setInteractionEnabled();
@@ -65,17 +66,18 @@ public final class ChessGame
 	{
 		if (evt.getButton() == MouseButton.SECONDARY) {
 			board.switchPerspective();
-		}
-		else if (evt.getButton() == MouseButton.PRIMARY) {
+		} else if (evt.getButton() == MouseButton.PRIMARY) {
 			Point2D clickTarget = new Point2D(evt.getX(), evt.getY());
-			BoardSquare correspondingSquare = board.getClosestSquare(clickTarget);
+			Square correspondingSquare = board.getClosestSquare(clickTarget);
 
-			if (bitboardsIntersect(correspondingSquare.asBitboard(), getActiveLocations())) {
-				setSelection(Optionals.of(correspondingSquare));
+			if (Bitboard.intersects(correspondingSquare.bitboard, getActiveLocations())) {
+				setSelection(Option.of(correspondingSquare));
 			} else if (squareSelection.isPresent()) {
-				BoardSquare src = squareSelection.get();
+				Square src = squareSelection.get();
 				Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay)
-						.filter(m -> m.getSource().equals(src) && m.getTarget().equals(correspondingSquare)).safeNext();
+						.filter(m -> m.getSource().equals(src)
+								&& m.getTarget().equals(correspondingSquare))
+						.nextOp();
 
 				setSelection(Optional.empty());
 				if (mv.isPresent()) {
@@ -98,7 +100,7 @@ public final class ChessGame
 		}
 	}
 
-	private void setSelection(Optional<BoardSquare> selection)
+	private void setSelection(Optional<Square> selection)
 	{
 		squareSelection = selection;
 		board.setSelectedSquare(selection);
@@ -113,14 +115,13 @@ public final class ChessGame
 	 */
 	private boolean terminalStateReached()
 	{
-		Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay).safeNext();
+		Optional<ChessMove> mv = LegalMoves.getAllMoves(stateOfPlay).nextOp();
 		GameTermination termState = TerminationState.of(stateOfPlay, mv.isPresent());
 		if (termState.isTerminal()) {
 			Platform.runLater(board.getFxComponent()::setInteractionDisabled);
 			terminationState.setValue(termState);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -142,7 +143,8 @@ public final class ChessGame
 
 	private long getActiveLocations()
 	{
-		return stateOfPlay.getPieceLocations().getSideLocations(stateOfPlay.getActiveSide());
+		return stateOfPlay.getPieceLocations()
+				.getSideLocations(stateOfPlay.getActiveSide());
 	}
 
 	public Node getFxComponent()

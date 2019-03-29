@@ -20,7 +20,7 @@ final class TestFileParser extends AbstractTestFileParser
 	{
 		Vec<String> lines = loadFile(fileName);
 		return Arguments.of(BoardParser.parse(lines.take(9)),
-				parseIndividualCases(lines.skip(9)));
+				parseIndividualCases(lines.drop(9)));
 	}
 
 	private Vec<IndividualStateCase> parseIndividualCases(Vec<String> caseLines)

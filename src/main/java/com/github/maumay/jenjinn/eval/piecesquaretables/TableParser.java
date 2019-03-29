@@ -6,7 +6,7 @@ package com.github.maumay.jenjinn.eval.piecesquaretables;
 import com.github.maumay.jenjinn.base.FileUtils;
 import com.github.maumay.jenjinn.eval.PieceValues;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.utils.ArrayUtils;
 import com.github.maumay.jflow.utils.Strings;
 import com.github.maumay.jflow.vec.Vec;
@@ -46,7 +46,8 @@ public final class TableParser
 			int[] locationValues = lines.revIter()
 					.map(line -> Strings.allMatches(line, NUMBER_PATTERN).toList())
 					.map(matches -> ArrayUtils.intMap(Integer::parseInt, matches))
-					.flatMapToInt(Iter::reverseInts).toArray();
+					.flatMap(array -> Iter.reverseInts(array).boxed()).mapToInt(x -> x)
+					.toArray();
 
 			return new PieceSquareTable(piece, pvalues.valueOf(piece), locationValues);
 		} else {

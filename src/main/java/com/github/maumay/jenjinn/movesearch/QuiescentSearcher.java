@@ -23,8 +23,8 @@ import com.github.maumay.jenjinn.moves.ChessMove;
 import com.github.maumay.jenjinn.moves.EnpassantMove;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -65,8 +65,8 @@ public final class QuiescentSearcher
 			throw new InterruptedException();
 		}
 
-		EnhancedIterator<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
-		Optional<ChessMove> firstMove = movesToProbe.nextOption();
+		RichIterator<ChessMove> movesToProbe = LegalMoves.getAllMoves(root);
+		Optional<ChessMove> firstMove = movesToProbe.nextOp();
 		GameTermination terminalState = TerminationState.of(root, firstMove.isPresent());
 
 		if (terminalState.isTerminal()) {

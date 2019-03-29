@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -29,7 +29,7 @@ public class PgnFileConversion
 	{
 		if (!outFolder.toFile().exists()) {
 			Files.createDirectory(outFolder);
-			EnhancedIterator<Path> files = Iter
+			RichIterator<Path> files = Iter
 					.wrap(Files.newDirectoryStream(srcFolder).iterator());
 			files.filter(pth -> pth.toString().endsWith(PGN_EXT)).forEach(src -> {
 				String outFileName = src.getFileName().toString().replaceFirst(PGN_EXT,
@@ -50,7 +50,7 @@ public class PgnFileConversion
 	{
 		Vec<String> folderNames = Vec.of("modernkings", "classicalqueens", "modernqueens",
 				"flankandunorthodox");
-		folderNames.findFirst(
+		folderNames.find(
 				name -> !Files.isDirectory(Paths.get("/home", "t", "chesspgns", name)))
 				.ifPresent(x -> {
 					throw new RuntimeException();

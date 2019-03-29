@@ -32,8 +32,8 @@ import java.util.function.Predicate;
 import com.github.maumay.jenjinn.base.Dir;
 import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.pieces.Moveable;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.utils.Tup;
 import com.github.maumay.jflow.vec.Vec;
 
@@ -374,7 +374,7 @@ public enum TestChessPiece implements Moveable
 		return Iter.over(movementDirections).flatMap(dir -> {
 			Vec<Square> allSquares = startSquare.getAllSquares(dir, 8);
 			Tup<Vec<Square>, Vec<Square>> spanned = allSquares.span(isClearSquare);
-			return spanned._1.iter().append(Iter.option(spanned._2.headOption()));
+			return spanned._1.iter().append(Iter.option(spanned._2.headOp()));
 		}).map(sq -> sq.bitboard).fold((a, b) -> a | b);
 	}
 
@@ -383,7 +383,7 @@ public enum TestChessPiece implements Moveable
 		return Arrays.asList(values());
 	}
 
-	public static EnhancedIterator<TestChessPiece> iterateAll()
+	public static RichIterator<TestChessPiece> iterateAll()
 	{
 		return Iter.over(valuesAsList());
 	}

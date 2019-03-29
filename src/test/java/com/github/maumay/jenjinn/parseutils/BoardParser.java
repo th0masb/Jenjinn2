@@ -24,7 +24,7 @@ import com.github.maumay.jenjinn.boardstate.HalfMoveCounter;
 import com.github.maumay.jenjinn.boardstate.HashCache;
 import com.github.maumay.jenjinn.eval.piecesquaretables.PieceSquareTables;
 import com.github.maumay.jenjinn.utils.BoardHasher;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.utils.Exceptions;
 import com.github.maumay.jflow.utils.Strings;
 import com.github.maumay.jflow.vec.Vec;
@@ -133,11 +133,11 @@ public final class BoardParser
 
 		CastleZone whiteCastleStatus = Iter.over(regexMatchers.keySet())
 				.filter(rx -> Strings.matchesAnywhere(whiteStatus, rx))
-				.map(regexMatchers::get).nextOption().orElse(null);
+				.map(regexMatchers::get).nextOp().orElse(null);
 
 		CastleZone blackCastleStatus = Iter.over(regexMatchers.keySet())
 				.filter(rx -> Strings.matchesAnywhere(blackStatus, rx))
-				.map(regexMatchers::get).nextOption().orElse(null);
+				.map(regexMatchers::get).nextOp().orElse(null);
 
 		return new CastlingStatus(rightSet, whiteCastleStatus, blackCastleStatus);
 	}

@@ -24,7 +24,7 @@ final class TestFileParser extends AbstractTestFileParser
 	{
 		Vec<String> lines = loadFile(fileName);
 		return Arguments.of(BoardParser.parse(lines.take(9)),
-				parseConstraintEvaluation(lines.skip(9)));
+				parseConstraintEvaluation(lines.drop(9)));
 	}
 
 	private Integer parseConstraintEvaluation(Vec<String> attackerInfo)
@@ -35,8 +35,7 @@ final class TestFileParser extends AbstractTestFileParser
 
 		Vec<String> whiteAttackers = attackerInfo.take(6);
 		int whiteAttackUnits = 0, whiteAttackCount = 0;
-		for (Tup<Piece, String> x : ChessPieces.ALL.iter().zipWith(whiteAttackers)
-				.toList()) {
+		for (Tup<Piece, String> x : ChessPieces.ALL.iter().zip(whiteAttackers).toList()) {
 			Vec<Integer> decoded = Strings.allMatches(x._2, "[0-9]")
 					.map(Integer::parseInt).toVec();
 			if (decoded.size() != 3) {
@@ -50,9 +49,9 @@ final class TestFileParser extends AbstractTestFileParser
 			whiteAttackCount += decoded.last();
 		}
 
-		Vec<String> blackAttackers = attackerInfo.skip(6);
+		Vec<String> blackAttackers = attackerInfo.drop(6);
 		int blackAttackUnits = 0, blackAttackCount = 0;
-		for (Tup<Piece, String> x : ChessPieces.ALL.iter().skip(6).zipWith(blackAttackers)
+		for (Tup<Piece, String> x : ChessPieces.ALL.iter().drop(6).zip(blackAttackers)
 				.toVec()) {
 			Vec<Integer> decoded = Strings.allMatches(x._2, "[0-9]")
 					.map(Integer::parseInt).toVec();

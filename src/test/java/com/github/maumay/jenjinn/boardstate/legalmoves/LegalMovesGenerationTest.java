@@ -18,8 +18,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.calculators.LegalMoves;
 import com.github.maumay.jenjinn.moves.ChessMove;
-import com.github.maumay.jflow.iterators.factories.Iter;
-import com.github.maumay.jflow.iterators.factories.Repeatedly;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.Repeatedly;
 import com.github.maumay.jflow.utils.Strings;
 
 /**
@@ -71,7 +71,7 @@ class LegalMovesGenerationTest
 	static String pad(int caseNumber)
 	{
 		String caseString = Strings.str(caseNumber);
-		return Repeatedly.cycle("0").take(3 - caseString.length()).append(caseString)
+		return Repeatedly.call(() -> "0").take(3 - caseString.length()).append(caseString)
 				.fold("", (a, b) -> a + b);
 	}
 }

@@ -14,7 +14,7 @@ import com.github.maumay.jenjinn.bitboards.BitboardIterator;
 import com.github.maumay.jenjinn.boardstate.DetailedPieceLocations;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author ThomasB

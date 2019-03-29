@@ -1,7 +1,7 @@
 /**
  * 
  */
-package jenjinn.fx;
+package com.github.maumay.jenjinn.fx;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

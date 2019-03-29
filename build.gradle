@@ -27,13 +27,19 @@ if (JavaVersion.current().isJava8Compatible()) {
  }
 
 dependencies {
-    compile name: 'JFlow-0.5'
+    compile name: 'jflow-0.5'
 
 	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.1.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+
+}
+
+configurations {
+	appCompile.extendsFrom compile
+	appRuntime.extendsFrom runtime
 }
 
 version = '1.0'

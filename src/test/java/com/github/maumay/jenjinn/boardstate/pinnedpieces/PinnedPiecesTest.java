@@ -11,8 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.calculators.PinnedPieces;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -26,7 +26,7 @@ class PinnedPiecesTest
 		assertEquals(expectedPinnedPieces, PinnedPieces.in(state).getLocations());
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		TestFileParser parser = new TestFileParser();
 		return Iter.over(parser.parse("case001"), parser.parse("case002"));

@@ -3,10 +3,8 @@
  */
 package com.github.maumay.jenjinn.eval.piecesquaretables;
 
-import com.github.maumay.jenjinn.eval.piecesquaretables.PieceSquareTable;
-import com.github.maumay.jenjinn.eval.piecesquaretables.PieceSquareTables;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.vec.Vec;
 
 /**

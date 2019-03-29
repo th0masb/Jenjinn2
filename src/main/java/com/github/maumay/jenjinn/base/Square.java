@@ -5,8 +5,8 @@ import static java.util.Arrays.asList;
 
 import java.util.Optional;
 
-import com.github.maumay.jflow.iterators.api.Iter;
-import com.github.maumay.jflow.iterators.api.Repeatedly;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.Repeatedly;
 import com.github.maumay.jflow.vec.Vec;
 
 /**

@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.github.maumay.jenjinn.base.GameTermination;
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.calculators.TerminationState;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -29,7 +29,7 @@ class TerminationStateTest
 		assertEquals(expectedTerminationState, TerminationState.of(state, hasLegalMoves));
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		throw new RuntimeException();
 	}

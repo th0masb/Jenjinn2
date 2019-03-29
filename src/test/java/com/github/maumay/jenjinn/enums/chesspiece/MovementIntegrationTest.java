@@ -34,7 +34,7 @@ class MovementIntegrationTest
 	void testPawnMoves()
 	{
 		Vec<Piece> pawns = Vec.of(Piece.WHITE_PAWN, Piece.BLACK_PAWN);
-		Square.ALL.skip(8).take(48)
+		Square.ALL.drop(8).take(48)
 				.forEach(square -> testMovesAgreeAtSquare(square, pawns));
 	}
 

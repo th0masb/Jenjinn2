@@ -25,7 +25,7 @@ public final class ChessPieces
 
 	public static final Vec<Piece> ALL = Vec.of(Piece.values());
 	public static final Vec<Piece> WHITE = ALL.take(6);
-	public static final Vec<Piece> BLACK = ALL.skip(6);
+	public static final Vec<Piece> BLACK = ALL.drop(6);
 
 	private static final Vec<Piece> WHITE_PINNING_PIECES = Vec.of(WHITE_QUEEN, WHITE_ROOK,
 			WHITE_BISHOP);

@@ -1,9 +1,12 @@
 /**
  *
  */
-package jenjinn.fx;
+package com.github.maumay.jenjinn.fx;
 
 import java.util.Optional;
+
+import com.github.maumay.jenjinn.base.Side;
+import com.github.maumay.jenjinn.pieces.Piece;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -14,8 +17,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
-import jenjinn.engine.base.Side;
-import jenjinn.engine.pieces.ChessPiece;
 
 /**
  * @author ThomasB
@@ -65,7 +66,8 @@ public final class GameWrapper extends Region
 		playAgain.setVisible(false);
 		playAgain.setOnAction(evt -> reset());
 
-		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack, playAgain, timeSlider, timeLabel);
+		getChildren().addAll(gameInfoLabel, chooseYourSide, chooseWhite, chooseBlack,
+				playAgain, timeSlider, timeLabel);
 	}
 
 	private String formatTime(double time)
@@ -80,8 +82,7 @@ public final class GameWrapper extends Region
 		double maxTime = ChessGame.MAX_MOVETIME / 1000.0;
 		double start = (minTime + maxTime) / 2;
 		Slider slider = new Slider(minTime, maxTime, start);
-		slider.valueProperty()
-		.addListener((x, y, newVal) -> {
+		slider.valueProperty().addListener((x, y, newVal) -> {
 			chessGame.ifPresent(z -> z.setMoveTime(newVal.doubleValue()));
 			timeLabel.setText(formatTime(newVal.doubleValue()));
 			layoutChildren();
@@ -92,7 +93,7 @@ public final class GameWrapper extends Region
 
 	private Button createSideSelectionButton(Side side)
 	{
-		ChessPiece toDisplay = side.isWhite() ? ChessPiece.WHITE_QUEEN : ChessPiece.BLACK_QUEEN;
+		Piece toDisplay = side.isWhite() ? Piece.WHITE_QUEEN : Piece.BLACK_QUEEN;
 		Button button = new Button();
 		button.setStyle(CSS_STYLE);
 		button.setGraphic(new ImageView(ImageCache.INSTANCE.getImageOf(toDisplay)));
@@ -168,7 +169,8 @@ public final class GameWrapper extends Region
 	{
 		getChildren().stream().forEach(x -> x.autosize());
 		Insets pad = getPadding();
-		double lpad = pad.getLeft(), tpad = pad.getTop(), rpad = pad.getRight(), bpad = pad.getBottom();
+		double lpad = pad.getLeft(), tpad = pad.getTop(), rpad = pad.getRight(),
+				bpad = pad.getBottom();
 		double w = getWidth(), h = getHeight();
 		gameInfoLabel.relocate(lpad, tpad);
 		playAgain.relocate(w - rpad - playAgain.getWidth(), tpad);
@@ -184,16 +186,19 @@ public final class GameWrapper extends Region
 			double gameY = snapSize(Math.max(y1, y2) + 5);
 			double gameX = snapSize(lpad);
 
-			double timeLabelWidth = timeLabel.getWidth(), timeLabelHeight = timeLabel.getHeight();
+			double timeLabelWidth = timeLabel.getWidth(),
+					timeLabelHeight = timeLabel.getHeight();
 			double sliderWidth = Math.max(30, gameWidth - timeLabelWidth - 5);
-			double sliderHeight = Math.max(timeLabel.getHeight(), 0.1*h);
+			double sliderHeight = Math.max(timeLabel.getHeight(), 0.1 * h);
 
 			timeSlider.resize(sliderWidth, sliderHeight);
 			timeSlider.relocate(lpad, h - bpad - sliderHeight);
-			timeLabel.relocate(lpad + timeSlider.getWidth() + 5, h - bpad - 0.5 * (sliderHeight + timeLabelHeight));
+			timeLabel.relocate(lpad + timeSlider.getWidth() + 5,
+					h - bpad - 0.5 * (sliderHeight + timeLabelHeight));
 
 			double gameHeight = snapSize(h - tpad - gameY - timeSlider.getHeight() - 5);
-			chessGame.get().getFxComponent().resizeRelocate(gameX, gameY, gameWidth, gameHeight);
+			chessGame.get().getFxComponent().resizeRelocate(gameX, gameY, gameWidth,
+					gameHeight);
 		}
 	}
 

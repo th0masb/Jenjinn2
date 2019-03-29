@@ -21,8 +21,8 @@ import com.github.maumay.jenjinn.moves.EnpassantMove;
 import com.github.maumay.jenjinn.moves.PromotionMove;
 import com.github.maumay.jenjinn.moves.PromotionResult;
 import com.github.maumay.jenjinn.moves.StandardMove;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -37,7 +37,7 @@ class ShorthandMoveParserTest
 		assertEquals(upcast, ShorthandMoveParser.parse(encodedMove).toSet());
 	}
 
-	static EnhancedIterator<Arguments> testMoveConstruction()
+	static RichIterator<Arguments> testMoveConstruction()
 	{
 		return Iter.over(
 				Arguments.of("s[a1->a3]",
@@ -69,7 +69,7 @@ class ShorthandMoveParserTest
 				() -> ShorthandMoveParser.parse(encoded));
 	}
 
-	static EnhancedIterator<Arguments> testMoveConstructionFailure()
+	static RichIterator<Arguments> testMoveConstructionFailure()
 	{
 		return Iter.over(Arguments.of("S [a1->a3]"), Arguments.of("S[a1 ->a3]"),
 				Arguments.of("S[a1->k3]"), Arguments.of("S[a1->{}]"),

@@ -6,6 +6,7 @@ package com.github.maumay.jenjinn.bitboards;
 import java.util.Iterator;
 
 import com.github.maumay.jenjinn.base.Square;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author t
@@ -48,8 +49,8 @@ public final class Bitboard
 		return result;
 	}
 
-	public static BitboardIterator iter(long bitboard)
+	public static RichIterator<Square> iter(long bitboard)
 	{
-		return new BitboardIterator(bitboard);
+		return BitboardIterator.from(bitboard);
 	}
 }

@@ -11,9 +11,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.github.maumay.jenjinn.boardstate.HashCache;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.utils.Strings;
 
 /**
@@ -68,7 +67,7 @@ class HashCacheTest
 		assertEquals(expectedOutcome, cache.containsThreeRepetitions());
 	}
 
-	static EnhancedIterator<Arguments> testContainsThreeRepetitions()
+	static RichIterator<Arguments> testContainsThreeRepetitions()
 	{
 		return Iter.over(
 				Arguments.of(new long[] { 0, 1, 2, 4, 1, 5, 5, 7, 9, 100, -23, 1 }, 12,

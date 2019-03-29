@@ -11,14 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.maumay.jenjinn.base.CastleZone;
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jenjinn.moves.CastleMove;
-import com.github.maumay.jenjinn.moves.ChessMove;
-import com.github.maumay.jenjinn.moves.EnpassantMove;
-import com.github.maumay.jenjinn.moves.PromotionMove;
-import com.github.maumay.jenjinn.moves.PromotionResult;
-import com.github.maumay.jenjinn.moves.StandardMove;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -34,7 +28,7 @@ class MoveDecodingTest
 		assertEquals(expectedMove, ChessMove.decode(compactEncoding));
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		return Iter.over(
 				Arguments.of("StandardMove[source=a3|target=a4]", "Sa3a4",

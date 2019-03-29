@@ -11,14 +11,14 @@ import java.util.Set;
 
 import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.bitboards.BitboardIterator;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterables.RichIterable;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author t
- *
  */
-public final class LocationTracker implements Iterable<Square>
+public final class LocationTracker implements RichIterable<Square>
 {
 	private final Set<Square> locs = EnumSet.noneOf(Square.class);
 	private long allLocs;
@@ -68,7 +68,7 @@ public final class LocationTracker implements Iterable<Square>
 	 * appear in the iteration.
 	 */
 	@Override
-	public EnhancedIterator<Square> iterator()
+	public RichIterator<Square> iter()
 	{
 		return Iter.over(locs);
 	}

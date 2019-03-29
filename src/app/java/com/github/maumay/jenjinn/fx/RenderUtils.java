@@ -1,7 +1,7 @@
 /**
  *
  */
-package jenjinn.fx;
+package com.github.maumay.jenjinn.fx;
 
 import java.util.ArrayList;
 import java.util.List;

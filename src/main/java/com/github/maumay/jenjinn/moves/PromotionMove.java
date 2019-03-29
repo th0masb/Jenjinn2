@@ -12,8 +12,8 @@ import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.MoveReversalData;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -29,7 +29,7 @@ public final class PromotionMove extends AbstractChessMove
 		this.promotionResult = promotionResult;
 	}
 
-	public static EnhancedIterator<ChessMove> generateAllPossibilities(Square start,
+	public static RichIterator<ChessMove> generateAllPossibilities(Square start,
 			Square target)
 	{
 		return Iter.over(PromotionResult.values())

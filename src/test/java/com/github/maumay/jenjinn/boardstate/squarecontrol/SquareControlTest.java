@@ -17,8 +17,8 @@ import com.github.maumay.jenjinn.boardstate.calculators.SquareControl;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
 import com.github.maumay.jenjinn.utils.VisualGridGenerator;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -41,13 +41,13 @@ class SquareControlTest
 
 		assertEquals(expectedWhitecontrol, SquareControl.calculate(state, Side.WHITE));
 
-		long expectedBlackcontrol = ChessPieces.ALL.iter().skip(6)
+		long expectedBlackcontrol = ChessPieces.ALL.iter().drop(6)
 				.mapToLong(expectedControl::get).fold(0L, (a, b) -> a | b);
 
 		assertEquals(expectedBlackcontrol, SquareControl.calculate(state, Side.BLACK));
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		TestFileParser parser = new TestFileParser();
 		return Iter.over(parser.parse("case001"));

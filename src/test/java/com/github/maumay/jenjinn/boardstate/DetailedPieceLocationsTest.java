@@ -15,12 +15,11 @@ import org.junit.jupiter.api.Test;
 
 import com.github.maumay.jenjinn.base.Side;
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jenjinn.boardstate.DetailedPieceLocations;
 import com.github.maumay.jenjinn.eval.piecesquaretables.PieceSquareTables;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
 import com.github.maumay.jenjinn.utils.BoardHasher;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author t

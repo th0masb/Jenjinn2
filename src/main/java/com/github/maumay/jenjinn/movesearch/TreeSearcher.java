@@ -15,7 +15,7 @@ import com.github.maumay.jenjinn.boardstate.calculators.LegalMoves;
 import com.github.maumay.jenjinn.boardstate.calculators.TerminationState;
 import com.github.maumay.jenjinn.moves.ChessMove;
 import com.github.maumay.jenjinn.movesearch.TranspositionTable.Entry;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -53,7 +53,7 @@ public final class TreeSearcher
 	public synchronized Optional<ChessMove> getBestMoveFrom(BoardState root,
 			long timeLimit)
 	{
-		Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).nextOption();
+		Optional<ChessMove> legalMoves = LegalMoves.getAllMoves(root).nextOp();
 		if (TerminationState.of(root, legalMoves.isPresent()).isTerminal()) {
 			return Optional.empty();
 		}
@@ -127,7 +127,7 @@ public final class TreeSearcher
 			throw new InterruptedException();
 		}
 
-		Optional<ChessMove> firstMove = LegalMoves.getAllMoves(root).nextOption();
+		Optional<ChessMove> firstMove = LegalMoves.getAllMoves(root).nextOp();
 		GameTermination termination = TerminationState.of(root, firstMove.isPresent());
 		if (termination.isTerminal()) {
 			return -Math.abs(termination.value);

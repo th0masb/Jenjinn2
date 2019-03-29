@@ -10,7 +10,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import com.github.maumay.jenjinn.utils.BasicPieceLocations;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author ThomasB

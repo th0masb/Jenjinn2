@@ -92,11 +92,11 @@ public final class ShorthandMoveParser
 	{
 		if (ec.matches(CommonRegex.CORD)) {
 			Vec<Square> squares = CordParser.parse(ec);
-			return Tup.of(squares.head(), squares.skip(1));
+			return Tup.of(squares.head(), squares.drop(1));
 		} else if (ec.matches(CommonRegex.MULTI_TARGET)) {
 			Vec<Square> squares = Strings.allMatches(ec, CommonRegex.SINGLE_SQUARE)
 					.map(String::toUpperCase).map(Square::valueOf).toVec();
-			return Tup.of(squares.head(), squares.skip(1));
+			return Tup.of(squares.head(), squares.drop(1));
 		} else {
 			throw new IllegalArgumentException(ec);
 		}

@@ -14,7 +14,7 @@ import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.DetailedPieceLocations;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.RichIterator;
 
 /**
  * @author ThomasB
@@ -67,7 +67,7 @@ public class StaticExchangeEvaluator
 	private void updateXrays(DetailedPieceLocations pieceLocs)
 	{
 		if (xrays != 0) {
-			EnhancedIterator<Square> xrayLocs = BitboardIterator.from(xrays);
+			RichIterator<Square> xrayLocs = BitboardIterator.from(xrays);
 			long white = pieceLocs.getWhiteLocations(),
 					black = pieceLocs.getBlackLocations();
 			while (xrayLocs.hasNext()) {
@@ -90,7 +90,7 @@ public class StaticExchangeEvaluator
 		long black = locationProvider.getBlackLocations();
 
 		for (Piece p : ChessPieces.ALL) {
-			EnhancedIterator<Square> locations = locationProvider.iterateLocs(p);
+			RichIterator<Square> locations = locationProvider.iterateLocs(p);
 			while (locations.hasNext()) {
 				Square loc = locations.next();
 				long control = p.getSquaresOfControl(loc, white, black);

@@ -17,7 +17,7 @@ import com.github.maumay.jenjinn.moves.ChessMove;
 import com.github.maumay.jenjinn.moves.PromotionMove;
 import com.github.maumay.jenjinn.moves.PromotionResult;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.utils.Strings;
 import com.github.maumay.jflow.vec.Vec;
 
@@ -31,8 +31,8 @@ public final class PgnMoveBuilder
 	 * Maps PGN identifiers to piece ordinals mod 6.
 	 */
 	private static final Map<Character, Integer> CHARACTER_PIECE_MAP = Iter
-			.ints('N', 'B', 'R', 'Q', 'K').zipWith(ChessPieces.WHITE.iter().skip(1))
-			.toMap(p -> Character.valueOf((char) p._i), p -> p._o.ordinal());
+			.ints('N', 'B', 'R', 'Q', 'K').boxed().zip(ChessPieces.WHITE.iter().drop(1))
+			.toMap(p -> Character.valueOf((char) (int) p._1), p -> p._2.ordinal());
 
 	private static final String FILE = "([a-h])", RANK = "([1-8])";
 	private static final String SQUARE = "(" + FILE + RANK + ")";
@@ -92,13 +92,13 @@ public final class PgnMoveBuilder
 			} else if (files.size() == 2) {
 				char sourceFile = files.head().toUpperCase().charAt(0);
 				return candidates
-						.findFirst(mv -> mv.getSource().name().charAt(0) == sourceFile)
+						.find(mv -> mv.getSource().name().charAt(0) == sourceFile)
 						.orElseThrow(() -> new BadPgnException(
 								mc + ", " + sourceFile + ", " + candidates));
 			} else if (ranks.size() == 2) {
 				char sourceRank = ranks.head().charAt(0);
 				return candidates
-						.findFirst(mv -> mv.getSource().name().charAt(1) == sourceRank)
+						.find(mv -> mv.getSource().name().charAt(1) == sourceRank)
 						.orElseThrow(() -> new BadPgnException(
 								mc + ", " + sourceRank + ", " + candidates));
 			} else {
@@ -108,7 +108,7 @@ public final class PgnMoveBuilder
 			Square source = encodedSquares.head(), target = encodedSquares.last();
 			return Iter.over(legalMoves)
 					.filter(mv -> mv.getSource() == source && mv.getTarget() == target)
-					.nextOption().orElseThrow(exSupplier);
+					.nextOp().orElseThrow(exSupplier);
 		} else {
 			throw exSupplier.get();
 		}
@@ -133,7 +133,7 @@ public final class PgnMoveBuilder
 			return candidates.head();
 		} else if (candidates.size() == 2) {
 			char file = mc.toUpperCase().charAt(0);
-			return candidates.findFirst(mv -> mv.getSource().name().charAt(0) == file)
+			return candidates.find(mv -> mv.getSource().name().charAt(0) == file)
 					.orElseThrow(exSupplier);
 		} else {
 			throw exSupplier.get();

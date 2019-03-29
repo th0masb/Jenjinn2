@@ -20,10 +20,10 @@ final class TestFileParser extends AbstractTestFileParser
 		Vec<String> lines = loadFile(fileName);
 
 		Vec<String> boardStateAttributes = lines.take(9);
-		Vec<String> expectedMoveLines = lines.skip(9)
+		Vec<String> expectedMoveLines = lines.drop(9)
 				.takeWhile(s -> !s.startsWith("---"));
-		Vec<String> expectedAttackLines = lines.skipWhile(s -> !s.startsWith("---"))
-				.skip(1);
+		Vec<String> expectedAttackLines = lines.dropWhile(s -> !s.startsWith("---"))
+				.drop(1);
 
 		return Arguments.of(BoardParser.parse(boardStateAttributes),
 				parseMoves(expectedMoveLines), parseMoves(expectedAttackLines));

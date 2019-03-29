@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.HashCache;
-import com.github.maumay.jenjinn.moves.ChessMove;
 import com.github.maumay.jenjinn.parseutils.AbstractTestFileParser;
 import com.github.maumay.jenjinn.parseutils.BoardParser;
 import com.github.maumay.jflow.vec.Vec;
@@ -43,10 +42,10 @@ final class TestFileParser extends AbstractTestFileParser
 		}
 
 		ChessMove reconstructedMove = ChessMove.decode(lines.head());
-		BoardState startState = BoardParser.parse(lines.skip(1).take(9),
+		BoardState startState = BoardParser.parse(lines.drop(1).take(9),
 				STARTING_MOVE_COUNT);
 		long expectedOldHash = startState.calculateHash();
-		BoardState expectedEvolutionResult = BoardParser.parse(lines.skip(10).take(9),
+		BoardState expectedEvolutionResult = BoardParser.parse(lines.drop(10).take(9),
 				STARTING_MOVE_COUNT + 1);
 		BoardState updatedExpected = insertPreviousHash(expectedEvolutionResult,
 				expectedOldHash);

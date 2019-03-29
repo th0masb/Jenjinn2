@@ -12,7 +12,7 @@ import com.github.maumay.jenjinn.boardstate.CastlingStatus;
 import com.github.maumay.jenjinn.boardstate.LocationTracker;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.vec.Vec;
 
 /**

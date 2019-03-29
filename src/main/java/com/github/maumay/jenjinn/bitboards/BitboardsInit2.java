@@ -9,7 +9,7 @@ import java.util.List;
 import com.github.maumay.jenjinn.base.Dir;
 import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.pieces.PieceMovementDirs;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.utils.ArrayUtils;
 import com.github.maumay.jflow.vec.Vec;
 

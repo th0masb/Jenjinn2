@@ -8,8 +8,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -26,7 +26,7 @@ class CordParserTest
 		assertEquals(squares, CordParser.parse(encodedCord));
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		return Iter.over(Arguments.of("g1->D1", new int[] { 1, 2, 3, 4 }),
 				Arguments.of("G1->F3", new int[] { 1, 18 }));

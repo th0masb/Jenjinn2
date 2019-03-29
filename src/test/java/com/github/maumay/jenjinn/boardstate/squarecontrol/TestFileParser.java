@@ -31,7 +31,7 @@ final class TestFileParser extends AbstractTestFileParser
 	{
 		Vec<String> lines = loadFile(fileName);
 		return Arguments.of(BoardParser.parse(lines.take(9)),
-				parseSquaresOfControl(lines.skip(9)));
+				parseSquaresOfControl(lines.drop(9)));
 	}
 
 	private Map<Piece, Long> parseSquaresOfControl(Vec<String> squaresOfControl)
@@ -40,7 +40,7 @@ final class TestFileParser extends AbstractTestFileParser
 			throw new IllegalArgumentException("Only passed squares of control for "
 					+ squaresOfControl.size() + " pieces");
 		}
-		return ChessPieces.ALL.iter().zipWith(squaresOfControl.iterator()).toMap(Tup::_1,
+		return ChessPieces.ALL.iter().zip(squaresOfControl.iterator()).toMap(Tup::_1,
 				p -> parseSinglePieceSquaresOfControl(p._2));
 	}
 

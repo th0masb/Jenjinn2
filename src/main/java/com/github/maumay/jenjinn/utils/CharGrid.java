@@ -6,7 +6,7 @@ package com.github.maumay.jenjinn.utils;
 import java.util.Arrays;
 
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author ThomasB

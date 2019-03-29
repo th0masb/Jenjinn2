@@ -4,7 +4,7 @@
 package com.github.maumay.jenjinn.eval;
 
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author ThomasB

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.maumay.jenjinn.base.Dir;
 import com.github.maumay.jenjinn.base.Square;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 
 /**
  * @author ThomasB

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.github.maumay.jenjinn.base.Square;
 import com.github.maumay.jenjinn.bitboards.BitboardIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
 import com.github.maumay.jflow.vec.Vec;
 
 /**

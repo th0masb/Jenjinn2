@@ -10,7 +10,7 @@ import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.boardstate.DetailedPieceLocations;
 import com.github.maumay.jenjinn.pieces.ChessPieces;
 import com.github.maumay.jenjinn.pieces.Piece;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -19,8 +19,8 @@ import com.github.maumay.jflow.vec.Vec;
  */
 public final class KingSafetyEvaluator implements EvaluationComponent
 {
-	static final Vec<Piece> WKING_ATTACKERS = ChessPieces.BLACK.skip(1).take(4);
-	static final Vec<Piece> BKING_ATTACKERS = ChessPieces.WHITE.skip(1).take(4);
+	static final Vec<Piece> WKING_ATTACKERS = ChessPieces.BLACK.drop(1).take(4);
+	static final Vec<Piece> BKING_ATTACKERS = ChessPieces.WHITE.drop(1).take(4);
 
 	public KingSafetyEvaluator()
 	{
@@ -38,7 +38,7 @@ public final class KingSafetyEvaluator implements EvaluationComponent
 
 		int bAttackUnits = 0;
 		for (Piece piece : WKING_ATTACKERS) {
-			EnhancedIterator<Square> locs = pieceLocs.iterateLocs(piece);
+			RichIterator<Square> locs = pieceLocs.iterateLocs(piece);
 			while (locs.hasNext()) {
 				long control = piece.getSquaresOfControl(locs.next(), white, black);
 				bAttackUnits += bitCount(control & wSafetyArea.getOuterArea())
@@ -53,7 +53,7 @@ public final class KingSafetyEvaluator implements EvaluationComponent
 
 		int wAttackUnits = 0;
 		for (Piece piece : BKING_ATTACKERS) {
-			EnhancedIterator<Square> locs = pieceLocs.iterateLocs(piece);
+			RichIterator<Square> locs = pieceLocs.iterateLocs(piece);
 			while (locs.hasNext()) {
 				long control = piece.getSquaresOfControl(locs.next(), white, black);
 				wAttackUnits += bitCount(control & bSafetyArea.getOuterArea())

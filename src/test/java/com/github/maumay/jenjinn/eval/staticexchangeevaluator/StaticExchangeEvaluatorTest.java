@@ -11,8 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.github.maumay.jenjinn.boardstate.BoardState;
 import com.github.maumay.jenjinn.eval.StaticExchangeEvaluator;
-import com.github.maumay.jflow.iterators.EnhancedIterator;
-import com.github.maumay.jflow.iterators.factories.Iter;
+import com.github.maumay.jflow.iterators.Iter;
+import com.github.maumay.jflow.iterators.RichIterator;
 import com.github.maumay.jflow.vec.Vec;
 
 /**
@@ -33,7 +33,7 @@ class StaticExchangeEvaluatorTest
 		}
 	}
 
-	static EnhancedIterator<Arguments> test()
+	static RichIterator<Arguments> test()
 	{
 		TestFileParser parser = new TestFileParser();
 		return Iter.over("case001").map(parser::parse);

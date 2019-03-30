@@ -5,10 +5,6 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-
-    flatDir {
-    	dirs 'libs'
-    }
 }
 
 sourceSets {
@@ -27,7 +23,7 @@ if (JavaVersion.current().isJava8Compatible()) {
  }
 
 dependencies {
-    compile name: 'jflow-0.5'
+    compile 'com.github.maumay:jflow:0.5.1'
 
 	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
@@ -51,11 +47,6 @@ jar {
             'Implementation-Version': version,
             )
     }
-}
-
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '4.6'
 }
 
 test {

@@ -43,7 +43,7 @@ public final class TableParser
 		Vec<String> lines = FileUtils.cacheResource(packageProvider, filename);
 
 		if (lines.size() == 8) {
-			int[] locationValues = lines.revIter()
+			int[] locationValues = lines.iterRev()
 					.map(line -> Strings.allMatches(line, NUMBER_PATTERN).toList())
 					.map(matches -> ArrayUtils.intMap(Integer::parseInt, matches))
 					.flatMap(array -> Iter.reverseInts(array).boxed()).mapToInt(x -> x)

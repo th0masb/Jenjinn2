@@ -51,7 +51,7 @@ class PgnGameConversionIntegrationTest extends AbstractBoardStateTest
 								.map(x -> new MoveReversalData());
 						reversalData.iter().zip(mvs)
 								.forEach(p -> p._2.makeMove(state, p._1));
-						reversalData.revIter().zip(mvs.revIter())
+						reversalData.iterRev().zip(mvs.iterRev())
 								.forEach(p -> p._2.reverseMove(state, p._1));
 						assertBoardStatesAreEqual(StartStateGenerator.createStartBoard(),
 								state);

@@ -77,7 +77,7 @@ public final class TitledVisualGrid
 			return sb.reverse().toString();
 		}).append(title).toVec();
 
-		return lines.revIter().toList();
+		return lines.iterRev().toList();
 	}
 
 	private char[] convertVisualGridToCharArray()

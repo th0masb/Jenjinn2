@@ -23,7 +23,7 @@ if (JavaVersion.current().isJava8Compatible()) {
  }
 
 dependencies {
-    compile 'com.github.maumay:jflow:0.5.1'
+    compile 'com.github.maumay:jflow:0.5.3'
 
 	// Test dependencies.
 	testCompile 'org.junit.jupiter:junit-jupiter-params:5.2.0'
